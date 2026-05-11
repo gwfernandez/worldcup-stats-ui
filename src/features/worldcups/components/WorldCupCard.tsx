@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Star, ChevronRight } from 'lucide-react';
 import type { WorldCup } from '../../../types/worldcup.types';
 
@@ -29,7 +30,6 @@ const DEFAULT_ACCENT = '#8a8fa8';
 
 export interface WorldCupCardProps {
   worldCup: WorldCup;
-  onClick: (year: number) => void;
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -38,7 +38,7 @@ export interface WorldCupCardProps {
  * Card que representa una edición del mundial.
  * Muestra el logo oficial, año, país organizador y campeón.
  */
-export function WorldCupCard({ worldCup: worldCup, onClick }: WorldCupCardProps) {
+export function WorldCupCard({ worldCup: worldCup }: WorldCupCardProps) {
   const { year, country, countryCode, champion, championCode } = worldCup;
 
   const accentColor = championCode
@@ -50,8 +50,8 @@ export function WorldCupCard({ worldCup: worldCup, onClick }: WorldCupCardProps)
   const countryFlag = `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
 
   return (
-    <button
-      onClick={() => onClick(year)}
+    <Link
+      to={`/worldcup/${year}`}
       className="group relative w-full text-left bg-[#161925] border border-[#2a2d3a] rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-[#e8c84a] hover:bg-[#1a1e2e] focus:outline-none focus:ring-2 focus:ring-[#e8c84a] focus:ring-offset-2 focus:ring-offset-[#0f1117]"
     >
       {/* Barra lateral de color del campeón */}
@@ -110,6 +110,6 @@ export function WorldCupCard({ worldCup: worldCup, onClick }: WorldCupCardProps)
         className="absolute bottom-3 right-2 text-[#8a8fa8] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
         aria-hidden="true"
       />
-    </button>
+    </Link>
   );
 }
