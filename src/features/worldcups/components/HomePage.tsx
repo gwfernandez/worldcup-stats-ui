@@ -1,271 +1,215 @@
 import { useState } from 'react';
-import { Trophy, Globe, Users, Swords, ChevronRight, Star } from 'lucide-react';
-
-// ─── Tipos ────────────────────────────────────────────────────────────────────
-
-interface WorldCup {
-  year: number;
-  country: string;
-  flag: string;
-  champion: string;
-  championFlag: string;
-  continent: 'América' | 'Europa' | 'Asia/África';
-  accentColor: string;
-}
+import { Trophy, Globe, Users, Swords } from 'lucide-react';
+import { WorldCupCard } from './WorldCupCard';
+import type { WorldCup } from '../../../types/worldcup.types';
 
 // ─── Datos de ejemplo ─────────────────────────────────────────────────────────
+// TODO: reemplazar por useWorldCups() cuando el hook esté conectado a la API
 
 const WORLD_CUPS: WorldCup[] = [
   {
+    id: 1,
     year: 1930,
     country: 'Uruguay',
-    flag: '🇺🇾',
+    countryCode: 'UY',
     champion: 'Uruguay',
-    championFlag: '🇺🇾',
-    continent: 'América',
-    accentColor: '#4a9fd4',
+    championCode: 'UY',
   },
   {
+    id: 2,
     year: 1934,
     country: 'Italia',
-    flag: '🇮🇹',
+    countryCode: 'IT',
     champion: 'Italia',
-    championFlag: '🇮🇹',
-    continent: 'Europa',
-    accentColor: '#d44a4a',
+    championCode: 'IT',
   },
   {
+    id: 3,
     year: 1938,
     country: 'Francia',
-    flag: '🇫🇷',
+    countryCode: 'FR',
     champion: 'Italia',
-    championFlag: '🇮🇹',
-    continent: 'Europa',
-    accentColor: '#d44a4a',
+    championCode: 'IT',
   },
   {
+    id: 4,
     year: 1950,
     country: 'Brasil',
-    flag: '🇧🇷',
+    countryCode: 'BR',
     champion: 'Uruguay',
-    championFlag: '🇺🇾',
-    continent: 'América',
-    accentColor: '#4ad45a',
+    championCode: 'UY',
   },
   {
+    id: 5,
     year: 1954,
     country: 'Suiza',
-    flag: '🇨🇭',
+    countryCode: 'CH',
     champion: 'Alemania',
-    championFlag: '🇩🇪',
-    continent: 'Europa',
-    accentColor: '#e8c84a',
+    championCode: 'DE',
   },
   {
+    id: 6,
     year: 1958,
     country: 'Suecia',
-    flag: '🇸🇪',
+    countryCode: 'SE',
     champion: 'Brasil',
-    championFlag: '🇧🇷',
-    continent: 'Europa',
-    accentColor: '#4ad45a',
+    championCode: 'BR',
   },
   {
+    id: 7,
     year: 1962,
     country: 'Chile',
-    flag: '🇨🇱',
+    countryCode: 'CL',
     champion: 'Brasil',
-    championFlag: '🇧🇷',
-    continent: 'América',
-    accentColor: '#4ad45a',
+    championCode: 'BR',
   },
   {
+    id: 8,
     year: 1966,
     country: 'Inglaterra',
-    flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+    countryCode: 'GB',
     champion: 'Inglaterra',
-    championFlag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-    continent: 'Europa',
-    accentColor: '#d44a7a',
+    championCode: 'GB',
   },
   {
+    id: 9,
     year: 1970,
     country: 'México',
-    flag: '🇲🇽',
+    countryCode: 'MX',
     champion: 'Brasil',
-    championFlag: '🇧🇷',
-    continent: 'América',
-    accentColor: '#4ad45a',
+    championCode: 'BR',
   },
   {
+    id: 10,
     year: 1974,
     country: 'Alemania',
-    flag: '🇩🇪',
+    countryCode: 'DE',
     champion: 'Alemania',
-    championFlag: '🇩🇪',
-    continent: 'Europa',
-    accentColor: '#e8c84a',
+    championCode: 'DE',
   },
   {
+    id: 11,
     year: 1978,
     country: 'Argentina',
-    flag: '🇦🇷',
+    countryCode: 'AR',
     champion: 'Argentina',
-    championFlag: '🇦🇷',
-    continent: 'América',
-    accentColor: '#78b4e8',
+    championCode: 'AR',
   },
   {
+    id: 12,
     year: 1982,
     country: 'España',
-    flag: '🇪🇸',
+    countryCode: 'ES',
     champion: 'Italia',
-    championFlag: '🇮🇹',
-    continent: 'Europa',
-    accentColor: '#d44a4a',
+    championCode: 'IT',
   },
   {
+    id: 13,
     year: 1986,
     country: 'México',
-    flag: '🇲🇽',
+    countryCode: 'MX',
     champion: 'Argentina',
-    championFlag: '🇦🇷',
-    continent: 'América',
-    accentColor: '#78b4e8',
+    championCode: 'AR',
   },
   {
+    id: 14,
     year: 1990,
     country: 'Italia',
-    flag: '🇮🇹',
+    countryCode: 'IT',
     champion: 'Alemania',
-    championFlag: '🇩🇪',
-    continent: 'Europa',
-    accentColor: '#e8c84a',
+    championCode: 'DE',
   },
   {
+    id: 15,
     year: 1994,
     country: 'EE.UU.',
-    flag: '🇺🇸',
+    countryCode: 'US',
     champion: 'Brasil',
-    championFlag: '🇧🇷',
-    continent: 'América',
-    accentColor: '#4ad45a',
+    championCode: 'BR',
   },
   {
+    id: 16,
     year: 1998,
     country: 'Francia',
-    flag: '🇫🇷',
+    countryCode: 'FR',
     champion: 'Francia',
-    championFlag: '🇫🇷',
-    continent: 'Europa',
-    accentColor: '#4a78d4',
+    championCode: 'FR',
   },
   {
+    id: 17,
     year: 2002,
     country: 'Corea/Japón',
-    flag: '🇯🇵',
+    countryCode: 'JP',
     champion: 'Brasil',
-    championFlag: '🇧🇷',
-    continent: 'Asia/África',
-    accentColor: '#4ad45a',
+    championCode: 'BR',
   },
   {
+    id: 18,
     year: 2006,
     country: 'Alemania',
-    flag: '🇩🇪',
+    countryCode: 'DE',
     champion: 'Italia',
-    championFlag: '🇮🇹',
-    continent: 'Europa',
-    accentColor: '#d44a4a',
+    championCode: 'IT',
   },
   {
+    id: 19,
     year: 2010,
     country: 'Sudáfrica',
-    flag: '🇿🇦',
+    countryCode: 'ZA',
     champion: 'España',
-    championFlag: '🇪🇸',
-    continent: 'Asia/África',
-    accentColor: '#d4874a',
+    championCode: 'ES',
   },
   {
+    id: 20,
     year: 2014,
     country: 'Brasil',
-    flag: '🇧🇷',
+    countryCode: 'BR',
     champion: 'Alemania',
-    championFlag: '🇩🇪',
-    continent: 'América',
-    accentColor: '#e8c84a',
+    championCode: 'DE',
   },
   {
+    id: 21,
     year: 2018,
     country: 'Rusia',
-    flag: '🇷🇺',
+    countryCode: 'RU',
     champion: 'Francia',
-    championFlag: '🇫🇷',
-    continent: 'Europa',
-    accentColor: '#4a78d4',
+    championCode: 'FR',
   },
   {
+    id: 22,
     year: 2022,
     country: 'Qatar',
-    flag: '🇶🇦',
+    countryCode: 'QA',
     champion: 'Argentina',
-    championFlag: '🇦🇷',
-    continent: 'Asia/África',
-    accentColor: '#78b4e8',
+    championCode: 'AR',
   },
 ];
 
+// ─── Tipos locales ────────────────────────────────────────────────────────────
+
 type FilterType = 'Todos' | 'América' | 'Europa' | 'Asia/África';
 
-// ─── Componente WorldCupCard ───────────────────────────────────────────────────
+const CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = {
+  UY: 'América',
+  AR: 'América',
+  BR: 'América',
+  CL: 'América',
+  MX: 'América',
+  US: 'América',
+  IT: 'Europa',
+  FR: 'Europa',
+  DE: 'Europa',
+  GB: 'Europa',
+  SE: 'Europa',
+  CH: 'Europa',
+  ES: 'Europa',
+  RU: 'Europa',
+  JP: 'Asia/África',
+  ZA: 'Asia/África',
+  QA: 'Asia/África',
+};
 
-interface WorldCupCardProps {
-  wc: WorldCup;
-  onClick: (year: number) => void;
-}
-
-function WorldCupCard({ wc, onClick }: WorldCupCardProps) {
-  return (
-    <button
-      onClick={() => onClick(wc.year)}
-      className="group relative w-full text-left bg-[#161925] border border-[#2a2d3a] rounded-xl p-4 cursor-pointer transition-all duration-200 hover:border-[#e8c84a] hover:bg-[#1a1e2e] focus:outline-none focus:ring-2 focus:ring-[#e8c84a] focus:ring-offset-2 focus:ring-offset-[#0f1117]"
-    >
-      {/* Barra lateral de color del campeón */}
-      <div
-        className="absolute top-0 left-0 w-[3px] h-full rounded-l-xl transition-opacity duration-200 opacity-60 group-hover:opacity-100"
-        style={{ backgroundColor: wc.accentColor }}
-        aria-hidden="true"
-      />
-
-      <div className="pl-1">
-        <p className="text-xl font-medium text-[#e8c84a] leading-none mb-1">{wc.year}</p>
-        <p className="text-sm text-[#e8eaf0] flex items-center gap-1.5 mb-3">
-          <span className="text-base leading-none">{wc.flag}</span>
-          {wc.country}
-        </p>
-
-        <div className="h-px bg-[#2a2d3a] mb-3" />
-
-        <p className="text-xs text-[#8a8fa8] flex items-center gap-1">
-          <Star size={11} className="text-[#e8c84a] shrink-0" aria-hidden="true" />
-          <span className="text-[#e8eaf0]">
-            {wc.championFlag} {wc.champion}
-          </span>
-        </p>
-      </div>
-
-      {/* Flecha en hover */}
-      <ChevronRight
-        size={14}
-        className="absolute bottom-3 right-3 text-[#8a8fa8] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-        aria-hidden="true"
-      />
-    </button>
-  );
-}
-
-// ─── Componente Principal ─────────────────────────────────────────────────────
+// ─── Componente principal ─────────────────────────────────────────────────────
 
 export default function HomePage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
@@ -275,7 +219,7 @@ export default function HomePage() {
   const filtered =
     activeFilter === 'Todos'
       ? WORLD_CUPS
-      : WORLD_CUPS.filter((wc) => wc.continent === activeFilter);
+      : WORLD_CUPS.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
 
   const handleCardClick = (year: number) => {
     // TODO: navegar a /worldcup/:year con React Router
@@ -337,7 +281,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Placeholder para imagen estática */}
+        {/* Placeholder para imagen estática del hero */}
         <div
           className="w-48 h-36 shrink-0 bg-[#1e2233] border border-[#2a2d3a] rounded-xl flex flex-col items-center justify-center gap-2"
           aria-label="Imagen del mundial — reemplazar con asset real"
@@ -349,7 +293,6 @@ export default function HomePage() {
 
       {/* ── Grilla de mundiales ───────────────────────────────────────── */}
       <main className="px-6 py-6">
-        {/* Header de sección + filtros */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-medium text-[#e8eaf0] flex items-center gap-2">
             <Trophy size={14} className="text-[#8a8fa8]" aria-hidden="true" />
@@ -377,7 +320,7 @@ export default function HomePage() {
         {/* Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {filtered.map((wc) => (
-            <WorldCupCard key={wc.year} wc={wc} onClick={handleCardClick} />
+            <WorldCupCard key={wc.year} worldCup={wc} onClick={handleCardClick} />
           ))}
         </div>
       </main>
