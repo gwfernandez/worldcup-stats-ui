@@ -3,6 +3,8 @@ import { GroupsTab } from './tabs/GroupsTab';
 import { ScorersTab } from './tabs/ScorersTab';
 import { MOCK_GROUPS, MOCK_ELIMINATION_PHASES } from '../mocks/worldcupDetail.mock';
 import { MOCK_SCORERS } from '../mocks/scorers.mock';
+import { TeamsTab } from './tabs/TeamsTab';
+import { MOCK_TEAMS } from '../mocks/teams.mock';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
@@ -234,9 +236,7 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
           <GroupsTab groups={MOCK_GROUPS} eliminationPhases={MOCK_ELIMINATION_PHASES} />
         )}
         {activeTab === 'scorers' && <ScorersTab scorers={MOCK_SCORERS} />}
-        {activeTab === 'teams' && (
-          <p className="text-sm text-[#8a8fa8]">Solapa Selecciones — próximamente</p>
-        )}
+        {activeTab === 'teams' && <TeamsTab teams={MOCK_TEAMS} />}
         {activeTab === 'schedule' && (
           <p className="text-sm text-[#8a8fa8]">Solapa Cronograma — próximamente</p>
         )}
