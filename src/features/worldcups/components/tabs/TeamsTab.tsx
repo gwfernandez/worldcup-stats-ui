@@ -5,9 +5,11 @@ import {
   PERFORMANCE_STYLES,
   CONFEDERATION_TOOLTIP,
 } from '../../../../types/team.types';
-import { PlayersModal } from '../shared/PlayersModal';
+import { Pagination } from '../../../../components/shared/Pagination';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 10;
+
+import { PlayersModal } from '../shared/PlayersModal';
 
 const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
 
@@ -30,6 +32,7 @@ export function TeamsTab({ teams }: TeamsTabProps) {
   const [searchName, setSearchName] = useState('');
   const [filterConfederation, setFilterConf] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Opciones dinámicas
   const confederationOptions = useMemo(
@@ -51,9 +54,19 @@ export function TeamsTab({ teams }: TeamsTabProps) {
     [teams, searchName, filterConfederation, filterGroup],
   );
 
+  // Paginado
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginatedTeams = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filtered.slice(start, start + PAGE_SIZE);
+  }, [filtered, currentPage]);
+
   const handleFilterChange =
-    (setter: (v: string) => void) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    (setter: (v: string) => void) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setter(e.target.value);
+      setCurrentPage(1); // Reset page on filter change
+    };
 
   return (
     <>
@@ -165,14 +178,14 @@ export function TeamsTab({ teams }: TeamsTabProps) {
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {paginatedTeams.length === 0 && (
               <tr>
                 <td colSpan={6} className="py-8 text-center text-sm text-[#8a8fa8]">
                   No se encontraron selecciones con esos filtros
                 </td>
               </tr>
             )}
-            {filtered.map((team) => {
+            {paginatedTeams.map((team) => {
               const confTooltip = CONFEDERATION_TOOLTIP[team.confederation];
 
               return (
@@ -268,6 +281,16 @@ export function TeamsTab({ teams }: TeamsTabProps) {
             })}
           </tbody>
         </table>
+
+        {/* ── Paginado ────────────────────────────────────────────── */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filtered.length}
+          pageSize={PAGE_SIZE}
+          itemsLabel="selecciones"
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       {/* Modal */}

@@ -59,6 +59,16 @@ const TABS: Tab[] = [
     ),
   },
   {
+    id: 'scorers',
+    label: 'Goleadores',
+    icon: (
+      <Icon>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4l3 3" />
+      </Icon>
+    ),
+  },
+  {
     id: 'schedule',
     label: 'Cronograma',
     icon: (
@@ -92,16 +102,6 @@ const TABS: Tab[] = [
         <line x1="3" y1="6" x2="3.01" y2="6" />
         <line x1="3" y1="12" x2="3.01" y2="12" />
         <line x1="3" y1="18" x2="3.01" y2="18" />
-      </Icon>
-    ),
-  },
-  {
-    id: 'scorers',
-    label: 'Goleadores',
-    icon: (
-      <Icon>
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 8v4l3 3" />
       </Icon>
     ),
   },
