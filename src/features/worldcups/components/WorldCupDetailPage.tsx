@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { GroupsTab } from './tabs/GroupsTab';
+import { ScorersTab } from './tabs/ScorersTab';
 import { MOCK_GROUPS, MOCK_ELIMINATION_PHASES } from '../mocks/worldcupDetail.mock';
+import { MOCK_SCORERS } from '../mocks/scorers.mock';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
-type TabId = 'groups' | 'teams' | 'schedule' | 'stats' | 'standings';
+type TabId = 'groups' | 'teams' | 'schedule' | 'stats' | 'standings' | 'scorers';
 
 interface Tab {
   id: TabId;
@@ -13,7 +14,7 @@ interface Tab {
   icon: React.ReactNode;
 }
 
-const TabIcon = ({ d, d2 }: { d: string; d2?: string }) => (
+const Icon = ({ children }: { children: React.ReactNode }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="13"
@@ -26,8 +27,7 @@ const TabIcon = ({ d, d2 }: { d: string; d2?: string }) => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <path d={d} />
-    {d2 && <path d={d2} />}
+    {children}
   </svg>
 );
 
@@ -35,42 +35,90 @@ const TABS: Tab[] = [
   {
     id: 'groups',
     label: 'Grupos y fixture',
-    icon: <TabIcon d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />,
+    icon: (
+      <Icon>
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
+      </Icon>
+    ),
   },
   {
     id: 'teams',
     label: 'Selecciones',
     icon: (
-      <TabIcon
-        d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-        d2="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
-      />
+      <Icon>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </Icon>
     ),
   },
   {
     id: 'schedule',
     label: 'Cronograma',
-    icon: <TabIcon d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />,
+    icon: (
+      <Icon>
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </Icon>
+    ),
   },
-  { id: 'stats', label: 'Estadísticas', icon: <TabIcon d="M18 20V10M12 20V4M6 20v-6" /> },
+  {
+    id: 'stats',
+    label: 'Estadísticas',
+    icon: (
+      <Icon>
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+      </Icon>
+    ),
+  },
   {
     id: 'standings',
     label: 'Clasificación',
     icon: (
-      <TabIcon d="M9 11l3 3L22 4" d2="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+      <Icon>
+        <line x1="8" y1="6" x2="21" y2="6" />
+        <line x1="8" y1="12" x2="21" y2="12" />
+        <line x1="8" y1="18" x2="21" y2="18" />
+        <line x1="3" y1="6" x2="3.01" y2="6" />
+        <line x1="3" y1="12" x2="3.01" y2="12" />
+        <line x1="3" y1="18" x2="3.01" y2="18" />
+      </Icon>
+    ),
+  },
+  {
+    id: 'scorers',
+    label: 'Goleadores',
+    icon: (
+      <Icon>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4l3 3" />
+      </Icon>
     ),
   },
 ];
+
+// ─── Props ────────────────────────────────────────────────────────────────────
+
+export interface WorldCupDetailPageProps {
+  /** Año del mundial — en producción vendrá de useParams() */
+  year?: number;
+}
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
  * Página de detalle de un mundial.
- * Contiene el hero con metadata y las cinco solapas de contenido.
+ * Contiene el hero con metadata y las solapas de contenido.
  */
-export default function WorldCupDetailPage() {
-  const { year } = useParams<{ year: string }>();
-  const worldCupYear = year ? parseInt(year, 10) : 2022;
+export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPageProps) {
   const [activeTab, setActiveTab] = useState<TabId>('groups');
 
   return (
@@ -114,7 +162,6 @@ export default function WorldCupDetailPage() {
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="bg-[#161925] border-b border-[#2a2d3a] px-5 py-5 flex items-center gap-4">
-        {/* Logo placeholder */}
         <div
           className="w-14 h-14 shrink-0 bg-[#1e2233] border border-[#2a2d3a] rounded-xl flex items-center justify-center"
           aria-label="Logo del mundial"
@@ -140,9 +187,8 @@ export default function WorldCupDetailPage() {
             <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
           </svg>
         </div>
-
         <div>
-          <h1 className="text-[17px] font-medium text-white mb-1">🇲🇽 México {worldCupYear}</h1>
+          <h1 className="text-[17px] font-medium text-white mb-1">🇲🇽 México {year}</h1>
           <div className="flex gap-4 text-xs text-[#8a8fa8] mb-2">
             <span>16 selecciones</span>
             <span>32 partidos</span>
@@ -187,17 +233,18 @@ export default function WorldCupDetailPage() {
         {activeTab === 'groups' && (
           <GroupsTab groups={MOCK_GROUPS} eliminationPhases={MOCK_ELIMINATION_PHASES} />
         )}
+        {activeTab === 'scorers' && <ScorersTab scorers={MOCK_SCORERS} />}
         {activeTab === 'teams' && (
-          <div className="text-sm text-[#8a8fa8]">Solapa Selecciones — próximamente</div>
+          <p className="text-sm text-[#8a8fa8]">Solapa Selecciones — próximamente</p>
         )}
         {activeTab === 'schedule' && (
-          <div className="text-sm text-[#8a8fa8]">Solapa Cronograma — próximamente</div>
+          <p className="text-sm text-[#8a8fa8]">Solapa Cronograma — próximamente</p>
         )}
         {activeTab === 'stats' && (
-          <div className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</div>
+          <p className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</p>
         )}
         {activeTab === 'standings' && (
-          <div className="text-sm text-[#8a8fa8]">Solapa Clasificación — próximamente</div>
+          <p className="text-sm text-[#8a8fa8]">Solapa Clasificación — próximamente</p>
         )}
       </main>
     </div>
