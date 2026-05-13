@@ -5,10 +5,12 @@ import { MOCK_GROUPS, MOCK_ELIMINATION_PHASES } from '../mocks/worldcupDetail.mo
 import { MOCK_SCORERS } from '../mocks/scorers.mock';
 import { TeamsTab } from './tabs/TeamsTab';
 import { MOCK_TEAMS } from '../mocks/teams.mock';
+import { StadiumsTab } from './tabs/StadiumsTab';
+import { MOCK_STADIUMS } from '../mocks/stadiums.mock';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
-type TabId = 'groups' | 'teams' | 'schedule' | 'stats' | 'standings' | 'scorers';
+type TabId = 'groups' | 'teams' | 'scorers' | 'stadiums' | 'standings' | 'stats';
 
 interface Tab {
   id: TabId;
@@ -69,14 +71,13 @@ const TABS: Tab[] = [
     ),
   },
   {
-    id: 'schedule',
-    label: 'Cronograma',
+    id: 'stadiums',
+    label: 'Estadios',
     icon: (
       <Icon>
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
+        <path d="M12 2L2 7l10 5 10-5L12 2z" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
       </Icon>
     ),
   },
@@ -237,9 +238,7 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
         )}
         {activeTab === 'scorers' && <ScorersTab scorers={MOCK_SCORERS} />}
         {activeTab === 'teams' && <TeamsTab teams={MOCK_TEAMS} />}
-        {activeTab === 'schedule' && (
-          <p className="text-sm text-[#8a8fa8]">Solapa Cronograma — próximamente</p>
-        )}
+        {activeTab === 'stadiums' && <StadiumsTab stadiums={MOCK_STADIUMS} />}
         {activeTab === 'stats' && (
           <p className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</p>
         )}
