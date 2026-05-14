@@ -35,17 +35,19 @@ export default function HomePage() {
           <span className="text-sm font-medium tracking-wide">World Cups</span>
         </div>
         <div className="flex gap-6">
-          {['Mundiales', 'Selecciones', 'Goleadores'].map((link, i) => (
-            <a
-              key={link}
-              href="#"
-              className={`text-xs transition-colors duration-150 ${
-                i === 0 ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'
-              }`}
-            >
-              {link}
-            </a>
-          ))}
+          {['Mundiales', 'Campeones', 'Posiciones', 'Goleadores', 'Participaciones'].map(
+            (link, i) => (
+              <a
+                key={link}
+                href="#"
+                className={`text-xs transition-colors duration-150 ${
+                  i === 0 ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'
+                }`}
+              >
+                {link}
+              </a>
+            ),
+          )}
         </div>
       </nav>
 

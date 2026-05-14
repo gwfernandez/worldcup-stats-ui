@@ -84,19 +84,8 @@ const TABS: Tab[] = [
     ),
   },
   {
-    id: 'stats',
-    label: 'Estadísticas',
-    icon: (
-      <Icon>
-        <line x1="18" y1="20" x2="18" y2="10" />
-        <line x1="12" y1="20" x2="12" y2="4" />
-        <line x1="6" y1="20" x2="6" y2="14" />
-      </Icon>
-    ),
-  },
-  {
     id: 'standings',
-    label: 'Clasificación',
+    label: 'Posiciones',
     icon: (
       <Icon>
         <line x1="8" y1="6" x2="21" y2="6" />
@@ -105,6 +94,17 @@ const TABS: Tab[] = [
         <line x1="3" y1="6" x2="3.01" y2="6" />
         <line x1="3" y1="12" x2="3.01" y2="12" />
         <line x1="3" y1="18" x2="3.01" y2="18" />
+      </Icon>
+    ),
+  },
+  {
+    id: 'stats',
+    label: 'Estadísticas',
+    icon: (
+      <Icon>
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
       </Icon>
     ),
   },
@@ -153,15 +153,17 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
           <span className="text-sm font-medium tracking-wide">World Cups</span>
         </div>
         <div className="flex gap-5">
-          {['Mundiales', 'Selecciones', 'Goleadores'].map((link, i) => (
-            <a
-              key={link}
-              href="#"
-              className={`text-xs transition-colors duration-150 ${i === 0 ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'}`}
-            >
-              {link}
-            </a>
-          ))}
+          {['Mundiales', 'Campeones', 'Posiciones', 'Goleadores', 'Participaciones'].map(
+            (link, i) => (
+              <a
+                key={link}
+                href="#"
+                className={`text-xs transition-colors duration-150 ${i === 0 ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'}`}
+              >
+                {link}
+              </a>
+            ),
+          )}
         </div>
       </nav>
 
