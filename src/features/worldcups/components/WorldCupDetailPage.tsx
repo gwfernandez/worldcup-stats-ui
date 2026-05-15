@@ -153,17 +153,22 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
           <span className="text-sm font-medium tracking-wide">World Cups</span>
         </div>
         <div className="flex gap-5">
-          {['Mundiales', 'Campeones', 'Posiciones', 'Goleadores', 'Participaciones'].map(
-            (link, i) => (
-              <a
-                key={link}
-                href="#"
-                className={`text-xs transition-colors duration-150 ${i === 0 ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'}`}
-              >
-                {link}
-              </a>
-            ),
-          )}
+          {[
+            { label: 'Mundiales', href: '/', active: false },
+            { label: 'Campeones', href: '#', active: false },
+            { label: 'Posiciones', href: '/standings', active: false },
+            { label: 'Goleadores', href: '#', active: false },
+          ].map(({ label, href, active }) => (
+            <a
+              key={label}
+              href={href}
+              className={`text-xs transition-colors duration-150 ${
+                active ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'
+              }`}
+            >
+              {label}
+            </a>
+          ))}
         </div>
       </nav>
 
