@@ -157,7 +157,7 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
             { label: 'Mundiales', href: '/', active: false },
             { label: 'Campeones', href: '#', active: false },
             { label: 'Posiciones', href: '/standings', active: false },
-            { label: 'Goleadores', href: '#', active: false },
+            { label: 'Goleadores', href: '/scorers', active: false },
           ].map(({ label, href, active }) => (
             <a
               key={label}

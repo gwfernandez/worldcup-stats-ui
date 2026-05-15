@@ -39,7 +39,7 @@ export default function HomePage() {
             { label: 'Mundiales', href: '/', active: true },
             { label: 'Campeones', href: '#', active: false },
             { label: 'Posiciones', href: '/standings', active: false },
-            { label: 'Goleadores', href: '#', active: false },
+            { label: 'Goleadores', href: '/scorers', active: false },
           ].map(({ label, href, active }) => (
             <a
               key={label}
