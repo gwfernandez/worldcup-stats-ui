@@ -1,5 +1,5 @@
-import { ChampionsTable } from '../champions/ChampionsTable';
-import { MOCK_CHAMPIONS } from '../../mocks/champions.mock';
+import { ChampionsTable } from '../components/ChampionsTable';
+import { MOCK_CHAMPIONS } from '../mocks/champions.mock';
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
@@ -38,8 +38,8 @@ export default function ChampionsPage() {
         <div className="flex gap-6">
           {[
             { label: 'Mundiales', href: '/' },
-            { label: 'Posiciones', href: '/standings' },
             { label: 'Campeones', href: '/champions', active: true },
+            { label: 'Posiciones', href: '/standings' },
             { label: 'Goleadores', href: '/scorers' },
           ].map(({ label, href, active }) => (
             <a

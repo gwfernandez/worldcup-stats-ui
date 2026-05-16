@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
-import type { ChampionTeam } from '../../../../types/champion.types';
+import type { ChampionTeam } from '../../../types/champion.types';
 import {
   CONFEDERATION_STYLES,
   CONFEDERATION_TOOLTIP,
-} from '../../../../types/historicalStanding.types';
+} from '../../../types/historicalStanding.types';
 import { ChampionshipsModal } from './ChampionshipsModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
