@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
-import { WorldCupCard } from './WorldCupCard';
+import { WorldCupCard } from '../components/WorldCupCard';
 import {
   MOCK_WORLD_CUPS,
   MOCK_CONTINENT_BY_COUNTRY_CODE,

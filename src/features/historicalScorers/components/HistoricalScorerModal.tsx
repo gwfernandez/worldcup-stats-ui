@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import type { HistoricalScorer } from '../../../../types/historicalScorer.types';
-import { MEDAL_LABEL } from '../../../../types/historicalScorer.types';
+import type { HistoricalScorer } from '../../../types/historicalScorer.types';
+import { MEDAL_LABEL } from '../../../types/historicalScorer.types';
 import {
   CONFEDERATION_STYLES,
   CONFEDERATION_TOOLTIP,
-} from '../../../../types/historicalStanding.types';
+} from '../../../types/historicalStanding.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
-import { StandingsLegend } from '../standings/StandingsLegend';
-import { MOCK_HISTORICAL_STANDINGS } from '../../mocks/historicalStandings.mock';
-import { HistoricalStandingsTable } from '../standings/HistoricalStandingsTable';
+import { StandingsLegend } from '../components/StandingsLegend';
+import { MOCK_HISTORICAL_STANDINGS } from '../mocks/historicalStandings.mock';
+import { HistoricalStandingsTable } from '../components/HistoricalStandingsTable';
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 

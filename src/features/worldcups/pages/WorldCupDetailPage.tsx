@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { GroupsTab } from './tabs/GroupsTab';
-import { ScorersTab } from './tabs/ScorersTab';
+import { GroupsTab } from '../components/tabs/GroupsTab';
+import { ScorersTab } from '../components/tabs/ScorersTab';
 import { MOCK_GROUPS, MOCK_ELIMINATION_PHASES } from '../mocks/worldcupDetail.mock';
 import { MOCK_SCORERS } from '../mocks/scorers.mock';
-import { TeamsTab } from './tabs/TeamsTab';
+import { TeamsTab } from '../components/tabs/TeamsTab';
 import { MOCK_TEAMS } from '../mocks/teams.mock';
-import { StadiumsTab } from './tabs/StadiumsTab';
+import { StadiumsTab } from '../components/tabs/StadiumsTab';
 import { MOCK_STADIUMS } from '../mocks/stadiums.mock';
-import { StandingsTab } from './tabs/StandingsTab';
+import { StandingsTab } from '../components/tabs/StandingsTab';
 import { MOCK_STANDINGS } from '../mocks/standings.mock';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
