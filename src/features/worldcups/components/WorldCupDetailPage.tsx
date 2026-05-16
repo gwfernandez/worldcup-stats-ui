@@ -129,7 +129,7 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
   return (
     <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
       {/* ── Navbar ───────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-5 py-3.5 border-b border-[#2a2d3a] bg-[#0f1117] sticky top-0 z-10">
+      <nav className="flex items-center justify-between px-6 py-3.5 border-b border-[#2a2d3a] bg-[#0f1117] sticky top-0 z-10">
         <div className="flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
           </svg>
           <span className="text-sm font-medium tracking-wide">World Cups</span>
         </div>
-        <div className="flex gap-5">
+        <div className="flex gap-6">
           {[
             { label: 'Mundiales', href: '/', active: false },
             { label: 'Campeones', href: '#', active: false },
