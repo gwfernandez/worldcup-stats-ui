@@ -37,7 +37,7 @@ export default function HomePage() {
         <div className="flex gap-6">
           {[
             { label: 'Mundiales', href: '/', active: true },
-            { label: 'Campeones', href: '#', active: false },
+            { label: 'Campeones', href: '/champions', active: false },
             { label: 'Posiciones', href: '/standings', active: false },
             { label: 'Goleadores', href: '/scorers', active: false },
           ].map(({ label, href, active }) => (
