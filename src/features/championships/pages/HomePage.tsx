@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
-import { WorldCupCard } from '@/features/worldCups/components/WorldCupCard';
+import { WorldCupCard } from '@/features/championships/components/WorldCupCard';
 import {
   MOCK_WORLD_CUPS,
   MOCK_CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
-} from '@/features/worldCups/mocks/worldcup.mock';
+} from '@/features/championships/mocks/worldcup.mock';
 
 // ─── Datos de ejemplo ─────────────────────────────────────────────────────────
 // TODO: reemplazar por useWorldCups() cuando el hook esté conectado a la API

@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import type { Stadium } from '@/types/stadium.types';
 import type { Match } from '@/types/worldcup.types';
-import { StadiumMatchesModal } from '@/features/worldCups/components/shared/StadiumMatchesModal';
-import { MatchModal } from '@/features/worldCups/components/shared/MatchModal';
+import { StadiumMatchesModal } from '@/features/championships/components/shared/StadiumMatchesModal';
+import { MatchModal } from '@/features/championships/components/shared/MatchModal';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 

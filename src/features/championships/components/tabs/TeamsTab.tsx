@@ -5,7 +5,7 @@ import { Pagination } from '@/components/shared/Pagination';
 
 const PAGE_SIZE = 10;
 
-import { PlayersModal } from '@/features/worldCups/components/shared/PlayersModal';
+import { PlayersModal } from '@/features/championships/components/shared/PlayersModal';
 
 const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
 
