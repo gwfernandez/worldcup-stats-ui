@@ -1,6 +1,6 @@
-import type { Group, Match } from '../../../../types/worldcup.types';
-import { GroupStandingsTable } from './GroupStandingsTable';
-import { MatchRow } from '../shared/MatchRow';
+import type { Group, Match } from '@/types/worldcup.types';
+import { GroupStandingsTable } from '@/features/worldCups/components/groups/GroupStandingsTable';
+import { MatchRow } from '@/features/worldCups/components/shared/MatchRow';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 

@@ -1,4 +1,4 @@
-import type { StadiumList } from '../../../types/stadium.types';
+import type { StadiumList } from '@/types/stadium.types';
 
 export const MOCK_STADIUMS: StadiumList = [
   {

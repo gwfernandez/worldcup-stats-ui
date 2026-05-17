@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getWorldCups } from '../../../services/worldcupService';
-import type { WorldCupList } from '../../../types/worldcup.types';
+import { getWorldCups } from '@/services/worldcupService';
+import type { WorldCupList } from '@/types/worldcup.types';
 
 // ─── Query key ────────────────────────────────────────────────────────────────
 

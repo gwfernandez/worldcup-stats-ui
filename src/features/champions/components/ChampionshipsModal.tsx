@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { ChampionTeam } from '../../../types/champion.types';
+import type { ChampionTeam } from '@/types/champion.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

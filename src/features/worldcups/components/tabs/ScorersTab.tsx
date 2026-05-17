@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import type { Scorer } from '../../../../types/scorer.types';
-import { ScorerModal } from '../shared/ScorerModal';
+import type { Scorer } from '@/types/scorer.types';
+import { ScorerModal } from '@/features/worldCups/components/shared/ScorerModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -14,7 +14,7 @@ export interface ScorersTabProps {
   scorers: Scorer[];
 }
 
-import { Pagination } from '../../../../components/shared/Pagination';
+import { Pagination } from '@/components/shared/Pagination';
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 

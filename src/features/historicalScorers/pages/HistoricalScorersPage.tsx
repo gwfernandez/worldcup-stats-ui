@@ -1,5 +1,5 @@
-import { HistoricalScorersTable } from '../components/HistoricalScorersTable';
-import { MOCK_HISTORICAL_SCORERS } from '../mocks/historicalScorers.mock';
+import { HistoricalScorersTable } from '@/features/historicalScorers/components/HistoricalScorersTable';
+import { MOCK_HISTORICAL_SCORERS } from '@/features/historicalScorers/mocks/historicalScorers.mock';
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 

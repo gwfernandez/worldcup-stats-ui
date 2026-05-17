@@ -1,4 +1,4 @@
-import type { HistoricalScorerList } from '../../../types/historicalScorer.types';
+import type { HistoricalScorerList } from '@/types/historicalScorer.types';
 
 export const MOCK_HISTORICAL_SCORERS: HistoricalScorerList = [
   {

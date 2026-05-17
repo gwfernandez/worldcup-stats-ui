@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { GroupsTab } from '../components/tabs/GroupsTab';
-import { ScorersTab } from '../components/tabs/ScorersTab';
-import { MOCK_GROUPS, MOCK_ELIMINATION_PHASES } from '../mocks/worldcupDetail.mock';
-import { MOCK_SCORERS } from '../mocks/scorers.mock';
-import { TeamsTab } from '../components/tabs/TeamsTab';
-import { MOCK_TEAMS } from '../mocks/teams.mock';
-import { StadiumsTab } from '../components/tabs/StadiumsTab';
-import { MOCK_STADIUMS } from '../mocks/stadiums.mock';
-import { StandingsTab } from '../components/tabs/StandingsTab';
-import { MOCK_STANDINGS } from '../mocks/standings.mock';
+import { GroupsTab } from '@/features/worldCups/components/tabs/GroupsTab';
+import { ScorersTab } from '@/features/worldCups/components/tabs/ScorersTab';
+import {
+  MOCK_GROUPS,
+  MOCK_ELIMINATION_PHASES,
+} from '@/features/worldCups/mocks/worldcupDetail.mock';
+import { MOCK_SCORERS } from '@/features/worldCups/mocks/scorers.mock';
+import { TeamsTab } from '@/features/worldCups/components/tabs/TeamsTab';
+import { MOCK_TEAMS } from '@/features/worldCups/mocks/teams.mock';
+import { StadiumsTab } from '@/features/worldCups/components/tabs/StadiumsTab';
+import { MOCK_STADIUMS } from '@/features/worldCups/mocks/stadiums.mock';
+import { StandingsTab } from '@/features/worldCups/components/tabs/StandingsTab';
+import { MOCK_STANDINGS } from '@/features/worldCups/mocks/standings.mock';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 

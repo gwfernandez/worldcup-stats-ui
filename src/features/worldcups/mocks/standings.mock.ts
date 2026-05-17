@@ -1,4 +1,4 @@
-import type { StandingList } from '../../../types/standing.types';
+import type { StandingList } from '@/types/standing.types';
 
 export const MOCK_STANDINGS: StandingList = [
   {

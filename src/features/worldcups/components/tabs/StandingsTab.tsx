@@ -1,5 +1,5 @@
-import type { Standing, MatchResult } from '../../../../types/standing.types';
-import { PERFORMANCE_LABEL, PERFORMANCE_STYLES } from '../../../../types/team.types';
+import type { Standing, MatchResult } from '@/types/standing.types';
+import { PERFORMANCE_LABEL, PERFORMANCE_STYLES } from '@/types/team.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

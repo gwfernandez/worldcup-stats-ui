@@ -1,4 +1,4 @@
-import type { ChampionTeamList } from '../../../types/champion.types';
+import type { ChampionTeamList } from '@/types/champion.types';
 
 export const MOCK_CHAMPIONS: ChampionTeamList = [
   {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Star, ChevronRight } from 'lucide-react';
-import type { WorldCup } from '../../../types/worldcup.types';
+import type { WorldCup } from '@/types/worldcup.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
