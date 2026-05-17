@@ -1,10 +1,7 @@
 import { useState, useMemo } from 'react';
-import type { HistoricalScorer } from '../../../types/historicalScorer.types';
-import {
-  CONFEDERATION_STYLES,
-  CONFEDERATION_TOOLTIP,
-} from '../../../types/historicalStanding.types';
-import { HistoricalScorerModal } from './HistoricalScorerModal';
+import type { HistoricalScorer } from '@/types/historicalScorer.types';
+import { CONFEDERATION_STYLES, CONFEDERATION_TOOLTIP } from '@/types/historicalStanding.types';
+import { HistoricalScorerModal } from '@/features/historicalScorers/components/HistoricalScorerModal';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

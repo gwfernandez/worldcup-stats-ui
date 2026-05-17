@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TeamPerformanceSchema } from './team.types';
+import { TeamPerformanceSchema } from '@/types/team.types';
 
 // ─── Resultado de partido (para forma) ───────────────────────────────────────
 

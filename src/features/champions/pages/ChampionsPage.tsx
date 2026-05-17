@@ -1,5 +1,5 @@
-import { ChampionsTable } from '../components/ChampionsTable';
-import { MOCK_CHAMPIONS } from '../mocks/champions.mock';
+import { ChampionsTable } from '@/features/champions/components/ChampionsTable';
+import { MOCK_CHAMPIONS } from '@/features/champions/mocks/champions.mock';
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { Scorer } from '../../../../types/scorer.types';
+import type { Scorer } from '@/types/scorer.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

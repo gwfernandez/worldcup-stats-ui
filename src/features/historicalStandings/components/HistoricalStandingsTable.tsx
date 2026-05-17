@@ -1,9 +1,6 @@
 import { useState, useMemo } from 'react';
-import type { HistoricalStanding } from '../../../types/historicalStanding.types';
-import {
-  CONFEDERATION_STYLES,
-  CONFEDERATION_TOOLTIP,
-} from '../../../types/historicalStanding.types';
+import type { HistoricalStanding } from '@/types/historicalStanding.types';
+import { CONFEDERATION_STYLES, CONFEDERATION_TOOLTIP } from '@/types/historicalStanding.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

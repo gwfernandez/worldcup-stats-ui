@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { Group, EliminationPhase, Match } from '../../../../types/worldcup.types';
-import { GroupCard } from '../groups/GroupCard';
-import { PhaseRow } from '../elimination/PhaseRow';
-import { MatchModal } from '../shared/MatchModal';
+import type { Group, EliminationPhase, Match } from '@/types/worldcup.types';
+import { GroupCard } from '@/features/worldCups/components/groups/GroupCard';
+import { PhaseRow } from '@/features/worldCups/components/elimination/PhaseRow';
+import { MatchModal } from '@/features/worldCups/components/shared/MatchModal';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 

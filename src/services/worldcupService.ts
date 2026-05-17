@@ -1,5 +1,5 @@
-import { api } from './api';
-import { WorldCupListSchema, type WorldCupList } from '../types/worldcup.types';
+import { api } from '@/services/api';
+import { WorldCupListSchema, type WorldCupList } from '@/types/worldcup.types';
 
 // ─── Mock ─────────────────────────────────────────────────────────────────────
 // TODO: eliminar este bloque cuando el endpoint GET /api/v1/worldcups esté disponible

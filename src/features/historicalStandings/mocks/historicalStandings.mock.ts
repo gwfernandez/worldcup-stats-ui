@@ -1,4 +1,4 @@
-import type { HistoricalStandingList } from '../../../types/historicalStanding.types';
+import type { HistoricalStandingList } from '@/types/historicalStanding.types';
 
 export const MOCK_HISTORICAL_STANDINGS: HistoricalStandingList = [
   {

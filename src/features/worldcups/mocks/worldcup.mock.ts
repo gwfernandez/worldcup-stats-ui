@@ -1,4 +1,4 @@
-import type { WorldCup } from '../../../types/worldcup.types';
+import type { WorldCup } from '@/types/worldcup.types';
 
 export const MOCK_WORLD_CUPS: WorldCup[] = [
   {

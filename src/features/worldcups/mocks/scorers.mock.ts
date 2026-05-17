@@ -1,4 +1,4 @@
-import type { ScorerList } from '../../../types/scorer.types';
+import type { ScorerList } from '@/types/scorer.types';
 
 export const MOCK_SCORERS: ScorerList = [
   {

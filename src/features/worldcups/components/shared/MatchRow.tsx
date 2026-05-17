@@ -1,4 +1,4 @@
-import type { Match } from '../../../../types/worldcup.types';
+import type { Match } from '@/types/worldcup.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

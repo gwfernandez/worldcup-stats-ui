@@ -1,15 +1,11 @@
 import { useState, useMemo } from 'react';
-import type { Team } from '../../../../types/team.types';
-import {
-  PERFORMANCE_LABEL,
-  PERFORMANCE_STYLES,
-  CONFEDERATION_TOOLTIP,
-} from '../../../../types/team.types';
-import { Pagination } from '../../../../components/shared/Pagination';
+import type { Team } from '@/types/team.types';
+import { PERFORMANCE_LABEL, PERFORMANCE_STYLES, CONFEDERATION_TOOLTIP } from '@/types/team.types';
+import { Pagination } from '@/components/shared/Pagination';
 
 const PAGE_SIZE = 10;
 
-import { PlayersModal } from '../shared/PlayersModal';
+import { PlayersModal } from '@/features/worldCups/components/shared/PlayersModal';
 
 const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
 

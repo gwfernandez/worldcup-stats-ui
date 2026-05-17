@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import type { Team } from '../../../../types/team.types';
+import type { Team } from '@/types/team.types';
 import {
   POSITION_LABEL,
   POSITION_STYLES,
   PERFORMANCE_LABEL,
   PERFORMANCE_STYLES,
-} from '../../../../types/team.types';
+} from '@/types/team.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
