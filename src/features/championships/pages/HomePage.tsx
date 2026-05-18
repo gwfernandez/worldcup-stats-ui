@@ -6,6 +6,7 @@ import {
   MOCK_CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
 } from '@/features/championships/mocks/worldcup.mock';
+import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 
 // ─── Datos de ejemplo ─────────────────────────────────────────────────────────
 // TODO: reemplazar por useWorldCups() cuando el hook esté conectado a la API
@@ -28,31 +29,14 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
-      {/* ── Navbar ───────────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-6 py-3.5 border-b border-[#2a2d3a] bg-[#0f1117] sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <Trophy size={18} className="text-[#e8c84a]" aria-hidden="true" />
-          <span className="text-sm font-medium tracking-wide">World Cups</span>
-        </div>
-        <div className="flex gap-6">
-          {[
-            { label: 'Mundiales', href: '/', active: true },
-            { label: 'Campeones', href: '/champions', active: false },
-            { label: 'Posiciones', href: '/standings', active: false },
-            { label: 'Goleadores', href: '/scorers', active: false },
-          ].map(({ label, href, active }) => (
-            <a
-              key={label}
-              href={href}
-              className={`text-xs transition-colors duration-150 ${
-                active ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'
-              }`}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <WorldCupsNavbar
+        links={[
+          { label: 'Mundiales', href: '/', active: true },
+          { label: 'Campeones', href: '/champions', active: false },
+          { label: 'Posiciones', href: '/standings', active: false },
+          { label: 'Goleadores', href: '/scorers', active: false },
+        ]}
+      />
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="bg-[#161925] border-b border-[#2a2d3a] px-6 py-10 flex items-center gap-8">

@@ -1,6 +1,7 @@
 import { StandingsLegend } from '@/features/historicalStandings/components/StandingsLegend';
 import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
 import { HistoricalStandingsTable } from '@/features/historicalStandings/components/HistoricalStandingsTable';
+import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
@@ -12,49 +13,14 @@ import { HistoricalStandingsTable } from '@/features/historicalStandings/compone
 export default function HistoricalStandingsPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
-      {/* ── Navbar ───────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-6 py-3.5 border-b border-[#2a2d3a] bg-[#0f1117] sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#e8c84a"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-            <path d="M4 22h16" />
-            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-          </svg>
-          <span className="text-sm font-medium tracking-wide">World Cups</span>
-        </div>
-        <div className="flex gap-6">
-          {[
-            { label: 'Mundiales', href: '/', active: false },
-            { label: 'Campeones', href: '/champions', active: false },
-            { label: 'Posiciones', href: '/standings', active: true },
-            { label: 'Goleadores', href: '/scorers', active: false },
-          ].map(({ label, href, active }) => (
-            <a
-              key={label}
-              href={href}
-              className={`text-xs transition-colors duration-150 ${
-                active ? 'text-[#e8c84a]' : 'text-[#8a8fa8] hover:text-[#e8eaf0]'
-              }`}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <WorldCupsNavbar
+        links={[
+          { label: 'Mundiales', href: '/', active: false },
+          { label: 'Campeones', href: '/champions', active: false },
+          { label: 'Posiciones', href: '/standings', active: true },
+          { label: 'Goleadores', href: '/scorers', active: false },
+        ]}
+      />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="bg-[#161925] border-b border-[#2a2d3a] px-6 py-7 flex items-center justify-between gap-6">
