@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MatchSchema } from '@/types/worldcup.types';
+import { MatchSchema } from '@/types/championship.types';
 
 // ─── Stadium ──────────────────────────────────────────────────────────────────
 

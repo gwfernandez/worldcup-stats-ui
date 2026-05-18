@@ -1,4 +1,4 @@
-import type { Group, Match } from '@/types/worldcup.types';
+import type { Group, Match } from '@/types/championship.types';
 import { GroupStandingsTable } from '@/features/championships/components/groups/GroupStandingsTable';
 import { MatchRow } from '@/features/championships/components/shared/MatchRow';
 

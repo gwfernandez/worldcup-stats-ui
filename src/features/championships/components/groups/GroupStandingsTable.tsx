@@ -1,4 +1,4 @@
-import type { GroupStanding } from '@/types/worldcup.types';
+import type { GroupStanding } from '@/types/championship.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

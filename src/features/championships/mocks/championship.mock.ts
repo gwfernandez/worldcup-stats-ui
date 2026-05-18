@@ -1,6 +1,6 @@
-import type { WorldCup } from '@/types/worldcup.types';
+import type { Championship } from '@/types/championship.types';
 
-export const MOCK_WORLD_CUPS: WorldCup[] = [
+export const MOCK_CHAMPIONSHIPS: Championship[] = [
   {
     id: 1,
     year: 1930,

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-// ─── WorldCup ─────────────────────────────────────────────────────────────────
+// ─── Championship ─────────────────────────────────────────────────────────────────
 
-export const WorldCupSchema = z.object({
+export const ChampionshipSchema = z.object({
   id: z.number(),
   year: z.number(),
   country: z.string(),
@@ -18,10 +18,10 @@ export const WorldCupSchema = z.object({
   endDate: z.string(),
 });
 
-export const WorldCupListSchema = z.array(WorldCupSchema);
+export const ChampionshipListSchema = z.array(ChampionshipSchema);
 
-export type WorldCup = z.infer<typeof WorldCupSchema>;
-export type WorldCupList = z.infer<typeof WorldCupListSchema>;
+export type Championship = z.infer<typeof ChampionshipSchema>;
+export type ChampionshipList = z.infer<typeof ChampionshipListSchema>;
 
 // ─── Match ────────────────────────────────────────────────────────────────────
 

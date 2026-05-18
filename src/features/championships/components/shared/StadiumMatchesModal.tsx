@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { Stadium } from '@/types/stadium.types';
 import { MatchRow } from '@/features/championships/components/shared/MatchRow';
-import type { Match } from '@/types/worldcup.types';
+import type { Match } from '@/types/championship.types';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 

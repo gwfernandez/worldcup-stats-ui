@@ -1,4 +1,4 @@
-import type { Group, EliminationPhase } from '@/types/worldcup.types';
+import type { Group, EliminationPhase } from '@/types/championship.types';
 
 // ─── Grupos ───────────────────────────────────────────────────────────────────
 

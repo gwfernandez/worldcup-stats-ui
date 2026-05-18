@@ -4,7 +4,7 @@ import { ScorersTab } from '@/features/championships/components/tabs/ScorersTab'
 import {
   MOCK_GROUPS,
   MOCK_ELIMINATION_PHASES,
-} from '@/features/championships/mocks/worldcupDetail.mock';
+} from '@/features/championships/mocks/championshipDetail.mock';
 import { MOCK_SCORERS } from '@/features/championships/mocks/scorers.mock';
 import { TeamsTab } from '@/features/championships/components/tabs/TeamsTab';
 import { MOCK_TEAMS } from '@/features/championships/mocks/teams.mock';
@@ -118,7 +118,7 @@ const TABS: Tab[] = [
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
-export interface WorldCupDetailPageProps {
+export interface ChampionshipDetailPageProps {
   /** Año del mundial — en producción vendrá de useParams() */
   year?: number;
 }
@@ -129,7 +129,7 @@ export interface WorldCupDetailPageProps {
  * Página de detalle de un mundial.
  * Contiene el hero con metadata y las solapas de contenido.
  */
-export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPageProps) {
+export default function ChampionshipDetailPage({ year = 1970 }: ChampionshipDetailPageProps) {
   const [activeTab, setActiveTab] = useState<TabId>('groups');
 
   return (

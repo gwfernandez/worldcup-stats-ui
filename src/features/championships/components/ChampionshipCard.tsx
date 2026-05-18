@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Star, ChevronRight } from 'lucide-react';
-import type { WorldCup } from '@/types/worldcup.types';
+import type { Championship } from '@/types/championship.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -28,8 +28,8 @@ const DEFAULT_ACCENT = '#8a8fa8';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
-export interface WorldCupCardProps {
-  worldCup: WorldCup;
+export interface ChampionshipCardProps {
+  championship: Championship;
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -38,8 +38,8 @@ export interface WorldCupCardProps {
  * Card que representa una edición del mundial.
  * Muestra el logo oficial, año, país organizador y campeón.
  */
-export function WorldCupCard({ worldCup: worldCup }: WorldCupCardProps) {
-  const { year, country, countryCode, champion, championCode } = worldCup;
+export function ChampionshipCard({ championship }: ChampionshipCardProps) {
+  const { year, country, countryCode, champion, championCode } = championship;
 
   const accentColor = championCode
     ? (CHAMPION_ACCENT[championCode] ?? DEFAULT_ACCENT)

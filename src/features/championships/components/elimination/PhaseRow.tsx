@@ -1,4 +1,4 @@
-import type { EliminationPhase, Match } from '@/types/worldcup.types';
+import type { EliminationPhase, Match } from '@/types/championship.types';
 import { MatchRow } from '@/features/championships/components/shared/MatchRow';
 
 // ─── Props ────────────────────────────────────────────────────────────────────

@@ -76,7 +76,7 @@ src/
 │   ├── ui/                        # Componentes shadcn/ui (no modificar directamente)
 │   └── shared/                    # Componentes reutilizables propios (layout, feedback, etc.)
 ├── features/                      # Un directorio por dominio de negocio
-│   ├── worldcups/                 # Lista y detalle de ediciones
+│   ├── championships/             # Lista y detalle de campeonatos mundiales
 │   ├── teams/                     # Equipos y selecciones
 │   ├── fixture/                   # Fixture y resultados de partidos
 │   ├── players/                   # Planteles por selección
@@ -112,7 +112,7 @@ features/fixture/
 | Hook | `camelCase.ts` con prefijo `use` | `useFixture.ts` |
 | Service | `camelCase.ts` | `fixtureService.ts` |
 | Tipos / Interfaces | `camelCase.types.ts` | `fixture.types.ts` |
-| Zustand slice | `camelCase.store.ts` | `worldcup.store.ts` |
+| Zustand slice | `camelCase.store.ts` | `championshipDetail.store.ts` |
 | Utilidades | `camelCase.utils.ts` | `date.utils.ts` |
 | Test de componente | `NombreComponente.test.tsx` | `MatchCard.test.tsx` |
 | Test de hook/service | `nombreArchivo.test.ts` | `useFixture.test.ts` |
@@ -154,7 +154,7 @@ Los tipos principales del dominio se ubican en `src/types/`. Toda interacción c
 
 ```ts
 // Tipos principales del dominio
-WorldCup       // Edición del mundial (año, sede, campeón, etc.)
+Championship   // Edición del campeonato mundial (año, sede, campeón, etc.)
 Team           // Selección participante
 Player         // Jugador dentro de un plantel
 Match          // Partido con equipos, resultado y fase
@@ -215,12 +215,12 @@ export const useFixture = (year: number) =>
 Usar arrays descriptivos y jerárquicos:
 
 ```ts
-['worldcups']                        // lista de mundiales
-['worldcup', year]                   // detalle de un mundial
-['fixture', year]                    // fixture de un mundial
-['teams', year]                      // equipos de un mundial
-['players', year, teamId]            // plantel de una selección
-['scorers', year]                    // goleadores de un mundial
+['championships']               // lista de campeonatos mundiales
+['championship', year]            // detalle de un campeonato mundial
+['fixture', year]                 // fixture de un campeonato mundial
+['teams', year]                   // equipos de un campeonato mundial
+['players', year, teamId]         // plantel de una selección
+['scorers', year]                 // goleadores de un campeonato mundial
 ```
 
 ---
@@ -235,8 +235,8 @@ Casos de uso válidos:
 - Preferencias de UI (tema, idioma)
 
 ```ts
-// src/store/worldcup.store.ts
-interface WorldCupStore {
+// src/store/championship.store.ts
+interface ChampionshipStore {
   selectedYear: number | null
   setSelectedYear: (year: number) => void
 }
@@ -258,7 +258,7 @@ interface WorldCupStore {
 
 - Configurado con **react-i18next** desde el inicio
 - Los diccionarios se ubican en `src/i18n/{lang}/{namespace}.json`
-- Namespaces sugeridos: `common`, `worldcups`, `fixture`, `teams`, `players`, `scorers`
+- Namespaces sugeridos: `common`, `championships`, `fixture`, `teams`, `players`, `scorers`
 - Nunca hardcodear strings de UI directamente en los componentes
 
 ```ts
@@ -310,7 +310,7 @@ El proyecto sigue **Conventional Commits** compatible con **semantic-release**.
 
 **Tipos:** `feat` · `fix` · `perf` · `refactor` · `style` · `types` · `docs` · `test` · `build` · `ci` · `chore` · `revert`
 
-**Scopes:** `worldcups` · `teams` · `fixture` · `players` · `scorers` · `router` · `store` · `services` · `hooks` · `ui` · `shared` · `types` · `i18n` · `config`
+**Scopes:** `championships` · `teams` · `fixture` · `players` · `scorers` · `router` · `store` · `services` · `hooks` · `ui` · `shared` · `types` · `i18n` · `config`
 
 ```bash
 feat(scorers): agregar tabla de goleadores con paginación

@@ -83,7 +83,7 @@ No pedir información extra hasta haber intentado inferirla.
 Un commit de **cualquier tipo** se convierte en MAJOR si incluye:
 
 ```
-feat(hooks)!: cambiar valor de retorno de useWorldCup
+feat(hooks)!: cambiar valor de retorno de useChampionships
 
 BREAKING CHANGE: el hook ahora retorna `{ data, isLoading }` en lugar de `[data, isLoading]`
 ```
@@ -98,7 +98,7 @@ El scope mapea directamente a las capas o features del proyecto:
 
 | Scope | Cuándo usarlo |
 |---|---|
-| `worldcups` | Feature de lista/detalle de mundiales |
+| `championships` | Feature de lista/detalle de campeonatos mundiales |
 | `teams` | Feature de equipos y selecciones |
 | `fixture` | Feature de fixture y resultados |
 | `players` | Feature de planteles |
@@ -171,7 +171,7 @@ fix(fixture): corregir renderizado de partidos sin resultado
 feat(scorers): agregar tabla de goleadores con paginación
 
 # MINOR — nueva feature con body explicativo
-feat(worldcups): agregar vista de detalle por edición
+feat(championships): agregar vista de detalle por edición
 
 Muestra el campeón, sede, cantidad de equipos y goles totales.
 Consume el endpoint /api/worldcups/:year del servicio REST.

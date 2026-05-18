@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { Match } from '@/types/worldcup.types';
+import type { Match } from '@/types/championship.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
-import { WorldCupCard } from '@/features/championships/components/WorldCupCard';
+import { ChampionshipCard } from '@/features/championships/components/ChampionshipCard';
 import {
-  MOCK_WORLD_CUPS,
+  MOCK_CHAMPIONSHIPS,
   MOCK_CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
-} from '@/features/championships/mocks/worldcup.mock';
+} from '@/features/championships/mocks/championship.mock';
 import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 import HeroSection from '@/components/shared/HeroSection';
 
 // ─── Datos de ejemplo ─────────────────────────────────────────────────────────
-// TODO: reemplazar por useWorldCups() cuando el hook esté conectado a la API
-const WORLD_CUPS = MOCK_WORLD_CUPS;
+// TODO: reemplazar por useChampionships() cuando el hook esté conectado a la API
+const CHAMPIONSHIPS = MOCK_CHAMPIONSHIPS;
 
 // ─── Tipos locales ────────────────────────────────────────────────────────────
 const CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = MOCK_CONTINENT_BY_COUNTRY_CODE;
@@ -25,8 +25,8 @@ export default function HomePage() {
 
   const filtered =
     activeFilter === 'Todos'
-      ? WORLD_CUPS
-      : WORLD_CUPS.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
+      ? CHAMPIONSHIPS
+      : CHAMPIONSHIPS.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
@@ -80,7 +80,7 @@ export default function HomePage() {
         {/* Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {filtered.map((wc) => (
-            <WorldCupCard key={wc.year} worldCup={wc} />
+            <ChampionshipCard key={wc.year} championship={wc} />
           ))}
         </div>
       </main>

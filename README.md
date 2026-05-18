@@ -45,7 +45,7 @@ src/
 │   ├── ui/                  # Componentes base (shadcn/ui)
 │   └── shared/              # Componentes reutilizables propios
 ├── features/                # Módulos por dominio
-│   ├── worldcups/           # Lista y detalle de mundiales
+│   ├── championships/       # Lista y detalle de mundiales
 │   ├── teams/               # Equipos y selecciones
 │   ├── fixture/             # Fixture y resultados
 │   ├── players/             # Planteles por selección

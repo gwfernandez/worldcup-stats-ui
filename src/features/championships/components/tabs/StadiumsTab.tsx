@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { Stadium } from '@/types/stadium.types';
-import type { Match } from '@/types/worldcup.types';
+import type { Match } from '@/types/championship.types';
 import { StadiumMatchesModal } from '@/features/championships/components/shared/StadiumMatchesModal';
 import { MatchModal } from '@/features/championships/components/shared/MatchModal';
 
