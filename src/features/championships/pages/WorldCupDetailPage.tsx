@@ -13,6 +13,8 @@ import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
 import { StandingsTab } from '@/features/championships/components/tabs/StandingsTab';
 import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
 import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
+import HeroDetailSection from '../components/shared/HeroDetailSection';
+import { Globe, House, Swords, Volleyball } from 'lucide-react';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
@@ -141,53 +143,21 @@ export default function WorldCupDetailPage({ year = 1970 }: WorldCupDetailPagePr
         ]}
       />
 
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="bg-[#161925] border-b border-[#2a2d3a] px-5 py-5 flex items-center gap-4">
-        <div
-          className="w-14 h-14 shrink-0 bg-[#1e2233] border border-[#2a2d3a] rounded-xl flex items-center justify-center"
-          aria-label="Logo del mundial"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#e8c84a"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="opacity-40"
-            aria-hidden="true"
-          >
-            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-            <path d="M4 22h16" />
-            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-          </svg>
-        </div>
-        <div>
-          <h1 className="text-[17px] font-medium text-white mb-1">🇲🇽 México {year}</h1>
-          <div className="flex gap-4 text-xs text-[#8a8fa8] mb-2">
-            <span>16 selecciones</span>
-            <span>32 partidos</span>
-            <span>31 May – 21 Jun 1970</span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            <span className="text-[11px] px-2 py-0.5 bg-[#1e2a14] text-[#8fc44a] border border-[#3a5a1a] rounded-full">
-              🏆 Campeón: Brasil
-            </span>
-            <span className="text-[11px] px-2 py-0.5 bg-[#1e2233] text-[#8a8fa8] border border-[#2a2d3a] rounded-full">
-              Subcampeón: Italia
-            </span>
-            <span className="text-[11px] px-2 py-0.5 bg-[#1e2233] text-[#8a8fa8] border border-[#2a2d3a] rounded-full">
-              Goleador: Müller (10)
-            </span>
-          </div>
-        </div>
-      </section>
+      <HeroDetailSection
+        badge="Historia de los mundiales de fútbol"
+        title="Mexico"
+        titleAccent={String(year)}
+        description={`La Copa Mundial de la FIFA de ${year} se celebró desde el 31 de mayo hasta el 21 de junio.`}
+        champion="Brasil"
+        runnerUp="Italia"
+        topScorer="Gerd Müller (10)"
+        stats={[
+          { icon: Globe, value: '16', label: 'Selecciones' },
+          { icon: Swords, value: '32', label: 'Partidos' },
+          { icon: Volleyball, value: '78', label: 'Goles' },
+          { icon: House, value: '10', label: 'Estadios' },
+        ]}
+      />
 
       {/* ── Tabs ──────────────────────────────────────────────────── */}
       <div className="border-b border-[#2a2d3a] bg-[#0f1117] px-5 overflow-x-auto">
