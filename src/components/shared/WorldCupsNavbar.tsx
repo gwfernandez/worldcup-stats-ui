@@ -28,63 +28,6 @@ export interface WorldCupsNavbarProps {
 }
 
 // ---------------------------------------------------------------------------
-// Estilos
-// ---------------------------------------------------------------------------
-
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
-
-  .wc-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 24px;
-    border-bottom: 0.5px solid #2a2d3a;
-    background: #0f1117;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .wc-nav__logo {
-    font-size: 15px;
-    font-weight: 500;
-    color: #e8eaf0;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-  }
-
-  .wc-nav__logo-icon {
-    color: #e8c84a;
-    font-size: 18px;
-  }
-
-  .wc-nav__links {
-    display: flex;
-    gap: 24px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .wc-nav__link {
-    font-size: 13px;
-    color: #8a8fa8;
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .wc-nav__link:hover {
-    color: #c8cad8;
-  }
-
-  .wc-nav__link--active {
-    color: #e8c84a;
-  }
-`;
-
-// ---------------------------------------------------------------------------
 // Subcomponentes internos
 // ---------------------------------------------------------------------------
 
@@ -94,8 +37,11 @@ interface NavLogoProps {
 
 function NavLogo({ text }: NavLogoProps): React.ReactElement {
   return (
-    <a href="/" className="wc-nav__logo">
-      <i className="ti ti-trophy wc-nav__logo-icon" aria-hidden="true" />
+    <a
+      href="/"
+      className="flex items-center gap-2 text-[15px] font-medium text-[#e8eaf0] tracking-wide no-underline"
+    >
+      <i className="ti ti-trophy text-[#e8c84a] text-[18px]" aria-hidden="true" />
       {text}
     </a>
   );
@@ -112,7 +58,9 @@ function NavLinkItem({ href, label, active = false }: NavLinkItemProps): React.R
     <li>
       <a
         href={href}
-        className={`wc-nav__link${active ? ' wc-nav__link--active' : ''}`}
+        className={`text-[13px] no-underline transition-colors duration-150 hover:text-[#c8cad8] ${
+          active ? 'text-[#e8c84a]' : 'text-[#8a8fa8]'
+        }`}
         aria-current={active ? 'page' : undefined}
       >
         {label}
@@ -138,14 +86,16 @@ export default function WorldCupsNavbar({
 }: WorldCupsNavbarProps): React.ReactElement {
   return (
     <>
-      <style>{styles}</style>
-      <nav className="wc-nav" aria-label="Navegación principal">
+      <nav
+        className="font-mono flex items-center justify-between px-6 py-[14px] border-b border-[#2a2d3a] bg-[#0f1117]"
+        aria-label="Navegación principal"
+      >
         <div className="flex items-center gap-2">
           <Trophy size={18} className="text-[#e8c84a]" aria-hidden="true" />
           <NavLogo text={logoText} />
         </div>
 
-        <ul className="wc-nav__links">
+        <ul className="flex gap-6 list-none m-0 p-0">
           {links.map((link) => (
             <NavLinkItem key={link.href} href={link.href} label={link.label} active={link.active} />
           ))}
