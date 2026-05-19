@@ -38,7 +38,7 @@ export default function HistoricalStandingsPage() {
       />
 
       {/* ── Contenido ─────────────────────────────────────────────── */}
-      <main className="px-6 py-6 max-w-5xl mx-auto">
+      <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <HistoricalStandingsTable standings={MOCK_HISTORICAL_STANDINGS} />
         <StandingsLegend />
       </main>

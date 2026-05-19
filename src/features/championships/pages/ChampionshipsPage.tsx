@@ -18,10 +18,10 @@ const CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = MOCK_CONTINENT_BY_
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export default function HomePage() {
+export default function ChampionshipsPage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
 
-  const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia/África'];
+  const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia', 'África'];
 
   const filtered =
     activeFilter === 'Todos'
@@ -38,6 +38,7 @@ export default function HomePage() {
           { label: 'Goleadores', href: '/scorers', active: false },
         ]}
       />
+
       <HeroSection
         badge="Historia de los mundiales de fútbol"
         title="Todos los"
@@ -52,7 +53,7 @@ export default function HomePage() {
       />
 
       {/* ── Grilla de mundiales ───────────────────────────────────────── */}
-      <main className="px-6 py-6">
+      <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-medium text-[#e8eaf0] flex items-center gap-2">
             <Trophy size={14} className="text-[#8a8fa8]" aria-hidden="true" />

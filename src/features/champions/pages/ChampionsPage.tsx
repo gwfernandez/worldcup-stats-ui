@@ -36,7 +36,7 @@ export default function ChampionsPage() {
       />
 
       {/* ── Contenido ─────────────────────────────────────────────── */}
-      <main className="px-6 py-6 max-w-3xl mx-auto">
+      <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <ChampionsTable champions={MOCK_CHAMPIONS} />
       </main>
     </div>

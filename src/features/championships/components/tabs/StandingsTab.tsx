@@ -102,132 +102,128 @@ export function StandingsTab({ standings }: StandingsTabProps) {
   const sorted = [...standings].sort((a, b) => a.position - b.position);
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse" style={{ minWidth: '720px' }}>
-          <thead>
-            <tr className="border-b border-[#2a2d3a]">
-              <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 w-8">#</th>
-              <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 pr-3">
-                Selección
-              </th>
-              <Th label="PTS" tooltip="Puntos" />
-              <Th label="PJ" tooltip="Partidos Jugados" />
-              <Th label="PG" tooltip="Partidos Ganados" />
-              <Th label="PE" tooltip="Partidos Empatados" />
-              <Th label="PP" tooltip="Partidos Perdidos" />
-              <Th label="GF" tooltip="Goles a Favor" />
-              <Th label="GC" tooltip="Goles en Contra" />
-              <Th label="DIF" tooltip="Diferencia de Goles" />
-              <Th label="Rend." tooltip="Rendimiento (%)" className="min-w-[80px]" />
-              <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 pl-2 min-w-[120px]">
-                Desempeño
-              </th>
-              <th className="text-center text-[10px] font-normal text-[#8a8fa8] pb-2 min-w-[90px]">
-                Forma
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((row) => {
-              const diff = formatDiff(row.goalDiff);
-              const perfPct = calcPerformance(row.points, row.played);
-              const barColor = PERF_BAR_COLOR[row.performance];
-              const accentColor = PERFORMANCE_BAR_COLOR[row.performance];
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse" style={{ minWidth: '720px' }}>
+        <thead>
+          <tr className="border-b border-[#2a2d3a]">
+            <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 w-8">#</th>
+            <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 pr-3">
+              Selección
+            </th>
+            <Th label="PTS" tooltip="Puntos" />
+            <Th label="PJ" tooltip="Partidos Jugados" />
+            <Th label="PG" tooltip="Partidos Ganados" />
+            <Th label="PE" tooltip="Partidos Empatados" />
+            <Th label="PP" tooltip="Partidos Perdidos" />
+            <Th label="GF" tooltip="Goles a Favor" />
+            <Th label="GC" tooltip="Goles en Contra" />
+            <Th label="DIF" tooltip="Diferencia de Goles" />
+            <Th label="Rend." tooltip="Rendimiento (%)" className="min-w-[80px]" />
+            <th className="text-left text-[10px] font-normal text-[#8a8fa8] pb-2 pl-2 min-w-[120px]">
+              Desempeño
+            </th>
+            <th className="text-center text-[10px] font-normal text-[#8a8fa8] pb-2 min-w-[90px]">
+              Forma
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.map((row) => {
+            const diff = formatDiff(row.goalDiff);
+            const perfPct = calcPerformance(row.points, row.played);
+            const barColor = PERF_BAR_COLOR[row.performance];
+            const accentColor = PERFORMANCE_BAR_COLOR[row.performance];
 
-              return (
-                <tr
-                  key={row.teamCode}
-                  className="border-t border-[#1e2233] hover:bg-[#161925] transition-colors duration-150"
-                >
-                  {/* Posición con borde lateral */}
-                  <td className="py-2 relative pl-3.5 pr-2">
-                    <div
-                      className="absolute left-0 top-0 bottom-0 w-[3px]"
-                      style={{ backgroundColor: accentColor }}
-                      aria-hidden="true"
+            return (
+              <tr
+                key={row.teamCode}
+                className="border-t border-[#1e2233] hover:bg-[#161925] transition-colors duration-150"
+              >
+                {/* Posición con borde lateral */}
+                <td className="py-2 relative pl-3.5 pr-2">
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-[3px]"
+                    style={{ backgroundColor: accentColor }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[11px] text-[#8a8fa8]">{row.position}</span>
+                </td>
+
+                {/* Selección */}
+                <td className="py-2 pr-3">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={FLAG_URL(row.teamCode)}
+                      alt={row.teamName}
+                      width={16}
+                      height={11}
+                      className="rounded-[1px] shrink-0"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
-                    <span className="text-[11px] text-[#8a8fa8]">{row.position}</span>
-                  </td>
+                    <span className="text-xs text-[#e8eaf0]">{row.teamName}</span>
+                  </div>
+                </td>
 
-                  {/* Selección */}
-                  <td className="py-2 pr-3">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={FLAG_URL(row.teamCode)}
-                        alt={row.teamName}
-                        width={16}
-                        height={11}
-                        className="rounded-[1px] shrink-0"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
+                {/* PTS */}
+                <td className="py-2 px-2 text-right">
+                  <span className="text-xs font-medium text-[#e8eaf0]">{row.points}</span>
+                </td>
+
+                {/* PJ PG PE PP */}
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.played}</td>
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.won}</td>
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.drawn}</td>
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.lost}</td>
+
+                {/* GF GC */}
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.goalsFor}</td>
+                <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.goalsAgainst}</td>
+
+                {/* DIF */}
+                <td className={`py-2 px-2 text-right text-xs ${diff.className}`}>{diff.label}</td>
+
+                {/* Rendimiento */}
+                <td className="py-2 px-2">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <div className="w-9 h-[3px] bg-[#2a2d3a] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${perfPct}%`, backgroundColor: barColor }}
                       />
-                      <span className="text-xs text-[#e8eaf0]">{row.teamName}</span>
                     </div>
-                  </td>
+                    <span className="text-[11px] text-[#8a8fa8] min-w-[28px] text-right">
+                      {perfPct}%
+                    </span>
+                  </div>
+                </td>
 
-                  {/* PTS */}
-                  <td className="py-2 px-2 text-right">
-                    <span className="text-xs font-medium text-[#e8eaf0]">{row.points}</span>
-                  </td>
-
-                  {/* PJ PG PE PP */}
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.played}</td>
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.won}</td>
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.drawn}</td>
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.lost}</td>
-
-                  {/* GF GC */}
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">{row.goalsFor}</td>
-                  <td className="py-2 px-2 text-right text-xs text-[#8a8fa8]">
-                    {row.goalsAgainst}
-                  </td>
-
-                  {/* DIF */}
-                  <td className={`py-2 px-2 text-right text-xs ${diff.className}`}>{diff.label}</td>
-
-                  {/* Rendimiento */}
-                  <td className="py-2 px-2">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <div className="w-9 h-[3px] bg-[#2a2d3a] rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{ width: `${perfPct}%`, backgroundColor: barColor }}
-                        />
-                      </div>
-                      <span className="text-[11px] text-[#8a8fa8] min-w-[28px] text-right">
-                        {perfPct}%
+                {/* Desempeño */}
+                <td className="py-2 pl-2 pr-3">
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${PERFORMANCE_STYLES[row.performance]}`}
+                    >
+                      {PERFORMANCE_LABEL[row.performance]}
+                    </span>
+                    {row.isHost && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full border bg-[#1e1e2e] text-[#9090d0] border-[#3a3a60] whitespace-nowrap">
+                        🏠 Anfitrión
                       </span>
-                    </div>
-                  </td>
+                    )}
+                  </div>
+                </td>
 
-                  {/* Desempeño */}
-                  <td className="py-2 pl-2 pr-3">
-                    <div className="flex items-center gap-1 flex-wrap">
-                      <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${PERFORMANCE_STYLES[row.performance]}`}
-                      >
-                        {PERFORMANCE_LABEL[row.performance]}
-                      </span>
-                      {row.isHost && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full border bg-[#1e1e2e] text-[#9090d0] border-[#3a3a60] whitespace-nowrap">
-                          🏠 Anfitrión
-                        </span>
-                      )}
-                    </div>
-                  </td>
-
-                  {/* Forma */}
-                  <td className="py-2 text-center">
-                    <FormDots form={row.form} />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                {/* Forma */}
+                <td className="py-2 text-center">
+                  <FormDots form={row.form} />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

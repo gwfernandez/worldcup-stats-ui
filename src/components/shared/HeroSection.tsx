@@ -81,29 +81,31 @@ export default function HeroSection({
   heroImage,
 }: HeroSectionProps) {
   return (
-    <section className="font-mono bg-[#161925] border-b border-[#2a2d3a] px-6 py-10 flex items-center gap-8">
-      {/* ── Texto ────────────────────────────────────────────────────── */}
-      <div className="flex-1">
-        <span className="inline-block bg-[#1e2a14] text-[#8fc44a] text-xs px-3 py-1 rounded-full border border-[#3a5a1a] mb-3">
-          {badge}
-        </span>
+    <section className="font-mono bg-[#161925] border-b border-[#2a2d3a]">
+      <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
+        {/* ── Texto ────────────────────────────────────────────────────── */}
+        <div className="flex-1">
+          <span className="inline-block bg-[#1e2a14] text-[#8fc44a] text-xs px-3 py-1 rounded-full border border-[#3a5a1a] mb-3">
+            {badge}
+          </span>
 
-        <h1 className="text-2xl font-medium text-white leading-snug mb-2">
-          {title} <span className="text-[#e8c84a]">{titleAccent}</span>
-        </h1>
+          <h1 className="text-2xl font-medium text-white leading-snug mb-2">
+            {title} <span className="text-[#e8c84a]">{titleAccent}</span>
+          </h1>
 
-        <p className="text-sm text-[#8a8fa8] leading-relaxed mb-6 max-w-2sm">{description}</p>
+          <p className="text-sm text-[#8a8fa8] leading-relaxed mb-6 max-w-2sm">{description}</p>
 
-        {/* ── Stats ─────────────────────────────────────────────────── */}
-        <div className="flex gap-6">
-          {stats.map((stat) => (
-            <StatItem key={stat.label} {...stat} />
-          ))}
+          {/* ── Stats ─────────────────────────────────────────────────── */}
+          <div className="flex gap-6">
+            {stats.map((stat) => (
+              <StatItem key={stat.label} {...stat} />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* ── Imagen: slot externo o placeholder ───────────────────────── */}
-      {heroImage ?? <HeroImagePlaceholder />}
+        {/* ── Imagen: slot externo o placeholder ───────────────────────── */}
+        {heroImage ?? <HeroImagePlaceholder />}
+      </div>
     </section>
   );
 }

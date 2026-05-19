@@ -333,7 +333,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
   },
 ];
 
-export type FilterType = 'Todos' | 'América' | 'Europa' | 'Asia/África';
+export type FilterType = 'Todos' | 'América' | 'Europa' | 'Asia' | 'África';
 
 export const MOCK_CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = {
   UY: 'América',
@@ -350,7 +350,7 @@ export const MOCK_CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = {
   CH: 'Europa',
   ES: 'Europa',
   RU: 'Europa',
-  JP: 'Asia/África',
-  ZA: 'Asia/África',
-  QA: 'Asia/África',
+  JP: 'Asia',
+  ZA: 'África',
+  QA: 'Asia',
 };

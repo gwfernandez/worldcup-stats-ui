@@ -160,27 +160,29 @@ export default function ChampionshipDetailPage({ year = 1970 }: ChampionshipDeta
       />
 
       {/* ── Tabs ──────────────────────────────────────────────────── */}
-      <div className="border-b border-[#2a2d3a] bg-[#0f1117] px-5 overflow-x-auto">
-        <div className="flex">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 text-xs px-3 py-2.5 border-b-2 whitespace-nowrap transition-colors duration-150 focus:outline-none ${
-                activeTab === tab.id
-                  ? 'text-[#e8c84a] border-[#e8c84a]'
-                  : 'text-[#8a8fa8] border-transparent hover:text-[#e8eaf0]'
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          ))}
+      <div className="font-mono border-b border-[#2a2d3a] bg-[#0f1117] overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 text-xs px-3 py-3 border-b-2 whitespace-nowrap transition-colors duration-150 focus:outline-none ${
+                  activeTab === tab.id
+                    ? 'text-[#e8c84a] border-[#e8c84a]'
+                    : 'text-[#8a8fa8] border-transparent hover:text-[#e8eaf0]'
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ── Contenido ─────────────────────────────────────────────── */}
-      <main className="px-5 py-5">
+      <main className="font-mono max-w-7xl mx-auto px-6 py-5">
         {activeTab === 'groups' && (
           <GroupsTab groups={MOCK_GROUPS} eliminationPhases={MOCK_ELIMINATION_PHASES} />
         )}

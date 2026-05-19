@@ -37,7 +37,7 @@ export default function HistoricalScorersPage() {
       />
 
       {/* ── Contenido ─────────────────────────────────────────────── */}
-      <main className="px-6 py-6 max-w-4xl mx-auto">
+      <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <HistoricalScorersTable scorers={MOCK_HISTORICAL_SCORERS} />
       </main>
     </div>
