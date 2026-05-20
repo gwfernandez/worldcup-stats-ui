@@ -11,6 +11,7 @@
 
 import React from 'react';
 import { Trophy } from 'lucide-react';
+import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -37,13 +38,13 @@ interface NavLogoProps {
 
 function NavLogo({ text }: NavLogoProps): React.ReactElement {
   return (
-    <a
-      href="/"
+    <Link
+      to="/"
       className="flex items-center gap-2 text-[15px] font-medium text-[#e8eaf0] tracking-wide no-underline"
     >
       <i className="ti ti-trophy text-[#e8c84a] text-[18px]" aria-hidden="true" />
       {text}
-    </a>
+    </Link>
   );
 }
 
@@ -53,18 +54,25 @@ interface NavLinkItemProps {
   active?: boolean;
 }
 
-function NavLinkItem({ href, label, active = false }: NavLinkItemProps): React.ReactElement {
+function NavLinkItem({ href, label, active }: NavLinkItemProps): React.ReactElement {
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  const isMundialesActive = href === '/' && (pathname === '/' || pathname.startsWith('/worldcup'));
+  const isLinkActive =
+    isMundialesActive || (href !== '/' && pathname.startsWith(href)) || (active ?? false);
+
   return (
     <li>
-      <a
-        href={href}
+      <RouterNavLink
+        to={href}
         className={`text-[13px] no-underline transition-colors duration-150 hover:text-[#c8cad8] ${
-          active ? 'text-[#e8c84a]' : 'text-[#8a8fa8]'
+          isLinkActive ? 'text-[#e8c84a]' : 'text-[#8a8fa8]'
         }`}
-        aria-current={active ? 'page' : undefined}
+        aria-current={isLinkActive ? 'page' : undefined}
       >
         {label}
-      </a>
+      </RouterNavLink>
     </li>
   );
 }
