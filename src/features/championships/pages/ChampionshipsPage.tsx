@@ -6,7 +6,6 @@ import {
   MOCK_CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
 } from '@/features/championships/mocks/championship.mock';
-import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 import HeroSection from '@/components/shared/HeroSection';
 
 // ─── Datos de ejemplo ─────────────────────────────────────────────────────────
@@ -29,16 +28,7 @@ export default function ChampionshipsPage() {
       : CHAMPIONSHIPS.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
 
   return (
-    <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
-      <WorldCupsNavbar
-        links={[
-          { label: 'Mundiales', href: '/', active: true },
-          { label: 'Campeones', href: '/champions', active: false },
-          { label: 'Posiciones', href: '/standings', active: false },
-          { label: 'Goleadores', href: '/scorers', active: false },
-        ]}
-      />
-
+    <>
       <HeroSection
         badge="Historia de los mundiales de fútbol"
         title="Todos los"
@@ -85,6 +75,6 @@ export default function ChampionshipsPage() {
           ))}
         </div>
       </main>
-    </div>
+    </>
   );
 }
