@@ -2,10 +2,7 @@ import { useState, useMemo } from 'react';
 import type { ChampionTeam } from '@/types/champion.types';
 import { CONFEDERATION_STYLES, CONFEDERATION_TOOLTIP } from '@/types/historicalStanding.types';
 import { ChampionshipsModal } from '@/features/champions/components/ChampionshipsModal';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -44,61 +41,19 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
     <>
       {/* ── Filtros ───────────────────────────────────────────── */}
       <div className="flex gap-2.5 mb-4">
-        <div className="flex-[2] relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Buscar selección..."
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="w-full bg-[#161925] border border-[#2a2d3a] rounded-lg pl-8 pr-3 py-[7px] text-xs text-[#e8eaf0] placeholder:text-[#8a8fa8] outline-none focus:border-[#e8c84a] transition-colors"
-          />
-        </div>
-
-        <div className="flex-1 relative">
-          <select
-            value={filterConf}
-            onChange={(e) => setFilterConf(e.target.value)}
-            className="w-full appearance-none bg-[#161925] border border-[#2a2d3a] rounded-lg px-3 py-[7px] pr-7 text-xs text-[#e8eaf0] outline-none focus:border-[#e8c84a] transition-colors cursor-pointer"
-          >
-            <option value="">Todas las confederaciones</option>
-            {confOptions.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
+        <SearchInput
+          className="flex-[2]"
+          placeholder="Buscar selección..."
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <FilterSelect
+          className="flex-1"
+          value={filterConf}
+          onChange={(e) => setFilterConf(e.target.value)}
+          placeholderOption="Todas las confederaciones"
+          options={confOptions.map((c) => ({ value: c, label: c }))}
+        />
       </div>
 
       {/* ── Tabla ──────────────────────────────────────────────── */}
@@ -122,7 +77,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
           )}
           {filtered.map((team) => {
             const confStyle = CONFEDERATION_STYLES[team.confederation];
-            const confTooltip = CONFEDERATION_TOOLTIP[team.confederation];
+            const confTooltip = CONFEDERATION_TOOLTIP[team.confederation] ?? '';
             const isTop3 = team.position <= 3;
 
             return (
@@ -147,16 +102,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                 {/* Selección */}
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
-                    <img
-                      src={FLAG_URL(team.teamCode)}
-                      alt={team.teamName}
-                      width={18}
-                      height={13}
-                      className="rounded-[2px] shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+                    <FlagImage countryCode={team.teamCode} alt={team.teamName} />
                     <span className="text-xs text-[#e8eaf0]">{team.teamName}</span>
                   </div>
                 </td>
@@ -177,24 +123,18 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
 
                 {/* Confederación */}
                 <td className="py-2.5 pr-3">
-                  <div className="relative inline-flex group/conf cursor-default">
+                  <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-[#1e2233] text-[#8a8fa8] border-[#2a2d3a]'}`}
                     >
                       {team.confederation}
                     </span>
-                    {confTooltip && (
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/conf:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-                        {confTooltip}
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
-                      </div>
-                    )}
-                  </div>
+                  </Tooltip>
                 </td>
 
                 {/* Acción */}
                 <td className="py-2.5 text-center">
-                  <div className="relative inline-flex group/action">
+                  <Tooltip content="Ver títulos" groupName="action">
                     <button
                       onClick={() => setSelectedTeam(team)}
                       className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] transition-colors focus:outline-none"
@@ -220,11 +160,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                         <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
                       </svg>
                     </button>
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/action:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-                      Ver títulos
-                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
-                    </div>
-                  </div>
+                  </Tooltip>
                 </td>
               </tr>
             );

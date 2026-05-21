@@ -1,8 +1,5 @@
 import type { Match } from '@/types/championship.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 const formatScore = (home: number | null, away: number | null): string =>
   home !== null && away !== null ? `${home} – ${away}` : 'vs';
@@ -40,15 +37,12 @@ export function MatchRow({ match, onSelect, showWinner = true }: MatchRowProps) 
       <div
         className={`flex items-center gap-1.5 flex-1 text-xs overflow-hidden ${homeWon ? 'text-[#8fc44a] font-medium' : 'text-[#e8eaf0]'}`}
       >
-        <img
-          src={FLAG_URL(homeTeamCode)}
+        <FlagImage
+          countryCode={homeTeamCode}
           alt={homeTeam}
           width={14}
           height={10}
           className="rounded-[1px] shrink-0"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
         />
         <span className="truncate">{homeTeam}</span>
       </div>
@@ -63,15 +57,12 @@ export function MatchRow({ match, onSelect, showWinner = true }: MatchRowProps) 
         className={`flex items-center justify-end gap-1.5 flex-1 text-xs overflow-hidden ${awayWon ? 'text-[#8fc44a] font-medium' : 'text-[#e8eaf0]'}`}
       >
         <span className="truncate text-right">{awayTeam}</span>
-        <img
-          src={FLAG_URL(awayTeamCode)}
+        <FlagImage
+          countryCode={awayTeamCode}
           alt={awayTeam}
           width={14}
           height={10}
           className="rounded-[1px] shrink-0"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
         />
       </div>
 

@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import type { Match } from '@/types/championship.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/48x36/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 const GOAL_TYPE_LABEL: Record<string, string> = {
   penalty: 'penal',
@@ -95,15 +92,13 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
           {/* Equipos y resultado */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col items-center gap-1 flex-1">
-              <img
-                src={FLAG_URL(homeTeamCode)}
+              <FlagImage
+                countryCode={homeTeamCode}
                 alt={homeTeam}
+                size="md"
                 width={36}
                 height={27}
                 className="rounded"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
               />
               <span className="text-xs text-[#e8eaf0] text-center">{homeTeam}</span>
             </div>
@@ -111,15 +106,13 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
               {homeScore !== null && awayScore !== null ? `${homeScore} – ${awayScore}` : 'vs'}
             </div>
             <div className="flex flex-col items-center gap-1 flex-1">
-              <img
-                src={FLAG_URL(awayTeamCode)}
+              <FlagImage
+                countryCode={awayTeamCode}
                 alt={awayTeam}
+                size="md"
                 width={36}
                 height={27}
                 className="rounded"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
               />
               <span className="text-xs text-[#e8eaf0] text-center">{awayTeam}</span>
             </div>
@@ -157,13 +150,12 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
                   className="flex items-center gap-2 py-1.5 border-t border-[#1e2233] text-xs text-[#e8eaf0]"
                 >
                   <span className="text-[11px] text-[#e8c84a] min-w-[28px]">{goal.minute}'</span>
-                  <img
-                    src={`https://flagcdn.com/24x18/${goal.teamCode.toLowerCase()}.png`}
+                  <FlagImage
+                    countryCode={goal.teamCode}
                     alt=""
                     width={14}
                     height={10}
                     className="rounded-[1px]"
-                    aria-hidden="true"
                   />
                   <span>{goal.playerName}</span>
                   {goal.type && goal.type !== 'normal' && (

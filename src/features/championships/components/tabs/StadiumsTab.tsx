@@ -3,6 +3,7 @@ import type { Stadium } from '@/types/stadium.types';
 import type { Match } from '@/types/championship.types';
 import { StadiumMatchesModal } from '@/features/championships/components/shared/StadiumMatchesModal';
 import { MatchModal } from '@/features/championships/components/shared/MatchModal';
+import { SearchInput } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -37,31 +38,12 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
     <>
       {/* ── Filtro ───────────────────────────────────────────────── */}
       <div className="flex gap-2.5 mb-4">
-        <div className="flex-[2] relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Buscar estadio..."
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="w-full bg-[#161925] border border-[#2a2d3a] rounded-lg pl-8 pr-3 py-[7px] text-xs text-[#e8eaf0] placeholder:text-[#8a8fa8] outline-none focus:border-[#e8c84a] transition-colors"
-          />
-        </div>
+        <SearchInput
+          className="flex-[2]"
+          placeholder="Buscar estadio..."
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
       </div>
 
       {/* ── Tabla ────────────────────────────────────────────────── */}

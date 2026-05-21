@@ -1,8 +1,5 @@
 import type { GroupStanding } from '@/types/championship.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 const formatDiff = (diff: number): string => (diff > 0 ? `+${diff}` : `${diff}`);
 
@@ -66,15 +63,12 @@ export function GroupStandingsTable({ standings }: GroupStandingsTableProps) {
               <td className={`py-[5px] pl-[10px] pr-1 ${textColor}`}>
                 <div className="flex items-center gap-1.5 overflow-hidden">
                   <span className="text-[10px] text-[#8a8fa8] shrink-0 w-3">{row.position}</span>
-                  <img
-                    src={FLAG_URL(row.teamCode)}
+                  <FlagImage
+                    countryCode={row.teamCode}
                     alt={row.teamName}
                     width={14}
                     height={10}
                     className="rounded-[1px] shrink-0"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
                   />
                   <span className="truncate">{row.teamName}</span>
                 </div>

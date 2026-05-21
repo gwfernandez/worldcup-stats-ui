@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Star, ChevronRight } from 'lucide-react';
 import type { Championship } from '@/types/championship.types';
+import { FlagImage } from '@/components/shared';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -47,8 +48,6 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
 
   const logoUrl = getLogoUrl(year);
 
-  const countryFlag = `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-
   return (
     <Link
       to={`/worldcup/${year}`}
@@ -83,15 +82,12 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
         <p className="text-lg font-medium text-[#e8c84a] leading-none mb-1">{year}</p>
 
         <p className="text-xs text-[#e8eaf0] flex items-center gap-1.5 mb-2.5">
-          <img
-            src={countryFlag}
+          <FlagImage
+            countryCode={countryCode}
             alt={country}
             width={16}
             height={12}
             className="rounded-[2px] shrink-0"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
           />
           {country}
         </p>
