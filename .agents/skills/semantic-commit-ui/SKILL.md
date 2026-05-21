@@ -1,5 +1,5 @@
 ---
-name: semantic-commit-react
+name: semantic-commit-ui
 description: >
   Redactar mensajes de commit que cumplan con Conventional Commits y sean compatibles con
   semantic-release para versionado semántico automático (SemVer) en proyectos React + TypeScript.
