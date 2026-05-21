@@ -6,10 +6,7 @@ import {
   PERFORMANCE_LABEL,
   PERFORMANCE_STYLES,
 } from '@/types/team.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -53,15 +50,12 @@ export function PlayersModal({ team, onClose }: PlayersModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
           <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
-            <img
-              src={FLAG_URL(team.teamCode)}
+            <FlagImage
+              countryCode={team.teamCode}
               alt={team.name}
               width={20}
               height={15}
               className="rounded-[2px]"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
             />
             {team.name} — Plantel
           </div>

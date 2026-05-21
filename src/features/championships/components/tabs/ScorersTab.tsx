@@ -1,27 +1,18 @@
 import { useState, useMemo } from 'react';
 import type { Scorer } from '@/types/scorer.types';
 import { ScorerModal } from '@/features/championships/components/shared/ScorerModal';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { Pagination } from '@/components/shared/Pagination';
+import { SearchInput, FilterSelect, FlagImage } from '@/components/shared';
 
 const PAGE_SIZE = 10;
-
-// ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface ScorersTabProps {
   scorers: Scorer[];
 }
 
-import { Pagination } from '@/components/shared/Pagination';
-
-// ─── Componente principal ─────────────────────────────────────────────────────
-
 /**
  * Solapa de goleadores.
  * Incluye filtros por nombre, selección y fase, tabla paginada y modal de detalle.
- * Muestra todos los jugadores con al menos un gol (PAGE_SIZE filas por página).
  */
 export function ScorersTab({ scorers }: ScorersTabProps) {
   const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
@@ -30,7 +21,6 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
   const [filterPhase, setFilterPhase] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Opciones dinámicas para los selects
   const teamOptions = useMemo(() => {
     const teams = [
       ...new Map(scorers.map((s) => [s.teamCode, { code: s.teamCode, name: s.teamName }])).values(),
@@ -43,10 +33,8 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
     return [...phases].sort();
   }, [scorers]);
 
-  // Máximo de goles para la barra proporcional
   const maxGoals = useMemo(() => Math.max(...scorers.map((s) => s.totalGoals), 1), [scorers]);
 
-  // Filtrado completo (resetea página al cambiar filtros)
   const filtered = useMemo(() => {
     return scorers.filter((s) => {
       const matchesName = s.playerName.toLowerCase().includes(searchName.toLowerCase());
@@ -56,7 +44,6 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
     });
   }, [scorers, searchName, filterTeam, filterPhase]);
 
-  // Resetear a página 1 cuando cambian los filtros
   const handleFilterChange =
     (setter: (v: string) => void) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -64,105 +51,35 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
       setCurrentPage(1);
     };
 
-  // Paginado
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-
-  // Ranking global (posición sobre la lista filtrada completa, no solo la página)
   const globalRankOf = (scorer: Scorer) => filtered.indexOf(scorer) + 1;
 
   return (
     <>
-      {/* ── Fila 1: Filtros ─────────────────────────────────────── */}
       <div className="flex gap-2.5 mb-4">
-        <div className="flex-[2] relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Buscar jugador..."
-            value={searchName}
-            onChange={handleFilterChange(setSearchName)}
-            className="w-full bg-[#161925] border border-[#2a2d3a] rounded-lg pl-8 pr-3 py-[7px] text-xs text-[#e8eaf0] placeholder:text-[#8a8fa8] outline-none focus:border-[#e8c84a] transition-colors"
-          />
-        </div>
-
-        <div className="flex-1 relative">
-          <select
-            value={filterTeam}
-            onChange={handleFilterChange(setFilterTeam)}
-            className="w-full appearance-none bg-[#161925] border border-[#2a2d3a] rounded-lg px-3 py-[7px] pr-7 text-xs text-[#e8eaf0] outline-none focus:border-[#e8c84a] transition-colors cursor-pointer"
-          >
-            <option value="">Todas las selecciones</option>
-            {teamOptions.map((t) => (
-              <option key={t.code} value={t.code}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
-
-        <div className="flex-1 relative">
-          <select
-            value={filterPhase}
-            onChange={handleFilterChange(setFilterPhase)}
-            className="w-full appearance-none bg-[#161925] border border-[#2a2d3a] rounded-lg px-3 py-[7px] pr-7 text-xs text-[#e8eaf0] outline-none focus:border-[#e8c84a] transition-colors cursor-pointer"
-          >
-            <option value="">Todas las fases</option>
-            {phaseOptions.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
-            aria-hidden="true"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
+        <SearchInput
+          className="flex-[2]"
+          placeholder="Buscar jugador..."
+          value={searchName}
+          onChange={handleFilterChange(setSearchName)}
+        />
+        <FilterSelect
+          className="flex-1"
+          value={filterTeam}
+          onChange={handleFilterChange(setFilterTeam)}
+          placeholderOption="Todas las selecciones"
+          options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
+        />
+        <FilterSelect
+          className="flex-1"
+          value={filterPhase}
+          onChange={handleFilterChange(setFilterPhase)}
+          placeholderOption="Todas las fases"
+          options={phaseOptions.map((p) => ({ value: p, label: p }))}
+        />
       </div>
 
-      {/* ── Fila 2: Tabla ───────────────────────────────────────── */}
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-[#2a2d3a]">
@@ -208,15 +125,12 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
                 </td>
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-1.5">
-                    <img
-                      src={FLAG_URL(scorer.teamCode)}
+                    <FlagImage
+                      countryCode={scorer.teamCode}
                       alt={scorer.teamName}
                       width={16}
                       height={11}
                       className="rounded-[1px] shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
                     />
                     <span className="text-xs text-[#e8eaf0]">{scorer.teamName}</span>
                   </div>
@@ -243,7 +157,6 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
         </tbody>
       </table>
 
-      {/* ── Paginado ────────────────────────────────────────────── */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -253,7 +166,6 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
         onPageChange={setCurrentPage}
       />
 
-      {/* Modal */}
       <ScorerModal scorer={selectedScorer} onClose={() => setSelectedScorer(null)} />
     </>
   );

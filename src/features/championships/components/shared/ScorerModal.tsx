@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import type { Scorer } from '@/types/scorer.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 const FINAL_PHASES = ['Final', 'Semifinales', 'Cuartos de final', 'Tercer puesto'];
 
@@ -49,16 +46,7 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
           <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
-            <img
-              src={FLAG_URL(teamCode)}
-              alt={teamName}
-              width={18}
-              height={13}
-              className="rounded-[2px]"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
+            <FlagImage countryCode={teamCode} alt={teamName} className="rounded-[2px]" />
             {playerName} — {teamName}
           </div>
           <button
@@ -127,15 +115,12 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
                     </td>
                     <td className="py-2 pr-3">
                       <div className="flex items-center gap-1.5">
-                        <img
-                          src={FLAG_URL(goal.rivalTeamCode)}
+                        <FlagImage
+                          countryCode={goal.rivalTeamCode}
                           alt={goal.rivalTeam}
                           width={14}
                           height={10}
                           className="rounded-[1px] shrink-0"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
                         />
                         <span className="text-[#e8eaf0]">{goal.rivalTeam}</span>
                       </div>

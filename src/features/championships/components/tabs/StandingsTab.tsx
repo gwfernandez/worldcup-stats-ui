@@ -1,9 +1,8 @@
 import type { Standing, MatchResult } from '@/types/standing.types';
 import { PERFORMANCE_LABEL, PERFORMANCE_STYLES } from '@/types/team.types';
+import { Tooltip, FlagImage } from '@/components/shared';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
 
 const formatDiff = (diff: number): { label: string; className: string } => {
   if (diff > 0) return { label: `+${diff}`, className: 'text-[#8fc44a]' };
@@ -51,13 +50,11 @@ function Th({
 }) {
   return (
     <th
-      className={`text-right text-[10px] font-normal text-[#8a8fa8] pb-2 px-2 relative group/th whitespace-nowrap cursor-default ${className}`}
+      className={`text-right text-[10px] font-normal text-[#8a8fa8] pb-2 px-2 whitespace-nowrap cursor-default ${className}`}
     >
-      {label}
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/th:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-        {tooltip}
-        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
-      </div>
+      <Tooltip content={tooltip} groupName="th">
+        <span>{label}</span>
+      </Tooltip>
     </th>
   );
 }
@@ -152,15 +149,12 @@ export function StandingsTab({ standings }: StandingsTabProps) {
                 {/* Selección */}
                 <td className="py-2 pr-3">
                   <div className="flex items-center gap-2">
-                    <img
-                      src={FLAG_URL(row.teamCode)}
+                    <FlagImage
+                      countryCode={row.teamCode}
                       alt={row.teamName}
                       width={16}
                       height={11}
                       className="rounded-[1px] shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
                     />
                     <span className="text-xs text-[#e8eaf0]">{row.teamName}</span>
                   </div>
