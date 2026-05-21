@@ -2,7 +2,7 @@
  * WorldCupsNavbar — Componente presentacional
  *
  * Props:
- *   - links: NavLink[]  — ítems de navegación; el padre controla cuál está activo
+ *   - links: NavLink[]  — ítems de navegación (el activo se deriva de la ruta actual)
  *   - logoText: string  — texto junto al ícono del logo (default "World Cups")
  *
  * Requiere Tabler Icons en el <head>:
@@ -12,6 +12,7 @@
 import React from 'react';
 import { Trophy } from 'lucide-react';
 import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
+import { isNavLinkActive } from './worldCupsNavbar.utils';
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -20,13 +21,15 @@ import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 export interface NavLink {
   label: string;
   href: string;
-  active?: boolean;
 }
 
 export interface WorldCupsNavbarProps {
   logoText?: string;
   links?: NavLink[];
 }
+
+const ACTIVE_LINK_CLASS = 'text-[#e8c84a]';
+const INACTIVE_LINK_CLASS = 'text-[#8a8fa8]';
 
 // ---------------------------------------------------------------------------
 // Subcomponentes internos
@@ -51,23 +54,19 @@ function NavLogo({ text }: NavLogoProps): React.ReactElement {
 interface NavLinkItemProps {
   href: string;
   label: string;
-  active?: boolean;
 }
 
-function NavLinkItem({ href, label, active }: NavLinkItemProps): React.ReactElement {
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  const isMundialesActive = href === '/' && (pathname === '/' || pathname.startsWith('/worldcup'));
-  const isLinkActive =
-    isMundialesActive || (href !== '/' && pathname.startsWith(href)) || (active ?? false);
+function NavLinkItem({ href, label }: NavLinkItemProps): React.ReactElement {
+  const { pathname } = useLocation();
+  const isLinkActive = isNavLinkActive(href, pathname);
 
   return (
     <li>
       <RouterNavLink
         to={href}
+        end={href === '/'}
         className={`text-[13px] no-underline transition-colors duration-150 hover:text-[#c8cad8] ${
-          isLinkActive ? 'text-[#e8c84a]' : 'text-[#8a8fa8]'
+          isLinkActive ? ACTIVE_LINK_CLASS : INACTIVE_LINK_CLASS
         }`}
         aria-current={isLinkActive ? 'page' : undefined}
       >
@@ -82,10 +81,10 @@ function NavLinkItem({ href, label, active }: NavLinkItemProps): React.ReactElem
 // ---------------------------------------------------------------------------
 
 const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Mundiales', href: '/', active: true },
-  { label: 'Campeones', href: '/champions', active: false },
-  { label: 'Posiciones', href: '/standings', active: false },
-  { label: 'Goleadores', href: '/scorers', active: false },
+  { label: 'Mundiales', href: '/' },
+  { label: 'Campeones', href: '/champions' },
+  { label: 'Posiciones', href: '/standings' },
+  { label: 'Goleadores', href: '/scorers' },
 ];
 
 export default function WorldCupsNavbar({
@@ -105,7 +104,7 @@ export default function WorldCupsNavbar({
 
         <ul className="flex gap-6 list-none m-0 p-0">
           {links.map((link) => (
-            <NavLinkItem key={link.href} href={link.href} label={link.label} active={link.active} />
+            <NavLinkItem key={link.href} href={link.href} label={link.label} />
           ))}
         </ul>
       </nav>

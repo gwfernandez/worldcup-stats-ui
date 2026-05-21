@@ -3,6 +3,37 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import WorldCupsNavbar from './WorldCupsNavbar';
+import { isNavLinkActive, isWorldCupDetailPage } from './worldCupsNavbar.utils';
+
+const ACTIVE_CLASS = 'text-[#e8c84a]';
+const INACTIVE_CLASS = 'text-[#8a8fa8]';
+
+describe('isNavLinkActive', () => {
+  it('activates Mundiales only on home', () => {
+    expect(isNavLinkActive('/', '/')).toBe(true);
+    expect(isNavLinkActive('/', '/champions')).toBe(false);
+    expect(isNavLinkActive('/', '/worldcup/1970')).toBe(false);
+  });
+
+  it('activates section links on their routes', () => {
+    expect(isNavLinkActive('/champions', '/champions')).toBe(true);
+    expect(isNavLinkActive('/standings', '/standings')).toBe(true);
+    expect(isNavLinkActive('/scorers', '/scorers')).toBe(true);
+  });
+
+  it('deactivates all links on world cup detail pages', () => {
+    expect(isNavLinkActive('/', '/worldcup/2022')).toBe(false);
+    expect(isNavLinkActive('/champions', '/worldcup/2022')).toBe(false);
+  });
+});
+
+describe('isWorldCupDetailPage', () => {
+  it('matches world cup detail paths only', () => {
+    expect(isWorldCupDetailPage('/worldcup/1970')).toBe(true);
+    expect(isWorldCupDetailPage('/')).toBe(false);
+    expect(isWorldCupDetailPage('/champions')).toBe(false);
+  });
+});
 
 describe('WorldCupsNavbar', () => {
   const customLinks = [
@@ -33,24 +64,42 @@ describe('WorldCupsNavbar', () => {
       </MemoryRouter>,
     );
 
-    const championsLink = screen.getByText('Campeones');
-    const mundialesLink = screen.getByText('Mundiales');
-
-    expect(championsLink).toHaveClass('text-[#e8c84a]');
-    expect(mundialesLink).toHaveClass('text-[#8a8fa8]');
+    expect(screen.getByText('Campeones')).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
   });
 
-  it('highlights Mundiales when visiting a detail subroute like /worldcup/1970', () => {
+  it('highlights Mundiales on home with default links', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Mundiales')).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByText('Campeones')).toHaveClass(INACTIVE_CLASS);
+  });
+
+  it('highlights Campeones on /champions with default links', () => {
+    render(
+      <MemoryRouter initialEntries={['/champions']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Campeones')).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
+  });
+
+  it('does not highlight any link on world cup detail pages', () => {
     render(
       <MemoryRouter initialEntries={['/worldcup/1970']}>
         <WorldCupsNavbar links={customLinks} />
       </MemoryRouter>,
     );
 
-    const mundialesLink = screen.getByText('Mundiales');
-    const championsLink = screen.getByText('Campeones');
-
-    expect(mundialesLink).toHaveClass('text-[#e8c84a]');
-    expect(championsLink).toHaveClass('text-[#8a8fa8]');
+    expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
+    expect(screen.getByText('Campeones')).toHaveClass(INACTIVE_CLASS);
+    expect(screen.getByText('Posiciones')).toHaveClass(INACTIVE_CLASS);
+    expect(screen.getByText('Goleadores')).toHaveClass(INACTIVE_CLASS);
   });
 });
