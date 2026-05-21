@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import type { ChampionTeam } from '@/types/champion.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { FlagImage } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -49,15 +46,12 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
           <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
-            <img
-              src={FLAG_URL(team.teamCode)}
+            <FlagImage
+              countryCode={team.teamCode}
               alt={team.teamName}
               width={20}
               height={15}
               className="rounded-[2px]"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
             />
             {team.teamName} — Títulos
           </div>
@@ -119,15 +113,12 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
                   {/* Sede */}
                   <td className="py-2 pr-3">
                     <div className="flex items-center gap-1.5">
-                      <img
-                        src={FLAG_URL(c.hostCode)}
+                      <FlagImage
+                        countryCode={c.hostCode}
                         alt={c.host}
                         width={13}
                         height={9}
                         className="rounded-[1px] shrink-0"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
                       />
                       <span className="text-[#8a8fa8]">{c.host}</span>
                     </div>
@@ -138,16 +129,12 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
                     <span className="font-medium text-[#e8c84a]">{c.finalScore}</span>{' '}
                     <span className="text-[#8a8fa8]">
                       vs{' '}
-                      <img
-                        src={FLAG_URL(c.finalOpponentCode)}
+                      <FlagImage
+                        countryCode={c.finalOpponentCode}
                         alt=""
                         width={12}
                         height={8}
                         className="rounded-[1px] inline-block mx-0.5 align-middle"
-                        aria-hidden="true"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
                       />
                       {c.finalOpponent}
                     </span>

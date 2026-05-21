@@ -2,10 +2,7 @@ import { useEffect } from 'react';
 import type { HistoricalScorer } from '@/types/historicalScorer.types';
 import { MEDAL_LABEL } from '@/types/historicalScorer.types';
 import { CONFEDERATION_STYLES, CONFEDERATION_TOOLTIP } from '@/types/historicalStanding.types';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const FLAG_URL = (code: string) => `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+import { Tooltip, FlagImage } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -33,7 +30,7 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
   if (!scorer) return null;
 
   const confStyle = CONFEDERATION_STYLES[scorer.confederation];
-  const confTooltip = CONFEDERATION_TOOLTIP[scorer.confederation];
+  const confTooltip = CONFEDERATION_TOOLTIP[scorer.confederation] ?? '';
   const titles = scorer.worldCups.filter((wc) => wc.medal === 'gold').length;
   const sorted = [...scorer.worldCups].sort((a, b) => a.year - b.year);
 
@@ -52,15 +49,10 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
           <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
-            <img
-              src={FLAG_URL(scorer.teamCode)}
+            <FlagImage
+              countryCode={scorer.teamCode}
               alt={scorer.teamName}
-              width={18}
-              height={13}
               className="rounded-[2px]"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
             />
             {scorer.playerName} — {scorer.teamName}
           </div>
@@ -106,19 +98,13 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
           {/* Confederación */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[11px] text-[#8a8fa8]">Confederación:</span>
-            <div className="relative inline-flex group/conf cursor-default">
+            <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
               <span
                 className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-[#1e2233] text-[#8a8fa8] border-[#2a2d3a]'}`}
               >
                 {scorer.confederation}
               </span>
-              {confTooltip && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/conf:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-                  {confTooltip}
-                  <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
-                </div>
-              )}
-            </div>
+            </Tooltip>
           </div>
 
           {/* Tabla por mundial */}
@@ -137,15 +123,12 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
                   {/* Mundial */}
                   <td className="py-2 pr-3">
                     <div className="flex items-center gap-2">
-                      <img
-                        src={FLAG_URL(wc.hostCode)}
+                      <FlagImage
+                        countryCode={wc.hostCode}
                         alt={wc.host}
                         width={14}
                         height={10}
                         className="rounded-[1px] shrink-0"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
                       />
                       <span className="font-medium text-[#e8c84a]">{wc.year}</span>
                       <span className="text-[#8a8fa8]">{wc.host}</span>
