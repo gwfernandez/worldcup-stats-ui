@@ -1,7 +1,6 @@
 import { StandingsLegend } from '@/features/historicalStandings/components/StandingsLegend';
 import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
 import { HistoricalStandingsTable } from '@/features/historicalStandings/components/HistoricalStandingsTable';
-import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 import HeroSection from '@/components/shared/HeroSection';
 import { Globe, Swords, Trophy } from 'lucide-react';
 
@@ -14,16 +13,7 @@ import { Globe, Swords, Trophy } from 'lucide-react';
  */
 export default function HistoricalStandingsPage() {
   return (
-    <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
-      <WorldCupsNavbar
-        links={[
-          { label: 'Mundiales', href: '/', active: false },
-          { label: 'Campeones', href: '/champions', active: false },
-          { label: 'Posiciones', href: '/standings', active: true },
-          { label: 'Goleadores', href: '/scorers', active: false },
-        ]}
-      />
-
+    <>
       <HeroSection
         badge="Historia de los mundiales de fútbol"
         title="Tabla de"
@@ -42,6 +32,6 @@ export default function HistoricalStandingsPage() {
         <HistoricalStandingsTable standings={MOCK_HISTORICAL_STANDINGS} />
         <StandingsLegend />
       </main>
-    </div>
+    </>
   );
 }

@@ -12,7 +12,6 @@ import { StadiumsTab } from '@/features/championships/components/tabs/StadiumsTa
 import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
 import { StandingsTab } from '@/features/championships/components/tabs/StandingsTab';
 import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
-import WorldCupsNavbar from '@/components/shared/WorldCupsNavbar';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
 import { Globe, House, Swords, Volleyball } from 'lucide-react';
 
@@ -133,16 +132,7 @@ export default function ChampionshipDetailPage({ year = 1970 }: ChampionshipDeta
   const [activeTab, setActiveTab] = useState<TabId>('groups');
 
   return (
-    <div className="min-h-screen bg-[#0f1117] text-[#e8eaf0]">
-      <WorldCupsNavbar
-        links={[
-          { label: 'Mundiales', href: '/', active: false },
-          { label: 'Campeones', href: '/champions', active: false },
-          { label: 'Posiciones', href: '/standings', active: false },
-          { label: 'Goleadores', href: '/scorers', active: false },
-        ]}
-      />
-
+    <>
       <HeroDetailSection
         badge="Historia de los mundiales de fútbol"
         title="Mexico"
@@ -194,6 +184,6 @@ export default function ChampionshipDetailPage({ year = 1970 }: ChampionshipDeta
           <p className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</p>
         )}
       </main>
-    </div>
+    </>
   );
 }
