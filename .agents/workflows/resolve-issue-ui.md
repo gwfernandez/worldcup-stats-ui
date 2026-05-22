@@ -51,7 +51,7 @@ description: Workflow que guía al agente en la resolución completa de un issue
    - Tests: `{NombreArchivo}.test.tsx` o `{NombreArchivo}.test.ts` en el mismo directorio
    - Cada feature se organiza internamente con subcarpetas: `components/`, `hooks/`, `types/` si la complejidad lo justifica
 3. No modificar archivos fuera del alcance del issue de GitHub
-4. Si el issue contiene una lista de tareas (tasks), realizar un commit independiente utilizando la skill `semantic-commit` por cada tarea completada. El mensaje del commit debe reflejar fielmente la tarea realizada. En caso de no haber una lista, realizar commits por cada hito lógico finalizado.
+4. Si el issue contiene una lista de tareas (tasks), realizar un commit independiente utilizando la skill `semantic-commit-ui` por cada tarea completada. El mensaje del commit debe reflejar fielmente la tarea realizada. En caso de no haber una lista, realizar commits por cada hito lógico finalizado.
 5. Respetar estrictamente la sección `🚫 Fuera de Alcance` del issue para evitar cambios innecesarios y mantener el foco.
 
 ---
@@ -62,7 +62,7 @@ description: Workflow que guía al agente en la resolución completa de un issue
 2. Revisar los hallazgos reportados y aplicar las correcciones aprobadas
 3. Si hay hallazgos 🔴 Críticos → **corregir obligatoriamente** antes de continuar
 4. Si hay hallazgos 🟠 Importantes → corregir salvo decisión explícita del usuario de postergarlos
-5. Registrar las correcciones con la skill `semantic-commit` si corresponde
+5. Registrar las correcciones con la skill `semantic-commit-ui` si corresponde
 
 > Esta fase es obligatoria. No avanzar a Testing sin haber ejecutado la auditoría de calidad.
 
