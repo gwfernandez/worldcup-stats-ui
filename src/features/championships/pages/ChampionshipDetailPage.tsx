@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { GroupsTab } from '@/features/championships/components/tabs/GroupsTab';
 import { ScorersTab } from '@/features/championships/components/tabs/ScorersTab';
 import {
@@ -115,11 +116,11 @@ const TABS: Tab[] = [
   },
 ];
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
-export interface ChampionshipDetailPageProps {
-  /** Año del mundial — en producción vendrá de useParams() */
-  year?: number;
+function parseYearParam(yearParam: string | undefined): number | null {
+  if (!yearParam) return null;
+  const year = parseInt(yearParam, 10);
+  if (Number.isNaN(year) || year <= 0) return null;
+  return year;
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -128,8 +129,14 @@ export interface ChampionshipDetailPageProps {
  * Página de detalle de un mundial.
  * Contiene el hero con metadata y las solapas de contenido.
  */
-export default function ChampionshipDetailPage({ year = 1970 }: ChampionshipDetailPageProps) {
+export default function ChampionshipDetailPage() {
+  const { year: yearParam } = useParams<{ year: string }>();
+  const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
+
+  if (year === null) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <>
