@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ─── Título individual ────────────────────────────────────────────────────────
 
-export const ChampionshipSchema = z.object({
+export const ChampionWinnerSchema = z.object({
   year: z.number(),
   host: z.string(),
   hostCode: z.string(),
@@ -11,7 +11,7 @@ export const ChampionshipSchema = z.object({
   finalOpponentCode: z.string(),
 });
 
-export type Championship = z.infer<typeof ChampionshipSchema>;
+export type ChampionWinner = z.infer<typeof ChampionWinnerSchema>;
 
 // ─── Champion team ────────────────────────────────────────────────────────────
 
@@ -21,7 +21,7 @@ export const ChampionTeamSchema = z.object({
   teamCode: z.string(),
   confederation: z.string(),
   titles: z.number(),
-  championships: z.array(ChampionshipSchema),
+  championships: z.array(ChampionWinnerSchema),
 });
 
 export const ChampionTeamListSchema = z.array(ChampionTeamSchema);
