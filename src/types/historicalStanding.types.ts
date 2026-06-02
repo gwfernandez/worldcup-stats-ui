@@ -30,14 +30,6 @@ export const CONFEDERATION_STYLES: Record<
   OFC: { pill: 'bg-[#1a2a2a] text-[#70a0a0] border-[#2a5050]', bar: '#409090', perfBar: '#409090' },
 };
 
-export const CONFEDERATION_TOOLTIP: Record<string, string> = {
-  CONMEBOL: 'Confederación Sudamericana de Fútbol',
-  UEFA: 'Unión de Asociaciones Europeas de Fútbol',
-  CONCACAF: 'Confederación de Norte, Centroamérica y el Caribe',
-  CAF: 'Confederación Africana de Fútbol',
-  AFC: 'Confederación Asiática de Fútbol',
-  OFC: 'Confederación de Fútbol de Oceanía',
-};
 
 // ─── Historical Standing ──────────────────────────────────────────────────────
 
