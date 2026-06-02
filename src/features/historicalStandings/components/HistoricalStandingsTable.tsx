@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { HistoricalStanding } from '@/types/historicalStanding.types';
-import { CONFEDERATION_STYLES, CONFEDERATION_TOOLTIP } from '@/types/historicalStanding.types';
+import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
+import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
 
 const formatDiff = (diff: number): { label: string; className: string } => {
