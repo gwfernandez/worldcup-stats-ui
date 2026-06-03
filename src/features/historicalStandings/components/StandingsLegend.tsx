@@ -1,3 +1,5 @@
+import { Info } from 'lucide-react';
+
 // ─── Datos de abreviaciones ───────────────────────────────────────────────────
 
 const ABBREVIATIONS = [
@@ -21,22 +23,7 @@ export function StandingsLegend() {
   return (
     <div className="mt-6">
       <p className="text-xs font-medium text-[#e8eaf0] mb-3 flex items-center gap-1.5">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="13"
-          height="13"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#e8c84a"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12.01" y2="8" />
-        </svg>
+        <Info size={13} stroke="#e8c84a" aria-hidden="true" />
         Leyenda
       </p>
 
