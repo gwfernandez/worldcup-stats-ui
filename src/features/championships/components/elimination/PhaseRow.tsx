@@ -1,3 +1,4 @@
+import { Trophy, Repeat } from 'lucide-react';
 import type { EliminationPhase, Match } from '@/types/championship.types';
 import { MatchRow } from '@/features/championships/components/shared/MatchRow';
 
@@ -25,38 +26,11 @@ export function PhaseRow({ phase, onMatchSelect }: PhaseRowProps) {
           isFinal ? 'bg-[#1e2a14] border-[#3a5a1a]' : 'bg-[#161925] border-[#2a2d3a]'
         }`}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={isFinal ? '#e8c84a' : '#e8c84a'}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          {isFinal ? (
-            // ícono copa
-            <>
-              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-              <path d="M4 22h16" />
-              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-              <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-            </>
-          ) : (
-            // ícono torneo
-            <>
-              <polyline points="17 1 21 5 17 9" />
-              <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-              <polyline points="7 23 3 19 7 15" />
-              <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-            </>
-          )}
-        </svg>
+        {isFinal ? (
+          <Trophy size={12} stroke="#e8c84a" aria-hidden="true" />
+        ) : (
+          <Repeat size={12} stroke="#e8c84a" aria-hidden="true" />
+        )}
         <span className={`font-medium ${isFinal ? 'text-[#e8c84a]' : 'text-[#e8c84a]'}`}>
           {phase.name}
         </span>

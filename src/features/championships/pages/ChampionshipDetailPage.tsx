@@ -14,7 +14,18 @@ import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
 import { StandingsTab } from '@/features/championships/components/tabs/StandingsTab';
 import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
-import { Globe, House, Swords, Volleyball } from 'lucide-react';
+import {
+  Globe,
+  House,
+  Swords,
+  Volleyball,
+  LayoutGrid,
+  Users,
+  Clock,
+  Layers,
+  List,
+  BarChart2,
+} from 'lucide-react';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
@@ -26,93 +37,36 @@ interface Tab {
   icon: React.ReactNode;
 }
 
-const Icon = ({ children }: { children: React.ReactNode }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="13"
-    height="13"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    {children}
-  </svg>
-);
-
 const TABS: Tab[] = [
   {
     id: 'groups',
     label: 'Grupos y fixture',
-    icon: (
-      <Icon>
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
-      </Icon>
-    ),
+    icon: <LayoutGrid size={13} />,
   },
   {
     id: 'teams',
     label: 'Selecciones',
-    icon: (
-      <Icon>
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </Icon>
-    ),
+    icon: <Users size={13} />,
   },
   {
     id: 'scorers',
     label: 'Goleadores',
-    icon: (
-      <Icon>
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 8v4l3 3" />
-      </Icon>
-    ),
+    icon: <Clock size={13} />,
   },
   {
     id: 'stadiums',
     label: 'Estadios',
-    icon: (
-      <Icon>
-        <path d="M12 2L2 7l10 5 10-5L12 2z" />
-        <polyline points="2 17 12 22 22 17" />
-        <polyline points="2 12 12 17 22 12" />
-      </Icon>
-    ),
+    icon: <Layers size={13} />,
   },
   {
     id: 'standings',
     label: 'Posiciones',
-    icon: (
-      <Icon>
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" />
-      </Icon>
-    ),
+    icon: <List size={13} />,
   },
   {
     id: 'stats',
     label: 'Estadísticas',
-    icon: (
-      <Icon>
-        <line x1="18" y1="20" x2="18" y2="10" />
-        <line x1="12" y1="20" x2="12" y2="4" />
-        <line x1="6" y1="20" x2="6" y2="14" />
-      </Icon>
-    ),
+    icon: <BarChart2 size={13} />,
   },
 ];
 

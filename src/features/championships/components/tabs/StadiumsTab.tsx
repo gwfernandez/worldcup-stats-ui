@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { MapPin, Clock, Map } from 'lucide-react';
 import type { Stadium } from '@/types/stadium.types';
 import type { Match } from '@/types/championship.types';
 import { StadiumMatchesModal } from '@/features/championships/components/shared/StadiumMatchesModal';
@@ -78,21 +79,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
               {/* Ciudad */}
               <td className="py-2.5 pr-3">
                 <div className="flex items-center gap-1.5 text-xs text-[#8a8fa8]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="11"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+                  <MapPin size={11} aria-hidden="true" />
                   {stadium.city}
                 </div>
               </td>
@@ -107,21 +94,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
               {/* Conteo de partidos */}
               <td className="py-2.5 pr-3">
                 <div className="flex items-center gap-1.5 text-xs text-[#8a8fa8]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="11"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 8v4l3 3" />
-                  </svg>
+                  <Clock size={11} aria-hidden="true" />
                   {stadium.matches.length}
                 </div>
               </td>
@@ -141,22 +114,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                         if (!stadium.mapsUrl) e.preventDefault();
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
-                        <line x1="9" y1="3" x2="9" y2="18" />
-                        <line x1="15" y1="6" x2="15" y2="21" />
-                      </svg>
+                      <Map size={13} aria-hidden="true" />
                     </a>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/map:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
                       Ver en mapa
@@ -171,21 +129,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                       className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] transition-colors focus:outline-none"
                       aria-label={`Ver partidos en ${stadium.name}`}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 8v4l3 3" />
-                      </svg>
+                      <Clock size={13} aria-hidden="true" />
                     </button>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/matches:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
                       Partidos
