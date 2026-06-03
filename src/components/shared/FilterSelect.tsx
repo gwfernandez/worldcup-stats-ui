@@ -1,3 +1,5 @@
+import { ChevronDown } from 'lucide-react';
+
 export interface FilterSelectOption {
   value: string;
   label: string;
@@ -35,21 +37,11 @@ export function FilterSelect({
           </option>
         ))}
       </select>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <ChevronDown
         className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
+        size={11}
         aria-hidden="true"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+      />
     </div>
   );
 }

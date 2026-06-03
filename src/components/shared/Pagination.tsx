@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface PaginationProps {
   currentPage: number;
@@ -53,20 +54,7 @@ export function Pagination({
           className="flex items-center justify-center w-7 h-7 rounded-md border border-[#2a2d3a] text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#2a2d3a] disabled:hover:text-[#8a8fa8] transition-colors focus:outline-none"
           aria-label="Página anterior"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <ChevronLeft size={12} aria-hidden="true" />
         </button>
 
         {/* Page numbers */}
@@ -102,20 +90,7 @@ export function Pagination({
           className="flex items-center justify-center w-7 h-7 rounded-md border border-[#2a2d3a] text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#2a2d3a] disabled:hover:text-[#8a8fa8] transition-colors focus:outline-none"
           aria-label="Página siguiente"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <ChevronRight size={12} aria-hidden="true" />
         </button>
       </div>
     </div>

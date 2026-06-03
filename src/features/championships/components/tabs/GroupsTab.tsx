@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { LayoutGrid, Repeat } from 'lucide-react';
 import type { Group, EliminationPhase, Match } from '@/types/championship.types';
 import { GroupCard } from '@/features/championships/components/groups/GroupCard';
 import { PhaseRow } from '@/features/championships/components/elimination/PhaseRow';
@@ -29,23 +30,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
           id="groups-heading"
           className="text-[11px] text-[#8a8fa8] uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
+          <LayoutGrid size={12} aria-hidden="true" />
           Fase de grupos
         </h3>
 
@@ -61,23 +46,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
             id="elimination-heading"
             className="text-[11px] text-[#8a8fa8] uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <polyline points="17 1 21 5 17 9" />
-              <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-              <polyline points="7 23 3 19 7 15" />
-              <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-            </svg>
+            <Repeat size={12} aria-hidden="true" />
             Fase eliminatoria
           </h3>
 

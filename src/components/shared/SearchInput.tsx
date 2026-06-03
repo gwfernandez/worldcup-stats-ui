@@ -1,3 +1,5 @@
+import { Search } from 'lucide-react';
+
 export interface SearchInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,22 +13,11 @@ export interface SearchInputProps {
 export function SearchInput({ value, onChange, placeholder, className = '' }: SearchInputProps) {
   return (
     <div className={`relative ${className}`}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="13"
-        height="13"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <Search
         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
+        size={13}
         aria-hidden="true"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
+      />
       <input
         type="text"
         placeholder={placeholder}
