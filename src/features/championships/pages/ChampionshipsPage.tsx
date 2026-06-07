@@ -1,31 +1,26 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
 import { ChampionshipCard } from '@/features/championships/components/ChampionshipCard';
+import { useChampionships } from '@/features/championships/hooks/useChampionships';
 import {
-  MOCK_CHAMPIONSHIPS,
-  MOCK_CONTINENT_BY_COUNTRY_CODE,
+  CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
-} from '@/features/championships/mocks/championship.mock';
+} from '@/features/championships/utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
-
-// ─── Datos de ejemplo ─────────────────────────────────────────────────────────
-// TODO: reemplazar por useChampionships() cuando el hook esté conectado a la API
-const CHAMPIONSHIPS = MOCK_CHAMPIONSHIPS;
-
-// ─── Tipos locales ────────────────────────────────────────────────────────────
-const CONTINENT_BY_COUNTRY_CODE: Record<string, FilterType> = MOCK_CONTINENT_BY_COUNTRY_CODE;
-
-// ─── Componente principal ─────────────────────────────────────────────────────
+import { QueryStatus } from '@/components/shared';
 
 export default function ChampionshipsPage() {
+  const { championships, isLoading, isError, error } = useChampionships();
   const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
 
   const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia', 'África'];
 
   const filtered =
     activeFilter === 'Todos'
-      ? CHAMPIONSHIPS
-      : CHAMPIONSHIPS.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
+      ? championships
+      : championships.filter(
+          (wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter,
+        );
 
   return (
     <>
@@ -42,7 +37,6 @@ export default function ChampionshipsPage() {
         ]}
       />
 
-      {/* ── Grilla de mundiales ───────────────────────────────────────── */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-medium text-[#e8eaf0] flex items-center gap-2">
@@ -68,12 +62,13 @@ export default function ChampionshipsPage() {
           </div>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {filtered.map((wc) => (
-            <ChampionshipCard key={wc.year} championship={wc} />
-          ))}
-        </div>
+        <QueryStatus isLoading={isLoading} isError={isError} error={error}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {filtered.map((wc) => (
+              <ChampionshipCard key={wc.year} championship={wc} />
+            ))}
+          </div>
+        </QueryStatus>
       </main>
     </>
   );
