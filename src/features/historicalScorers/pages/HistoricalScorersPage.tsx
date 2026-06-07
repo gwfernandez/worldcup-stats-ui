@@ -1,9 +1,8 @@
 import HeroSection from '@/components/shared/HeroSection';
+import { QueryStatus } from '@/components/shared';
 import { HistoricalScorersTable } from '@/features/historicalScorers/components/HistoricalScorersTable';
-import { MOCK_HISTORICAL_SCORERS } from '@/features/historicalScorers/mocks/historicalScorers.mock';
+import { useHistoricalScorers } from '@/features/historicalScorers/hooks/useHistoricalScorers';
 import { Award, Trophy, Users, Volleyball } from 'lucide-react';
-
-// ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
  * Página de Goleadores Históricos.
@@ -11,6 +10,8 @@ import { Award, Trophy, Users, Volleyball } from 'lucide-react';
  * Ruta: /scorers
  */
 export default function HistoricalScorersPage() {
+  const { scorers, isLoading, isError, error } = useHistoricalScorers();
+
   return (
     <>
       <HeroSection
@@ -26,9 +27,10 @@ export default function HistoricalScorersPage() {
         ]}
       />
 
-      {/* ── Contenido ─────────────────────────────────────────────── */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
-        <HistoricalScorersTable scorers={MOCK_HISTORICAL_SCORERS} />
+        <QueryStatus isLoading={isLoading} isError={isError} error={error}>
+          <HistoricalScorersTable scorers={scorers} />
+        </QueryStatus>
       </main>
     </>
   );

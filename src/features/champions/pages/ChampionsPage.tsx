@@ -1,9 +1,8 @@
 import HeroSection from '@/components/shared/HeroSection';
+import { QueryStatus } from '@/components/shared';
 import { ChampionsTable } from '@/features/champions/components/ChampionsTable';
-import { MOCK_CHAMPIONS } from '@/features/champions/mocks/champions.mock';
+import { useChampions } from '@/features/champions/hooks/useChampions';
 import { Globe, Trophy } from 'lucide-react';
-
-// ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
  * Página de Tabla de Campeones.
@@ -11,6 +10,8 @@ import { Globe, Trophy } from 'lucide-react';
  * Ruta: /champions
  */
 export default function ChampionsPage() {
+  const { champions, isLoading, isError, error } = useChampions();
+
   return (
     <>
       <HeroSection
@@ -25,9 +26,10 @@ export default function ChampionsPage() {
         ]}
       />
 
-      {/* ── Contenido ─────────────────────────────────────────────── */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
-        <ChampionsTable champions={MOCK_CHAMPIONS} />
+        <QueryStatus isLoading={isLoading} isError={isError} error={error}>
+          <ChampionsTable champions={champions} />
+        </QueryStatus>
       </main>
     </>
   );
