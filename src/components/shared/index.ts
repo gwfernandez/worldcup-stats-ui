@@ -3,3 +3,4 @@ export { FilterSelect, type FilterSelectProps, type FilterSelectOption } from '.
 export { Tooltip, type TooltipProps } from './Tooltip';
 export { FlagImage, type FlagImageProps } from './FlagImage';
 export { Pagination, type PaginationProps } from './Pagination';
+export { QueryStatus, type QueryStatusProps } from './QueryStatus';
