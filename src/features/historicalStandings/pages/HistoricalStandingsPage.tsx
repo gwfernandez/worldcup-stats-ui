@@ -1,10 +1,9 @@
 import { StandingsLegend } from '@/features/historicalStandings/components/StandingsLegend';
-import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
 import { HistoricalStandingsTable } from '@/features/historicalStandings/components/HistoricalStandingsTable';
+import { useHistoricalStandings } from '@/features/historicalStandings/hooks/useHistoricalStandings';
 import HeroSection from '@/components/shared/HeroSection';
+import { QueryStatus } from '@/components/shared';
 import { Globe, Swords, Trophy } from 'lucide-react';
-
-// ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
  * Página de Tabla de Posiciones Históricas.
@@ -12,6 +11,8 @@ import { Globe, Swords, Trophy } from 'lucide-react';
  * Ruta: /standings
  */
 export default function HistoricalStandingsPage() {
+  const { standings, isLoading, isError, error } = useHistoricalStandings();
+
   return (
     <>
       <HeroSection
@@ -27,10 +28,11 @@ export default function HistoricalStandingsPage() {
         ]}
       />
 
-      {/* ── Contenido ─────────────────────────────────────────────── */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
-        <HistoricalStandingsTable standings={MOCK_HISTORICAL_STANDINGS} />
-        <StandingsLegend />
+        <QueryStatus isLoading={isLoading} isError={isError} error={error}>
+          <HistoricalStandingsTable standings={standings} />
+          <StandingsLegend />
+        </QueryStatus>
       </main>
     </>
   );
