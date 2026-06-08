@@ -2,17 +2,10 @@ import { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { GroupsTab } from '@/features/championships/components/tabs/GroupsTab';
 import { ScorersTab } from '@/features/championships/components/tabs/ScorersTab';
-import {
-  MOCK_GROUPS,
-  MOCK_ELIMINATION_PHASES,
-} from '@/features/championships/mocks/championshipDetail.mock';
-import { MOCK_SCORERS } from '@/features/championships/mocks/scorers.mock';
 import { TeamsTab } from '@/features/championships/components/tabs/TeamsTab';
-import { MOCK_TEAMS } from '@/features/championships/mocks/teams.mock';
 import { StadiumsTab } from '@/features/championships/components/tabs/StadiumsTab';
-import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
 import { StandingsTab } from '@/features/championships/components/tabs/StandingsTab';
-import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
+import { useChampionshipDetail } from '@/features/championships/hooks/useChampionshipDetail';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
 import {
   Globe,
@@ -87,26 +80,39 @@ export default function ChampionshipDetailPage() {
   const { year: yearParam } = useParams<{ year: string }>();
   const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
+  const { detail, isLoading, isError } = useChampionshipDetail(year ?? 0, year !== null);
 
   if (year === null) {
     return <Navigate to="/" replace />;
+  }
+
+  if (isLoading || detail === null) {
+    return <p className="font-mono text-sm text-[#8a8fa8] px-6 py-5">Cargando mundial...</p>;
+  }
+
+  if (isError) {
+    return (
+      <p className="font-mono text-sm text-[#d06060] px-6 py-5">
+        No se pudo cargar el detalle del mundial.
+      </p>
+    );
   }
 
   return (
     <>
       <HeroDetailSection
         badge="Historia de los mundiales de fútbol"
-        title="Mexico"
-        titleAccent={String(year)}
-        description={`La Copa Mundial de la FIFA de ${year} se celebró desde el 31 de mayo hasta el 21 de junio.`}
-        champion="Brasil"
-        runnerUp="Italia"
-        topScorer="Gerd Müller (10)"
+        title={detail.country}
+        titleAccent={String(detail.year)}
+        description={`La Copa Mundial de la FIFA de ${detail.year} se celebró desde el 31 de mayo hasta el 21 de junio.`}
+        champion={detail.champion}
+        runnerUp={detail.runnerUp}
+        topScorer={`${detail.topScorer} (${detail.topScorerGoals})`}
         stats={[
-          { icon: Globe, value: '16', label: 'Selecciones' },
-          { icon: Swords, value: '32', label: 'Partidos' },
-          { icon: Volleyball, value: '78', label: 'Goles' },
-          { icon: House, value: '10', label: 'Estadios' },
+          { icon: Globe, value: String(detail.totalTeams), label: 'Selecciones' },
+          { icon: Swords, value: String(detail.totalMatches), label: 'Partidos' },
+          { icon: Volleyball, value: String(detail.totalGoals), label: 'Goles' },
+          { icon: House, value: String(detail.totalStadiums), label: 'Estadios' },
         ]}
       />
 
@@ -135,12 +141,12 @@ export default function ChampionshipDetailPage() {
       {/* ── Contenido ─────────────────────────────────────────────── */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-5">
         {activeTab === 'groups' && (
-          <GroupsTab groups={MOCK_GROUPS} eliminationPhases={MOCK_ELIMINATION_PHASES} />
+          <GroupsTab groups={detail.groups} eliminationPhases={detail.eliminationPhases} />
         )}
-        {activeTab === 'scorers' && <ScorersTab scorers={MOCK_SCORERS} />}
-        {activeTab === 'teams' && <TeamsTab teams={MOCK_TEAMS} />}
-        {activeTab === 'stadiums' && <StadiumsTab stadiums={MOCK_STADIUMS} />}
-        {activeTab === 'standings' && <StandingsTab standings={MOCK_STANDINGS} />}
+        {activeTab === 'scorers' && <ScorersTab scorers={detail.scorers} />}
+        {activeTab === 'teams' && <TeamsTab teams={detail.teams} />}
+        {activeTab === 'stadiums' && <StadiumsTab stadiums={detail.stadiums} />}
+        {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
         {activeTab === 'stats' && (
           <p className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</p>
         )}
