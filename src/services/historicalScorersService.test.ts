@@ -12,12 +12,13 @@ describe('historicalScorersService', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it('debería retornar datos mockeados cuando VITE_USE_MOCK es true', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
     const { getHistoricalScorers } = await import('./historicalScorersService');
-    
+
     const result = await getHistoricalScorers();
     expect(result).toEqual(MOCK_HISTORICAL_SCORERS);
     expect(api.get).not.toHaveBeenCalled();
