@@ -90,6 +90,28 @@ cp .env.example .env
 | Variable | Descripción |
 |---|---|
 | `VITE_API_BASE_URL` | URL base de la REST API de datos |
+| `VITE_USE_MOCK` | Habilita datos mockeados locales cuando vale `true` |
+
+### Modo mock local
+
+Mientras la integración con `worldcup-stats-service` no esté cerrada, el modo recomendado
+para desarrollo frontend es usar datos mockeados:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+VITE_USE_MOCK=true
+```
+
+Con `VITE_USE_MOCK=true`, los services soportados devuelven datos locales validados con Zod
+y no realizan requests HTTP. Para probar contra la API real, configurar:
+
+```env
+VITE_USE_MOCK=false
+```
+
+> Nota técnica: el contrato frontend/backend todavía requiere alineación. El frontend conserva
+> endpoints históricos como `/worldcups`, mientras que `worldcup-stats-service` documenta rutas
+> actuales como `/championships`. Mantener el modo mock activo hasta completar esa planificación.
 
 ### Comandos disponibles
 
