@@ -12,12 +12,13 @@ describe('championsService', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it('debería retornar datos mockeados cuando VITE_USE_MOCK es true', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
     const { getChampions } = await import('./championsService');
-    
+
     const result = await getChampions();
     expect(result).toEqual(MOCK_CHAMPIONS);
     expect(api.get).not.toHaveBeenCalled();

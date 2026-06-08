@@ -1,9 +1,7 @@
 import { api } from '@/services/api';
+import { env } from '@/config/env';
 import { HistoricalStandingListSchema, type HistoricalStandingList } from '@/types/historicalStanding.types';
 import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
-
-// ─── Mock ─────────────────────────────────────────────────────────────────────
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -12,7 +10,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
  * Usa mock data si VITE_USE_MOCK=true.
  */
 export const getHistoricalStandings = async (): Promise<HistoricalStandingList> => {
-  if (USE_MOCK) {
+  if (env.useMock) {
     return HistoricalStandingListSchema.parse(MOCK_HISTORICAL_STANDINGS);
   }
 

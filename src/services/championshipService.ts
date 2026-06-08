@@ -1,10 +1,10 @@
 import { api } from '@/services/api';
+import { env } from '@/config/env';
 import { ChampionshipListSchema, type ChampionshipList } from '@/types/championship.types';
 import { MOCK_CHAMPIONSHIPS } from '@/features/championships/mocks/championship.mock';
 
 // ─── Mock ─────────────────────────────────────────────────────────────────────
 // TODO: eliminar este bloque cuando el endpoint GET /api/v1/worldcups esté disponible
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -13,7 +13,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
  * Usa mock data si VITE_USE_MOCK=true o si el endpoint aún no existe.
  */
 export const getChampionships = async (): Promise<ChampionshipList> => {
-  if (USE_MOCK) {
+  if (env.useMock) {
     return ChampionshipListSchema.parse(MOCK_CHAMPIONSHIPS);
   }
 
