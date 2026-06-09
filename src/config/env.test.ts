@@ -7,6 +7,9 @@ describe('env', () => {
   });
 
   it('usa valores por defecto cuando no hay variables configuradas', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', '');
+    vi.stubEnv('VITE_USE_MOCK', '');
+
     const { env } = await import('./env');
 
     expect(env.apiBaseUrl).toBe('http://localhost:8080/api');
