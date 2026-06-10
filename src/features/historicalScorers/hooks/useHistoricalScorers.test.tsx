@@ -1,41 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useHistoricalScorers } from './useHistoricalScorers';
-import { getHistoricalScorers } from '@/services/historicalScorersService';
+import { http, HttpResponse, delay } from 'msw';
+import { describe, expect, it } from 'vitest';
+import { server } from '@/mocks/server';
 import { MOCK_HISTORICAL_SCORERS } from '@/features/historicalScorers/mocks/historicalScorers.mock';
-import type { ReactNode } from 'react';
-
-// Mock the service
-vi.mock('@/services/historicalScorersService', () => ({
-  getHistoricalScorers: vi.fn(),
-}));
-
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  const Wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-  Wrapper.displayName = 'QueryClientWrapper';
-  return Wrapper;
-};
+import { createQueryClientWrapper } from '@/test/queryClientWrapper';
+import { useHistoricalScorers } from './useHistoricalScorers';
 
 describe('useHistoricalScorers', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('debería retornar el estado inicial de carga', () => {
-    vi.mocked(getHistoricalScorers).mockReturnValue(new Promise(() => {}));
+  it('retorna el estado inicial de carga', () => {
+    server.use(
+      http.get('*/historical/scorers', async () => {
+        await delay('infinite');
+        return HttpResponse.json([]);
+      }),
+    );
 
     const { result } = renderHook(() => useHistoricalScorers(), {
-      wrapper: createWrapper(),
+      wrapper: createQueryClientWrapper(),
     });
 
     expect(result.current.isLoading).toBe(true);
@@ -44,11 +25,9 @@ describe('useHistoricalScorers', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('debería retornar la lista de goleadores exitosamente', async () => {
-    vi.mocked(getHistoricalScorers).mockResolvedValue(MOCK_HISTORICAL_SCORERS);
-
+  it('retorna la lista de goleadores cuando la petición se resuelve', async () => {
     const { result } = renderHook(() => useHistoricalScorers(), {
-      wrapper: createWrapper(),
+      wrapper: createQueryClientWrapper(),
     });
 
     await waitFor(() => {
@@ -60,12 +39,15 @@ describe('useHistoricalScorers', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('debería retornar un estado de error si el servicio falla', async () => {
-    const mockError = new Error('API Error');
-    vi.mocked(getHistoricalScorers).mockRejectedValue(mockError);
+  it('retorna estado de error cuando la petición falla', async () => {
+    server.use(
+      http.get('*/historical/scorers', () =>
+        HttpResponse.json({ message: 'API Error' }, { status: 500 }),
+      ),
+    );
 
     const { result } = renderHook(() => useHistoricalScorers(), {
-      wrapper: createWrapper(),
+      wrapper: createQueryClientWrapper(),
     });
 
     await waitFor(() => {
@@ -74,6 +56,6 @@ describe('useHistoricalScorers', () => {
 
     expect(result.current.isLoading).toBe(false);
     expect(result.current.scorers).toEqual([]);
-    expect(result.current.error).toEqual(mockError);
+    expect(result.current.error).toBeInstanceOf(Error);
   });
 });
