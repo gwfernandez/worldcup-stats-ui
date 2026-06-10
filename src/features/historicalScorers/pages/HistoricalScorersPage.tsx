@@ -3,6 +3,7 @@ import { QueryStatus } from '@/components/shared';
 import { HistoricalScorersTable } from '../components/HistoricalScorersTable';
 import { useHistoricalScorers } from '../hooks/useHistoricalScorers';
 import { Award, Trophy, Users, Volleyball } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Página de Goleadores Históricos.
@@ -10,20 +11,21 @@ import { Award, Trophy, Users, Volleyball } from 'lucide-react';
  * Ruta: /scorers
  */
 export default function HistoricalScorersPage() {
+  const { t } = useTranslation(['historicalScorers', 'championships']);
   const { scorers, isLoading, isError, error } = useHistoricalScorers();
 
   return (
     <>
       <HeroSection
-        badge="Historia de los mundiales de fútbol"
-        title="Tabla de"
-        titleAccent="Goleadores Históricos"
-        description="Los máximos anotadores en la historia de los Mundiales de Fútbol."
+        badge={t('championships:hero.badge')}
+        title={t('historicalScorers:hero.title')}
+        titleAccent={t('historicalScorers:hero.titleAccent')}
+        description={t('historicalScorers:hero.description')}
         stats={[
-          { icon: Volleyball, value: '2700+', label: 'Goles totales' },
-          { icon: Users, value: '1000+', label: 'Goleadores' },
-          { icon: Trophy, value: '16', label: 'Récord de goles' },
-          { icon: Award, value: 'Klose', label: 'Goleador histórico' },
+          { icon: Volleyball, value: '2700+', label: t('historicalScorers:hero.totalGoals') },
+          { icon: Users, value: '1000+', label: t('historicalScorers:hero.scorers') },
+          { icon: Trophy, value: '16', label: t('historicalScorers:hero.recordGoals') },
+          { icon: Award, value: 'Klose', label: t('historicalScorers:hero.historicalScorer') },
         ]}
       />
 

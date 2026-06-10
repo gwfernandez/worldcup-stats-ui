@@ -1,5 +1,6 @@
 import type { GroupStanding } from '@/types/championship.types';
 import { FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const formatDiff = (diff: number): string => (diff > 0 ? `+${diff}` : `${diff}`);
 
@@ -12,14 +13,14 @@ export interface GroupStandingsTableProps {
 // ─── Columnas ─────────────────────────────────────────────────────────────────
 
 const COLS = [
-  { key: 'points', label: 'Pts', title: 'Puntos' },
-  { key: 'played', label: 'J', title: 'Partidos jugados' },
-  { key: 'won', label: 'G', title: 'Ganados' },
-  { key: 'drawn', label: 'E', title: 'Empatados' },
-  { key: 'lost', label: 'P', title: 'Perdidos' },
-  { key: 'goalsFor', label: 'GF', title: 'Goles a favor' },
-  { key: 'goalsAgainst', label: 'GC', title: 'Goles en contra' },
-  { key: 'goalDiff', label: 'Dif', title: 'Diferencia de goles' },
+  { key: 'points', label: 'Pts', titleKey: 'standingMetrics.points' },
+  { key: 'played', label: 'J', titleKey: 'standingMetrics.played' },
+  { key: 'won', label: 'G', titleKey: 'standingMetrics.won' },
+  { key: 'drawn', label: 'E', titleKey: 'standingMetrics.drawn' },
+  { key: 'lost', label: 'P', titleKey: 'standingMetrics.lost' },
+  { key: 'goalsFor', label: 'GF', titleKey: 'standingMetrics.goalsFor' },
+  { key: 'goalsAgainst', label: 'GC', titleKey: 'standingMetrics.goalsAgainst' },
+  { key: 'goalDiff', label: 'Dif', titleKey: 'standingMetrics.goalDiff' },
 ] as const;
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -29,6 +30,8 @@ const COLS = [
  * Los equipos clasificados se resaltan en verde.
  */
 export function GroupStandingsTable({ standings }: GroupStandingsTableProps) {
+  const { t } = useTranslation('common');
+
   return (
     <table className="w-full border-collapse text-[11px]" style={{ tableLayout: 'fixed' }}>
       <colgroup>
@@ -41,12 +44,12 @@ export function GroupStandingsTable({ standings }: GroupStandingsTableProps) {
       <thead>
         <tr className="border-b border-wc-border-primary">
           <th className="text-left text-[10px] text-wc-text-muted font-normal py-[5px] pl-[10px] pr-1">
-            Equipo
+            {t('labels.team')}
           </th>
           {COLS.map((c) => (
             <th
               key={c.key}
-              title={c.title}
+              title={t(c.titleKey)}
               className="text-right text-[10px] text-wc-text-muted font-normal py-[5px] px-1"
             >
               {c.label}

@@ -186,6 +186,27 @@ Coverage mínimo requerido: **80%**
 | Tipos      | `camelCase.types.ts`           | `fixture.types.ts`   |
 | Test       | `{archivo}.test.tsx/ts`        | `MatchCard.test.tsx` |
 
+### i18n
+
+La internacionalización está configurada con **i18next** y **react-i18next** desde
+`src/i18n/config.ts`. Los diccionarios viven en:
+
+```txt
+src/i18n/locales/{es,en}/{namespace}.json
+```
+
+Namespaces activos:
+
+- `common`
+- `championships`
+- `champions`
+- `historicalScorers`
+- `historicalStandings`
+
+Los componentes deben usar `useTranslation` y evitar strings visibles hardcodeadas. Los nombres
+propios o valores que vienen de la API, como selecciones, jugadores, estadios y sedes, se renderizan
+tal como llegan desde el backend.
+
 ### Commits
 
 Este proyecto sigue la especificación [Conventional Commits](https://www.conventionalcommits.org/):

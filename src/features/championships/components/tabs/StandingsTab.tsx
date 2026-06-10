@@ -1,6 +1,7 @@
 import type { Standing, MatchResult } from '@/types/standing.types';
-import { PERFORMANCE_LABEL, PERFORMANCE_STYLES } from '@/types/team.types';
+import { PERFORMANCE_STYLES } from '@/types/team.types';
 import { Tooltip, FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,21 +62,23 @@ function Th({
 
 // ─── Subcomponente: círculos de forma ─────────────────────────────────────────
 
-const FORM_STYLES: Record<MatchResult, { bg: string; label: string }> = {
-  W: { bg: 'bg-wc-conf-conmebol-bar', label: 'Victoria' },
-  D: { bg: 'bg-wc-neutral-border', label: 'Empate' },
-  L: { bg: 'bg-wc-danger-border', label: 'Derrota' },
+const FORM_STYLES: Record<MatchResult, { bg: string; labelKey: string }> = {
+  W: { bg: 'bg-wc-conf-conmebol-bar', labelKey: 'form.W' },
+  D: { bg: 'bg-wc-neutral-border', labelKey: 'form.D' },
+  L: { bg: 'bg-wc-danger-border', labelKey: 'form.L' },
 };
 
 function FormDots({ form }: { form: MatchResult[] }) {
+  const { t } = useTranslation('common');
+
   return (
     <div className="flex items-center justify-center gap-[3px]">
       {form.map((result, i) => (
         <div
           key={i}
-          title={FORM_STYLES[result].label}
+          title={t(FORM_STYLES[result].labelKey)}
           className={`w-2.5 h-2.5 rounded-full shrink-0 ${FORM_STYLES[result].bg}`}
-          aria-label={FORM_STYLES[result].label}
+          aria-label={t(FORM_STYLES[result].labelKey)}
         />
       ))}
     </div>
@@ -96,6 +99,7 @@ export interface StandingsTabProps {
  * Incluye borde lateral por desempeño, barra de rendimiento, forma y pills.
  */
 export function StandingsTab({ standings }: StandingsTabProps) {
+  const { t } = useTranslation('common');
   const sorted = [...standings].sort((a, b) => a.position - b.position);
 
   return (
@@ -105,22 +109,26 @@ export function StandingsTab({ standings }: StandingsTabProps) {
           <tr className="border-b border-wc-border-primary">
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 w-8">#</th>
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pr-3">
-              Selección
+              {t('labels.team')}
             </th>
-            <Th label="PTS" tooltip="Puntos" />
-            <Th label="PJ" tooltip="Partidos Jugados" />
-            <Th label="PG" tooltip="Partidos Ganados" />
-            <Th label="PE" tooltip="Partidos Empatados" />
-            <Th label="PP" tooltip="Partidos Perdidos" />
-            <Th label="GF" tooltip="Goles a Favor" />
-            <Th label="GC" tooltip="Goles en Contra" />
-            <Th label="DIF" tooltip="Diferencia de Goles" />
-            <Th label="Rend." tooltip="Rendimiento (%)" className="min-w-[80px]" />
+            <Th label="PTS" tooltip={t('standingMetrics.points')} />
+            <Th label="PJ" tooltip={t('standingMetrics.played')} />
+            <Th label="PG" tooltip={t('standingMetrics.won')} />
+            <Th label="PE" tooltip={t('standingMetrics.drawn')} />
+            <Th label="PP" tooltip={t('standingMetrics.lost')} />
+            <Th label="GF" tooltip={t('standingMetrics.goalsFor')} />
+            <Th label="GC" tooltip={t('standingMetrics.goalsAgainst')} />
+            <Th label="DIF" tooltip={t('standingMetrics.goalDiff')} />
+            <Th
+              label={t('standingMetrics.performanceShort')}
+              tooltip={t('standingMetrics.performance')}
+              className="min-w-[80px]"
+            />
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pl-2 min-w-[120px]">
-              Desempeño
+              {t('labels.performance')}
             </th>
             <th className="text-center text-[10px] font-normal text-wc-text-muted pb-2 min-w-[90px]">
-              Forma
+              {t('labels.form')}
             </th>
           </tr>
         </thead>
@@ -201,11 +209,11 @@ export function StandingsTab({ standings }: StandingsTabProps) {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${PERFORMANCE_STYLES[row.performance]}`}
                     >
-                      {PERFORMANCE_LABEL[row.performance]}
+                      {t(`performance.${row.performance}`)}
                     </span>
                     {row.isHost && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full border bg-wc-lavender-surface text-wc-lavender-text border-wc-lavender-border whitespace-nowrap">
-                        🏠 Anfitrión
+                        {t('performance.host')}
                       </span>
                     )}
                   </div>

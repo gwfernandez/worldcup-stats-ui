@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "title": "Champions",
+    "titleAccent": "Table",
+    "description": "The national teams with the most titles in Football World Cup history.",
+    "champions": "Champions",
+    "mostTitles": "Most titles (5)"
+  }
+}

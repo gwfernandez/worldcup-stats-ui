@@ -4,6 +4,7 @@ import type { Group, EliminationPhase, Match } from '@/types/championship.types'
 import { PhaseRow } from '../elimination/PhaseRow';
 import { GroupCard } from '../groups/GroupCard';
 import { MatchModal } from '../shared/MatchModal';
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -20,6 +21,7 @@ export interface GroupsTabProps {
  * Gestiona el estado del modal de detalle de partido.
  */
 export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
+  const { t } = useTranslation('championships');
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
 
   return (
@@ -31,7 +33,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
           className="text-[11px] text-wc-text-muted uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
         >
           <LayoutGrid size={12} aria-hidden="true" />
-          Fase de grupos
+          {t('groups.groupStage')}
         </h3>
 
         {groups.map((group) => (
@@ -47,7 +49,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
             className="text-[11px] text-wc-text-muted uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
           >
             <Repeat size={12} aria-hidden="true" />
-            Fase eliminatoria
+            {t('groups.eliminationStage')}
           </h3>
 
           {eliminationPhases

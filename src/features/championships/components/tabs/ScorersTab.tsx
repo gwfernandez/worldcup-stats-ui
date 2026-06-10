@@ -3,6 +3,7 @@ import type { Scorer } from '@/types/scorer.types';
 import { ScorerModal } from '../shared/ScorerModal';
 import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const PAGE_SIZE = 10;
 
@@ -15,6 +16,7 @@ export interface ScorersTabProps {
  * Incluye filtros por nombre, selección y fase, tabla paginada y modal de detalle.
  */
 export function ScorersTab({ scorers }: ScorersTabProps) {
+  const { t } = useTranslation('common');
   const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
   const [searchName, setSearchName] = useState('');
   const [filterTeam, setFilterTeam] = useState('');
@@ -60,7 +62,7 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar jugador..."
+          placeholder={t('search.player')}
           value={searchName}
           onChange={handleFilterChange(setSearchName)}
         />
@@ -68,14 +70,14 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
           className="flex-1"
           value={filterTeam}
           onChange={handleFilterChange(setFilterTeam)}
-          placeholderOption="Todas las selecciones"
+          placeholderOption={t('filters.allTeams')}
           options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterPhase}
           onChange={handleFilterChange(setFilterPhase)}
-          placeholderOption="Todas las fases"
+          placeholderOption={t('filters.allStages')}
           options={phaseOptions.map((p) => ({ value: p, label: p }))}
         />
       </div>
@@ -86,13 +88,17 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pl-2 w-8">
               #
             </th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Jugador</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              Goles
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.player')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.team')}
             </th>
             <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              Promedio
+              {t('labels.goals')}
+            </th>
+            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
+              {t('labels.average')}
             </th>
           </tr>
         </thead>
@@ -100,7 +106,7 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
           {paginated.length === 0 && (
             <tr>
               <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
-                No se encontraron goleadores con esos filtros
+                {t('empty.scorers')}
               </td>
             </tr>
           )}
@@ -166,7 +172,7 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
         totalPages={totalPages}
         totalItems={filtered.length}
         pageSize={PAGE_SIZE}
-        itemsLabel="jugadores"
+        itemsLabel={t('labels.players').toLowerCase()}
         onPageChange={setCurrentPage}
       />
 

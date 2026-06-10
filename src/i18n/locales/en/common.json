@@ -1,0 +1,167 @@
+{
+  "app": {
+    "logo": "World Cups History",
+    "heroImagePlaceholder": "World Cup image"
+  },
+  "language": {
+    "ariaLabel": "Select language",
+    "es": "ES",
+    "en": "EN",
+    "spanish": "Spanish",
+    "english": "English"
+  },
+  "navigation": {
+    "ariaLabel": "Primary navigation",
+    "worldcups": "World Cups",
+    "champions": "Champions",
+    "standings": "Standings",
+    "scorers": "Scorers"
+  },
+  "status": {
+    "loading": "Loading...",
+    "genericError": "An error occurred while loading the data."
+  },
+  "pagination": {
+    "items": "items",
+    "range": "{{from}}–{{to}} of {{total}} {{itemsLabel}}",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {{page}}"
+  },
+  "filters": {
+    "all": "All",
+    "allFemale": "All",
+    "allGroups": "All groups",
+    "allStages": "All stages",
+    "allTeams": "All teams",
+    "allConfederations": "All confederations",
+    "continent": "Filter by continent",
+    "america": "Americas",
+    "europe": "Europe",
+    "asia": "Asia",
+    "africa": "Africa"
+  },
+  "search": {
+    "team": "Search team...",
+    "player": "Search player...",
+    "stadium": "Search stadium..."
+  },
+  "labels": {
+    "year": "Year",
+    "player": "Player",
+    "worldCup": "World Cup",
+    "team": "Team",
+    "teams": "Teams",
+    "players": "Players",
+    "matches": "Matches",
+    "goals": "Goals",
+    "stadiums": "Stadiums",
+    "titles": "Titles",
+    "totalTitles": "Total titles",
+    "firstTitle": "First title",
+    "lastTitle": "Last title",
+    "confederation": "Confederation",
+    "average": "Average",
+    "detail": "Details",
+    "city": "City",
+    "group": "Group",
+    "performance": "Performance",
+    "position": "Position",
+    "final": "Final",
+    "totalGoals": "Total goals",
+    "recordGoals": "Goal record",
+    "historicalScorer": "All-time scorer",
+    "host": "Host",
+    "champion": "Champion",
+    "runnerUp": "Runner-up",
+    "topScorer": "Top scorer",
+    "coach": "Coach",
+    "actions": "Actions",
+    "stadium": "Stadium",
+    "capacity": "Capacity",
+    "capacityShort": "Cap.",
+    "phase": "Stage",
+    "phases": "Stages",
+    "date": "Date",
+    "minute": "Min.",
+    "rival": "Opponent",
+    "name": "First name",
+    "lastName": "Last name",
+    "form": "Form",
+    "spectatorsShort": "att.",
+    "medal": "Medal"
+  },
+  "actions": {
+    "close": "Close",
+    "retry": "Retry",
+    "reloadPage": "Reload page",
+    "viewTitles": "View titles",
+    "viewTitlesFor": "View titles for {{team}}",
+    "viewPlayersFor": "View players for {{team}}",
+    "viewOnMap": "View on map",
+    "viewStadiumOnMap": "View {{stadium}} on the map",
+    "viewMatchesAt": "View matches at {{stadium}}"
+  },
+  "empty": {
+    "teams": "No teams matched those filters",
+    "scorers": "No scorers matched those filters",
+    "players": "No players matched those filters",
+    "stadiums": "No stadiums matched those filters",
+    "noGoals": "No goal details available"
+  },
+  "dialogs": {
+    "goalsFor": "Goal details for {{player}}",
+    "matchDetailFor": "Match details {{homeTeam}} vs {{awayTeam}}",
+    "matchDetail": "Match details",
+    "squadFor": "{{team}} squad",
+    "squad": "Squad",
+    "matchesAt": "Matches at {{stadium}}",
+    "historicalScorerFor": "Historical details for {{player}}"
+  },
+  "goalTypes": {
+    "penalty": "penalty",
+    "own_goal": "own goal",
+    "header": "header"
+  },
+  "performance": {
+    "champion": "🏆 Champion",
+    "runner_up": "🥈 Runner-up",
+    "third": "🥉 3rd Place",
+    "fourth": "4th Place",
+    "quarters": "Quarter-finals",
+    "round_of_16": "Round of 16",
+    "group_stage": "Group stage",
+    "host": "🏠 Host"
+  },
+  "positions": {
+    "goalkeeper": "Goalkeeper",
+    "defender": "Defender",
+    "midfielder": "Midfielder",
+    "forward": "Forward"
+  },
+  "form": {
+    "W": "Win",
+    "D": "Draw",
+    "L": "Loss"
+  },
+  "titlesDialog": {
+    "titleFor": "Titles for {{team}}"
+  },
+  "standingMetrics": {
+    "points": "Points",
+    "played": "Matches played",
+    "won": "Matches won",
+    "drawn": "Matches drawn",
+    "lost": "Matches lost",
+    "goalsFor": "Goals for",
+    "goalsAgainst": "Goals against",
+    "goalDiff": "Goal difference",
+    "performance": "Performance (%)",
+    "performanceShort": "Perf."
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected failure occurred while rendering this section. You can try restoring the view or reloading the page.",
+    "details": "Error details:"
+  }
+}

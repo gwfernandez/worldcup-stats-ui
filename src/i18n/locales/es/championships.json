@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "badge": "Historia de los mundiales de fútbol",
+    "title": "Todos los",
+    "titleAccent": "Mundiales de Fútbol",
+    "description": "Fixtures, campeones, planteles y goleadores desde Uruguay 1930.",
+    "defaultDescription": "Estadísticas, fixtures, planteles y goleadores desde Uruguay 1930 hasta hoy."
+  },
+  "stats": {
+    "editions": "Ediciones",
+    "teams": "Selecciones",
+    "matches": "Partidos",
+    "players": "Jugadores",
+    "goals": "Goles",
+    "stadiums": "Estadios"
+  },
+  "list": {
+    "title": "Ediciones"
+  },
+  "detail": {
+    "loading": "Cargando mundial...",
+    "error": "No se pudo cargar el detalle del mundial.",
+    "description": "La Copa Mundial de la FIFA de {{year}} se celebró desde el 31 de mayo hasta el 21 de junio.",
+    "comingSoon": "Solapa Estadísticas - próximamente"
+  },
+  "tabs": {
+    "groups": "Grupos y fixture",
+    "teams": "Selecciones",
+    "scorers": "Goleadores",
+    "stadiums": "Estadios",
+    "standings": "Posiciones",
+    "stats": "Estadísticas"
+  },
+  "groups": {
+    "groupStage": "Fase de grupos",
+    "eliminationStage": "Fase eliminatoria"
+  }
+}

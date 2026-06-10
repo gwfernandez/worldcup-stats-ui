@@ -11,6 +11,7 @@
  */
 
 import { Trophy, Globe, Users, Swords, type LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -41,6 +42,7 @@ const DEFAULT_STATS: HeroStat[] = [
   { icon: Swords, value: '2800+', label: 'Partidos' },
   { icon: Users, value: '1000+', label: 'Jugadores' },
 ];
+const DEFAULT_STAT_KEYS = ['editions', 'teams', 'matches', 'players'] as const;
 
 // ---------------------------------------------------------------------------
 // Subcomponentes internos
@@ -57,10 +59,12 @@ function StatItem({ icon: Icon, value, label }: HeroStat) {
 }
 
 function HeroImagePlaceholder() {
+  const { t } = useTranslation('common');
+
   return (
     <div
       className="w-48 h-36 shrink-0 bg-wc-surface-secondary border border-wc-border-primary rounded-xl flex flex-col items-center justify-center gap-2"
-      aria-label="Imagen del mundial — reemplazar con asset real"
+      aria-label={t('app.heroImagePlaceholder')}
     >
       <Trophy size={40} className="text-wc-accent-gold opacity-40" aria-hidden="true" />
       <span className="text-xs text-wc-text-muted">hero image</span>
@@ -73,31 +77,44 @@ function HeroImagePlaceholder() {
 // ---------------------------------------------------------------------------
 
 export default function HeroSection({
-  badge = 'Historia de los mundiales de fútbol',
-  title = 'Todos los',
-  titleAccent = 'Mundiales de Fútbol',
-  description = 'Estadísticas, fixtures, planteles y goleadores desde Uruguay 1930 hasta hoy.',
-  stats = DEFAULT_STATS,
+  badge,
+  title,
+  titleAccent,
+  description,
+  stats,
   heroImage,
 }: HeroSectionProps) {
+  const { t } = useTranslation(['championships', 'common']);
+  const resolvedStats =
+    stats ??
+    DEFAULT_STATS.map((stat, index) => ({
+      ...stat,
+      label: t(`championships:stats.${DEFAULT_STAT_KEYS[index]}`),
+    }));
+
   return (
     <section className="font-mono bg-wc-surface-primary border-b border-wc-border-primary">
       <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
         {/* ── Texto ────────────────────────────────────────────────────── */}
         <div className="flex-1">
           <span className="inline-block bg-wc-success-surface text-wc-success text-xs px-3 py-1 rounded-full border border-wc-success-border mb-3">
-            {badge}
+            {badge ?? t('championships:hero.badge')}
           </span>
 
           <h1 className="text-2xl font-medium text-white leading-snug mb-2">
-            {title} <span className="text-wc-accent-gold">{titleAccent}</span>
+            {title ?? t('championships:hero.title')}{' '}
+            <span className="text-wc-accent-gold">
+              {titleAccent ?? t('championships:hero.titleAccent')}
+            </span>
           </h1>
 
-          <p className="text-sm text-wc-text-muted leading-relaxed mb-6 max-w-2sm">{description}</p>
+          <p className="text-sm text-wc-text-muted leading-relaxed mb-6 max-w-2sm">
+            {description ?? t('championships:hero.defaultDescription')}
+          </p>
 
           {/* ── Stats ─────────────────────────────────────────────────── */}
           <div className="flex gap-6">
-            {stats.map((stat) => (
+            {resolvedStats.map((stat) => (
               <StatItem key={stat.label} {...stat} />
             ))}
           </div>

@@ -22,6 +22,7 @@ import {
   List,
   BarChart2,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
@@ -33,35 +34,35 @@ interface Tab {
   icon: React.ReactNode;
 }
 
-const TABS: Tab[] = [
+const TABS: Array<Omit<Tab, 'label'> & { labelKey: string }> = [
   {
     id: 'groups',
-    label: 'Grupos y fixture',
+    labelKey: 'tabs.groups',
     icon: <LayoutGrid size={13} />,
   },
   {
     id: 'teams',
-    label: 'Selecciones',
+    labelKey: 'tabs.teams',
     icon: <Users size={13} />,
   },
   {
     id: 'scorers',
-    label: 'Goleadores',
+    labelKey: 'tabs.scorers',
     icon: <Clock size={13} />,
   },
   {
     id: 'stadiums',
-    label: 'Estadios',
+    labelKey: 'tabs.stadiums',
     icon: <Layers size={13} />,
   },
   {
     id: 'standings',
-    label: 'Posiciones',
+    labelKey: 'tabs.standings',
     icon: <List size={13} />,
   },
   {
     id: 'stats',
-    label: 'Estadísticas',
+    labelKey: 'tabs.stats',
     icon: <BarChart2 size={13} />,
   },
 ];
@@ -76,6 +77,8 @@ function parseYearParam(yearParam: string | undefined): number | null {
 // ─── Skeleton de la página completa ───────────────────────────────────────────
 
 function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
+  const { t } = useTranslation('championships');
+
   return (
     <>
       {/* Hero skeleton */}
@@ -124,7 +127,7 @@ function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
 
       {/* Tab content skeleton */}
       <main className="font-mono max-w-7xl mx-auto px-6 py-5" role="status">
-        <span className="sr-only">Cargando mundial...</span>
+        <span className="sr-only">{t('detail.loading')}</span>
         {activeTab === 'groups' ? (
           <GroupsTabSkeleton />
         ) : (
@@ -145,6 +148,7 @@ function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
  * Contiene el hero con metadata y las solapas de contenido.
  */
 export default function ChampionshipDetailPage() {
+  const { t } = useTranslation(['championships', 'common']);
   const { year: yearParam } = useParams<{ year: string }>();
   const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
@@ -161,7 +165,7 @@ export default function ChampionshipDetailPage() {
   if (isError) {
     return (
       <p className="font-mono text-sm text-wc-danger-text px-6 py-5">
-        No se pudo cargar el detalle del mundial.
+        {t('championships:detail.error')}
       </p>
     );
   }
@@ -169,18 +173,18 @@ export default function ChampionshipDetailPage() {
   return (
     <>
       <HeroDetailSection
-        badge="Historia de los mundiales de fútbol"
+        badge={t('championships:hero.badge')}
         title={detail.country}
         titleAccent={String(detail.year)}
-        description={`La Copa Mundial de la FIFA de ${detail.year} se celebró desde el 31 de mayo hasta el 21 de junio.`}
+        description={t('championships:detail.description', { year: detail.year })}
         champion={detail.champion}
         runnerUp={detail.runnerUp}
         topScorer={`${detail.topScorer} (${detail.topScorerGoals})`}
         stats={[
-          { icon: Globe, value: String(detail.totalTeams), label: 'Selecciones' },
-          { icon: Swords, value: String(detail.totalMatches), label: 'Partidos' },
-          { icon: Volleyball, value: String(detail.totalGoals), label: 'Goles' },
-          { icon: House, value: String(detail.totalStadiums), label: 'Estadios' },
+          { icon: Globe, value: String(detail.totalTeams), label: t('common:labels.teams') },
+          { icon: Swords, value: String(detail.totalMatches), label: t('common:labels.matches') },
+          { icon: Volleyball, value: String(detail.totalGoals), label: t('common:labels.goals') },
+          { icon: House, value: String(detail.totalStadiums), label: t('common:labels.stadiums') },
         ]}
       />
 
@@ -199,7 +203,7 @@ export default function ChampionshipDetailPage() {
                 }`}
               >
                 {tab.icon}
-                {tab.label}
+                {t(`championships:${tab.labelKey}`)}
               </button>
             ))}
           </div>
@@ -216,7 +220,7 @@ export default function ChampionshipDetailPage() {
         {activeTab === 'stadiums' && <StadiumsTab stadiums={detail.stadiums} />}
         {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
         {activeTab === 'stats' && (
-          <p className="text-sm text-wc-text-muted">Solapa Estadísticas — próximamente</p>
+          <p className="text-sm text-wc-text-muted">{t('championships:detail.comingSoon')}</p>
         )}
       </main>
     </>

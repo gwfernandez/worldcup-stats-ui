@@ -5,6 +5,7 @@ import { MEDAL_LABEL } from '@/types/historicalScorer.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { Tooltip, FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -20,6 +21,8 @@ export interface HistoricalScorerModalProps {
  * Muestra stats globales y tabla con goles agrupados por mundial.
  */
 export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModalProps) {
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     if (!scorer) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -42,7 +45,7 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={`Detalle histórico de ${scorer.playerName}`}
+      aria-label={t('dialogs.historicalScorerFor', { player: scorer.playerName })}
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
@@ -61,7 +64,7 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
           <button
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
-            aria-label="Cerrar"
+            aria-label={t('actions.close')}
           >
             <X size={16} />
           </button>
@@ -71,10 +74,10 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
           {/* Stats resumen */}
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
-              { val: scorer.totalGoals, lbl: 'Goles totales' },
-              { val: scorer.worldCups.length, lbl: 'Mundiales' },
-              { val: scorer.average.toFixed(2), lbl: 'Promedio' },
-              { val: titles > 0 ? `🏆 ${titles}` : '—', lbl: 'Títulos' },
+              { val: scorer.totalGoals, lbl: t('labels.totalGoals') },
+              { val: scorer.worldCups.length, lbl: t('navigation.worldcups') },
+              { val: scorer.average.toFixed(2), lbl: t('labels.average') },
+              { val: titles > 0 ? `🏆 ${titles}` : '-', lbl: t('labels.titles') },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
                 <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
@@ -85,7 +88,7 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
 
           {/* Confederación */}
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-[11px] text-wc-text-muted">Confederación:</span>
+            <span className="text-[11px] text-wc-text-muted">{t('labels.confederation')}:</span>
             <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
               <span
                 className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
@@ -99,10 +102,18 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
           <table className="w-full border-collapse text-[11px]">
             <thead>
               <tr className="border-b border-wc-border-primary">
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">Mundial</th>
-                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">Goles</th>
-                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">Promedio</th>
-                <th className="text-right font-normal text-wc-text-muted pb-2">Medalla</th>
+                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
+                  {t('labels.worldCup')}
+                </th>
+                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">
+                  {t('labels.goals')}
+                </th>
+                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">
+                  {t('labels.average')}
+                </th>
+                <th className="text-right font-normal text-wc-text-muted pb-2">
+                  {t('labels.medal')}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -130,7 +141,7 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
 
                   {/* Promedio */}
                   <td className="py-2 pr-3 text-right text-wc-text-muted">
-                    {wc.goals > 0 ? wc.average.toFixed(2) : '—'}
+                    {wc.goals > 0 ? wc.average.toFixed(2) : '-'}
                   </td>
 
                   {/* Medalla / desempeño */}

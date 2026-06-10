@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Users } from 'lucide-react';
 import type { Team } from '@/types/team.types';
-import { PERFORMANCE_LABEL, PERFORMANCE_STYLES, CONFEDERATION_TOOLTIP } from '@/types/team.types';
+import { PERFORMANCE_STYLES, CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
 import { PlayersModal } from '../shared/PlayersModal';
+import { useTranslation } from 'react-i18next';
 
 const PAGE_SIZE = 10;
 
@@ -19,6 +20,7 @@ export interface TeamsTabProps {
  * Modal de plantel al hacer click en el ícono de jugadores.
  */
 export function TeamsTab({ teams }: TeamsTabProps) {
+  const { t } = useTranslation('common');
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [searchName, setSearchName] = useState('');
   const [filterConfederation, setFilterConf] = useState('');
@@ -61,7 +63,7 @@ export function TeamsTab({ teams }: TeamsTabProps) {
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar selección..."
+          placeholder={t('search.team')}
           value={searchName}
           onChange={handleFilterChange(setSearchName)}
         />
@@ -69,14 +71,14 @@ export function TeamsTab({ teams }: TeamsTabProps) {
           className="flex-1"
           value={filterConfederation}
           onChange={handleFilterChange(setFilterConf)}
-          placeholderOption="Todas las confederaciones"
+          placeholderOption={t('filters.allConfederations')}
           options={confederationOptions.map((c) => ({ value: c, label: c }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterGroup}
           onChange={handleFilterChange(setFilterGroup)}
-          placeholderOption="Todos los grupos"
+          placeholderOption={t('filters.allGroups')}
           options={groupOptions.map((g) => ({ value: g, label: g }))}
         />
       </div>
@@ -84,15 +86,23 @@ export function TeamsTab({ teams }: TeamsTabProps) {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-wc-border-primary">
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
-              Confederación
+              {t('labels.team')}
             </th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Grupo</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">DT</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Desempeño</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.confederation')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.group')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.coach')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.performance')}
+            </th>
             <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">
-              Acciones
+              {t('labels.actions')}
             </th>
           </tr>
         </thead>
@@ -100,7 +110,7 @@ export function TeamsTab({ teams }: TeamsTabProps) {
           {paginatedTeams.length === 0 && (
             <tr>
               <td colSpan={6} className="py-8 text-center text-sm text-wc-text-muted">
-                No se encontraron selecciones con esos filtros
+                {t('empty.teams')}
               </td>
             </tr>
           )}
@@ -137,16 +147,16 @@ export function TeamsTab({ teams }: TeamsTabProps) {
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${PERFORMANCE_STYLES[team.performance]}`}
                   >
-                    {PERFORMANCE_LABEL[team.performance]}
+                    {t(`performance.${team.performance}`)}
                   </span>
                 </td>
 
                 <td className="py-2.5 text-center">
-                  <Tooltip content="Jugadores" groupName="action">
+                  <Tooltip content={t('labels.players')} groupName="action">
                     <button
                       onClick={() => setSelectedTeam(team)}
                       className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
-                      aria-label={`Ver jugadores de ${team.name}`}
+                      aria-label={t('actions.viewPlayersFor', { team: team.name })}
                     >
                       <Users size={13} />
                     </button>
@@ -163,7 +173,7 @@ export function TeamsTab({ teams }: TeamsTabProps) {
         totalPages={totalPages}
         totalItems={filtered.length}
         pageSize={PAGE_SIZE}
-        itemsLabel="selecciones"
+        itemsLabel={t('labels.teams').toLowerCase()}
         onPageChange={setCurrentPage}
       />
 

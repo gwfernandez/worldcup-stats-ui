@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "All-Time",
+    "titleAccent": "Standings Table",
+    "description": "Cumulative ranking of national teams in Football World Cup history.",
+    "teams": "Teams",
+    "matches": "Matches",
+    "points": "Points",
+    "bestTeam": "Best team",
+    "firstWorldCup": "1st World Cup"
+  },
+  "legend": {
+    "title": "Legend",
+    "abbreviation": "Abbr.",
+    "meaning": "Meaning",
+    "points": "Accumulated points",
+    "played": "Matches played",
+    "won": "Matches won",
+    "drawn": "Matches drawn",
+    "lost": "Matches lost",
+    "goalsFor": "Goals for",
+    "goalsAgainst": "Goals against",
+    "goalDiff": "Goal difference (GF - GA)",
+    "pointsSystem": "Points system",
+    "win": "Match won",
+    "draw": "Match drawn",
+    "loss": "Match lost",
+    "since1998": "▲ Since France 1998",
+    "until1994": "▼ Until USA 1994",
+    "always": "Always",
+    "notePrefix": "Historical points are calculated using the current",
+    "noteHighlight": "3 points per win",
+    "noteSuffix": "system for consistency across editions."
+  }
+}

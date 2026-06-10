@@ -5,6 +5,7 @@ import type { Match } from '@/types/championship.types';
 import { MatchModal } from '../shared/MatchModal';
 import { StadiumMatchesModal } from '../shared/StadiumMatchesModal';
 import { SearchInput } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -21,6 +22,7 @@ export interface StadiumsTabProps {
  * Al hacer click en un partido del modal se abre el MatchModal de detalle.
  */
 export function StadiumsTab({ stadiums }: StadiumsTabProps) {
+  const { t } = useTranslation('common');
   const [searchName, setSearchName] = useState('');
   const [selectedStadium, setSelectedStadium] = useState<Stadium | null>(null);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
@@ -41,7 +43,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar estadio..."
+          placeholder={t('search.stadium')}
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -51,12 +53,20 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-wc-border-primary">
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Estadio</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Ciudad</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Capacidad</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Partidos</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.stadium')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.city')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.capacity')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.matches')}
+            </th>
             <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">
-              Acciones
+              {t('labels.actions')}
             </th>
           </tr>
         </thead>
@@ -64,7 +74,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
           {filtered.length === 0 && (
             <tr>
               <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
-                No se encontraron estadios
+                {t('empty.stadiums')}
               </td>
             </tr>
           )}
@@ -111,7 +121,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-conf-uefa-bar hover:text-wc-conf-uefa-bar transition-colors focus:outline-none"
-                      aria-label={`Ver ${stadium.name} en el mapa`}
+                      aria-label={t('actions.viewStadiumOnMap', { stadium: stadium.name })}
                       onClick={(e) => {
                         if (!stadium.mapsUrl) e.preventDefault();
                       }}
@@ -119,7 +129,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                       <Map size={13} aria-hidden="true" />
                     </a>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 group-hover/map:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-                      Ver en mapa
+                      {t('actions.viewOnMap')}
                       <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
                     </div>
                   </div>
@@ -129,12 +139,12 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                     <button
                       onClick={() => setSelectedStadium(stadium)}
                       className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
-                      aria-label={`Ver partidos en ${stadium.name}`}
+                      aria-label={t('actions.viewMatchesAt', { stadium: stadium.name })}
                     >
                       <Clock size={13} aria-hidden="true" />
                     </button>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 group-hover/matches:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
-                      Partidos
+                      {t('labels.matches')}
                       <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
                     </div>
                   </div>

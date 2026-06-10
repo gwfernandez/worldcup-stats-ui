@@ -4,6 +4,7 @@ import { useHistoricalStandings } from '../hooks/useHistoricalStandings';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
 import { Globe, Swords, Trophy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Página de Tabla de Posiciones Históricas.
@@ -11,20 +12,21 @@ import { Globe, Swords, Trophy } from 'lucide-react';
  * Ruta: /standings
  */
 export default function HistoricalStandingsPage() {
+  const { t } = useTranslation(['historicalStandings', 'championships']);
   const { standings, isLoading, isError, error } = useHistoricalStandings();
 
   return (
     <>
       <HeroSection
-        badge="Historia de los mundiales de fútbol"
-        title="Tabla de"
-        titleAccent="Posiciones Históricas"
-        description="Ranking acumulado de todas las selecciones en la historia de los Mundiales de Fútbol."
+        badge={t('championships:hero.badge')}
+        title={t('historicalStandings:hero.title')}
+        titleAccent={t('historicalStandings:hero.titleAccent')}
+        description={t('historicalStandings:hero.description')}
         stats={[
-          { icon: Trophy, value: '22', label: 'Ediciones' },
-          { icon: Globe, value: '80+', label: 'Selecciones' },
-          { icon: Swords, value: '2800+', label: 'Partidos' },
-          { icon: Trophy, value: '1930', label: '1er Mundial' },
+          { icon: Trophy, value: '22', label: t('championships:stats.editions') },
+          { icon: Globe, value: '80+', label: t('historicalStandings:hero.teams') },
+          { icon: Swords, value: '2800+', label: t('historicalStandings:hero.matches') },
+          { icon: Trophy, value: '1930', label: t('historicalStandings:hero.firstWorldCup') },
         ]}
       />
 

@@ -6,14 +6,23 @@ import { useChampionships } from '../hooks/useChampionships';
 import { CONTINENT_BY_COUNTRY_CODE, type FilterType } from '../utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const SKELETON_COUNT = 22;
 
 export default function ChampionshipsPage() {
+  const { t } = useTranslation(['championships', 'common']);
   const { championships, isLoading, isError, error } = useChampionships();
   const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
 
   const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia', 'África'];
+  const filterLabels: Record<FilterType, string> = {
+    Todos: t('common:filters.all'),
+    América: t('common:filters.america'),
+    Europa: t('common:filters.europe'),
+    Asia: t('common:filters.asia'),
+    África: t('common:filters.africa'),
+  };
 
   const filtered =
     activeFilter === 'Todos'
@@ -31,15 +40,15 @@ export default function ChampionshipsPage() {
   return (
     <>
       <HeroSection
-        badge="Historia de los mundiales de fútbol"
-        title="Todos los"
-        titleAccent="Mundiales de Fútbol"
-        description="Fixtures, campeones, planteles y goleadores desde Uruguay 1930."
+        badge={t('championships:hero.badge')}
+        title={t('championships:hero.title')}
+        titleAccent={t('championships:hero.titleAccent')}
+        description={t('championships:hero.description')}
         stats={[
-          { icon: Trophy, value: '22', label: 'Ediciones' },
-          { icon: Globe, value: '80+', label: 'Selecciones' },
-          { icon: Swords, value: '2800+', label: 'Partidos' },
-          { icon: Users, value: '1000+', label: 'Jugadores' },
+          { icon: Trophy, value: '22', label: t('championships:stats.editions') },
+          { icon: Globe, value: '80+', label: t('championships:stats.teams') },
+          { icon: Swords, value: '2800+', label: t('championships:stats.matches') },
+          { icon: Users, value: '1000+', label: t('championships:stats.players') },
         ]}
       />
 
@@ -47,11 +56,11 @@ export default function ChampionshipsPage() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-medium text-wc-text-primary flex items-center gap-2">
             <Trophy size={14} className="text-wc-text-muted" aria-hidden="true" />
-            Ediciones
+            {t('championships:list.title')}
             <span className="text-xs text-wc-text-muted font-normal ml-1">({filtered.length})</span>
           </h2>
 
-          <div className="flex gap-2" role="group" aria-label="Filtrar por continente">
+          <div className="flex gap-2" role="group" aria-label={t('common:filters.continent')}>
             {filters.map((f) => (
               <button
                 key={f}
@@ -62,7 +71,7 @@ export default function ChampionshipsPage() {
                     : 'bg-transparent text-wc-text-muted border-wc-border-primary hover:border-wc-border-muted hover:text-wc-text-primary'
                 }`}
               >
-                {f}
+                {filterLabels[f]}
               </button>
             ))}
           </div>
