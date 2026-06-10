@@ -41,18 +41,18 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
       aria-label={`Detalle de goles de ${playerName}`}
     >
       <div
-        className="bg-[#161925] border border-[#2a2d3a] rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+        className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
-          <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
+          <div className="flex items-center gap-2 text-sm font-medium text-wc-text-primary">
             <FlagImage countryCode={teamCode} alt={teamName} className="rounded-[2px]" />
             {playerName} — {teamName}
           </div>
           <button
             onClick={onClose}
-            className="text-[#8a8fa8] hover:text-[#e8eaf0] transition-colors focus:outline-none"
+            className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
             aria-label="Cerrar"
           >
             <X size={16} />
@@ -61,7 +61,7 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
 
         <div className="px-4 py-4">
           {/* Stats resumen */}
-          <div className="flex gap-5 px-4 py-3 bg-[#1e2233] border border-[#2a2d3a] rounded-lg mb-4">
+          <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
               { val: totalGoals, lbl: 'Goles' },
               { val: matchesPlayed, lbl: 'Partidos' },
@@ -69,8 +69,8 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
               { val: new Set(goals.map((g) => g.phase)).size, lbl: 'Fases' },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
-                <p className="text-lg font-medium text-[#e8c84a] leading-none">{val}</p>
-                <p className="text-[10px] text-[#8a8fa8] mt-1">{lbl}</p>
+                <p className="text-lg font-medium text-wc-accent-gold leading-none">{val}</p>
+                <p className="text-[10px] text-wc-text-muted mt-1">{lbl}</p>
               </div>
             ))}
           </div>
@@ -78,27 +78,29 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
           {/* Tabla de goles */}
           <table className="w-full border-collapse text-[12px]">
             <thead>
-              <tr className="border-b border-[#2a2d3a]">
-                <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2 pr-3">
+              <tr className="border-b border-wc-border-primary">
+                <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
                   Fecha
                 </th>
-                <th className="text-right text-[11px] font-normal text-[#8a8fa8] pb-2 pr-3">
+                <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
                   Min.
                 </th>
-                <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2 pr-3">
+                <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
                   Rival
                 </th>
-                <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Fase</th>
+                <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Fase</th>
               </tr>
             </thead>
             <tbody>
               {goals.map((goal) => {
                 const isFinalPhase = FINAL_PHASES.includes(goal.phase);
                 return (
-                  <tr key={goal.id} className="border-t border-[#1e2233]">
-                    <td className="py-2 pr-3 text-[#8a8fa8] whitespace-nowrap">{goal.date}</td>
+                  <tr key={goal.id} className="border-t border-wc-surface-secondary">
+                    <td className="py-2 pr-3 text-wc-text-muted whitespace-nowrap">{goal.date}</td>
                     <td className="py-2 pr-3 text-right">
-                      <span className="text-[11px] font-medium text-[#e8c84a]">{goal.minute}'</span>
+                      <span className="text-[11px] font-medium text-wc-accent-gold">
+                        {goal.minute}'
+                      </span>
                     </td>
                     <td className="py-2 pr-3">
                       <div className="flex items-center gap-1.5">
@@ -109,15 +111,15 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
                           height={10}
                           className="rounded-[1px] shrink-0"
                         />
-                        <span className="text-[#e8eaf0]">{goal.rivalTeam}</span>
+                        <span className="text-wc-text-primary">{goal.rivalTeam}</span>
                       </div>
                     </td>
                     <td className="py-2">
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full border ${
                           isFinalPhase
-                            ? 'bg-[#1e2a14] border-[#3a5a1a] text-[#8fc44a]'
-                            : 'bg-[#1e2233] border-[#2a2d3a] text-[#8a8fa8]'
+                            ? 'bg-wc-success-surface border-wc-success-border text-wc-success'
+                            : 'bg-wc-surface-secondary border-wc-border-primary text-wc-text-muted'
                         }`}
                       >
                         {goal.phase}

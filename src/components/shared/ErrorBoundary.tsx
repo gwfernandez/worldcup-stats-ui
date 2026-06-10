@@ -47,25 +47,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       return (
         <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 text-center font-mono animate-fade-in">
-          <div className="bg-[#161925] border border-[#2a2d3a] rounded-xl p-8 max-w-md w-full shadow-2xl">
+          <div className="bg-wc-surface-primary border border-wc-border-primary rounded-xl p-8 max-w-md w-full shadow-2xl">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-destructive/10 text-destructive mb-5">
               <AlertTriangle className="h-7 w-7" aria-hidden="true" />
             </div>
 
-            <h2 className="text-lg font-bold text-[#e8eaf0] mb-2 tracking-wide">
+            <h2 className="text-lg font-bold text-wc-text-primary mb-2 tracking-wide">
               Ha ocurrido un error
             </h2>
 
-            <p className="text-xs text-[#8a8fa8] mb-5 leading-relaxed">
-              Se produjo un fallo inesperado al renderizar esta sección. Puedes intentar restaurar la vista o recargar la página.
+            <p className="text-xs text-wc-text-muted mb-5 leading-relaxed">
+              Se produjo un fallo inesperado al renderizar esta sección. Puedes intentar restaurar
+              la vista o recargar la página.
             </p>
 
             {error && (
-              <div className="text-left bg-[#1e2233] border border-[#2a2d3a] rounded-lg p-3.5 mb-6 max-h-32 overflow-y-auto">
-                <p className="text-[10px] text-[#8a8fa8] uppercase font-bold tracking-wider mb-1">
+              <div className="text-left bg-wc-surface-secondary border border-wc-border-primary rounded-lg p-3.5 mb-6 max-h-32 overflow-y-auto">
+                <p className="text-[10px] text-wc-text-muted uppercase font-bold tracking-wider mb-1">
                   Detalles del error:
                 </p>
-                <code className="text-[11px] text-[#ff9f43] whitespace-pre-wrap break-all leading-normal">
+                <code className="text-[11px] text-wc-warning whitespace-pre-wrap break-all leading-normal">
                   {error.name}: {error.message}
                 </code>
               </div>
@@ -75,7 +76,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <Button
                 variant="default"
                 onClick={this.reset}
-                className="bg-[#e8c84a] text-[#0f1117] hover:bg-[#d0b038] font-bold h-9 px-4 text-xs flex items-center gap-1.5 cursor-pointer"
+                className="bg-wc-accent-gold text-wc-bg-primary hover:bg-wc-accent-gold-hover font-bold h-9 px-4 text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reintentar
@@ -83,7 +84,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <Button
                 variant="outline"
                 onClick={() => window.location.reload()}
-                className="border-[#2a2d3a] hover:bg-[#1e2233] hover:text-[#e8eaf0] h-9 px-4 text-xs font-bold text-[#8a8fa8] cursor-pointer"
+                className="border-wc-border-primary hover:bg-wc-surface-secondary hover:text-wc-text-primary h-9 px-4 text-xs font-bold text-wc-text-muted cursor-pointer"
               >
                 Recargar página
               </Button>

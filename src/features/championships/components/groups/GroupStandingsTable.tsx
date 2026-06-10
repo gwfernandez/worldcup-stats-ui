@@ -39,15 +39,15 @@ export function GroupStandingsTable({ standings }: GroupStandingsTableProps) {
       </colgroup>
 
       <thead>
-        <tr className="border-b border-[#2a2d3a]">
-          <th className="text-left text-[10px] text-[#8a8fa8] font-normal py-[5px] pl-[10px] pr-1">
+        <tr className="border-b border-wc-border-primary">
+          <th className="text-left text-[10px] text-wc-text-muted font-normal py-[5px] pl-[10px] pr-1">
             Equipo
           </th>
           {COLS.map((c) => (
             <th
               key={c.key}
               title={c.title}
-              className="text-right text-[10px] text-[#8a8fa8] font-normal py-[5px] px-1"
+              className="text-right text-[10px] text-wc-text-muted font-normal py-[5px] px-1"
             >
               {c.label}
             </th>
@@ -57,12 +57,14 @@ export function GroupStandingsTable({ standings }: GroupStandingsTableProps) {
 
       <tbody>
         {standings.map((row) => {
-          const textColor = row.qualified ? 'text-[#8fc44a]' : 'text-[#e8eaf0]';
+          const textColor = row.qualified ? 'text-wc-success' : 'text-wc-text-primary';
           return (
-            <tr key={row.teamCode} className="border-t border-[#1e2233]">
+            <tr key={row.teamCode} className="border-t border-wc-surface-secondary">
               <td className={`py-[5px] pl-[10px] pr-1 ${textColor}`}>
                 <div className="flex items-center gap-1.5 overflow-hidden">
-                  <span className="text-[10px] text-[#8a8fa8] shrink-0 w-3">{row.position}</span>
+                  <span className="text-[10px] text-wc-text-muted shrink-0 w-3">
+                    {row.position}
+                  </span>
                   <FlagImage
                     countryCode={row.teamCode}
                     alt={row.teamName}

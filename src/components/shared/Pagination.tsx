@@ -39,9 +39,9 @@ export function Pagination({
   const to = Math.min(currentPage * pageSize, totalItems);
 
   return (
-    <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#2a2d3a]">
+    <div className="flex items-center justify-between mt-4 pt-3 border-t border-wc-border-primary">
       {/* Range info */}
-      <span className="text-[11px] text-[#8a8fa8]">
+      <span className="text-[11px] text-wc-text-muted">
         {from}–{to} de {totalItems} {itemsLabel}
       </span>
 
@@ -51,7 +51,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex items-center justify-center w-7 h-7 rounded-md border border-[#2a2d3a] text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#2a2d3a] disabled:hover:text-[#8a8fa8] transition-colors focus:outline-none"
+          className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
           aria-label="Página anterior"
         >
           <ChevronLeft size={12} aria-hidden="true" />
@@ -62,7 +62,7 @@ export function Pagination({
           page === '...' ? (
             <span
               key={`ellipsis-${i}`}
-              className="w-7 h-7 flex items-center justify-center text-[11px] text-[#8a8fa8]"
+              className="w-7 h-7 flex items-center justify-center text-[11px] text-wc-text-muted"
             >
               …
             </span>
@@ -72,8 +72,8 @@ export function Pagination({
               onClick={() => onPageChange(page as number)}
               className={`w-7 h-7 rounded-md border text-[11px] transition-colors focus:outline-none ${
                 currentPage === page
-                  ? 'bg-[#1e2a14] border-[#3a5a1a] text-[#e8c84a] font-medium'
-                  : 'border-[#2a2d3a] text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a]'
+                  ? 'bg-wc-success-surface border-wc-success-border text-wc-accent-gold font-medium'
+                  : 'border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold'
               }`}
               aria-label={`Página ${page}`}
               aria-current={currentPage === page ? 'page' : undefined}
@@ -87,7 +87,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex items-center justify-center w-7 h-7 rounded-md border border-[#2a2d3a] text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#2a2d3a] disabled:hover:text-[#8a8fa8] transition-colors focus:outline-none"
+          className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
           aria-label="Página siguiente"
         >
           <ChevronRight size={12} aria-hidden="true" />

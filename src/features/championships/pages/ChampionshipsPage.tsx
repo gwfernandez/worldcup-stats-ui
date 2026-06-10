@@ -3,10 +3,7 @@ import { Trophy, Globe, Users, Swords } from 'lucide-react';
 import { ChampionshipCard } from '../components/ChampionshipCard';
 import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton';
 import { useChampionships } from '../hooks/useChampionships';
-import {
-  CONTINENT_BY_COUNTRY_CODE,
-  type FilterType,
-} from '../utils/championshipFilter.utils';
+import { CONTINENT_BY_COUNTRY_CODE, type FilterType } from '../utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
 
@@ -21,9 +18,7 @@ export default function ChampionshipsPage() {
   const filtered =
     activeFilter === 'Todos'
       ? championships
-      : championships.filter(
-          (wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter,
-        );
+      : championships.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
 
   const cardsSkeleton = (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -50,10 +45,10 @@ export default function ChampionshipsPage() {
 
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-medium text-[#e8eaf0] flex items-center gap-2">
-            <Trophy size={14} className="text-[#8a8fa8]" aria-hidden="true" />
+          <h2 className="text-sm font-medium text-wc-text-primary flex items-center gap-2">
+            <Trophy size={14} className="text-wc-text-muted" aria-hidden="true" />
             Ediciones
-            <span className="text-xs text-[#8a8fa8] font-normal ml-1">({filtered.length})</span>
+            <span className="text-xs text-wc-text-muted font-normal ml-1">({filtered.length})</span>
           </h2>
 
           <div className="flex gap-2" role="group" aria-label="Filtrar por continente">
@@ -61,10 +56,10 @@ export default function ChampionshipsPage() {
               <button
                 key={f}
                 onClick={() => setActiveFilter(f)}
-                className={`text-xs px-3 py-1 rounded-full border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#e8c84a] focus:ring-offset-1 focus:ring-offset-[#0f1117] ${
+                className={`text-xs px-3 py-1 rounded-full border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-1 focus:ring-offset-wc-bg-primary ${
                   activeFilter === f
-                    ? 'bg-[#1e2a14] text-[#8fc44a] border-[#3a5a1a]'
-                    : 'bg-transparent text-[#8a8fa8] border-[#2a2d3a] hover:border-[#4a4d5a] hover:text-[#e8eaf0]'
+                    ? 'bg-wc-success-surface text-wc-success border-wc-success-border'
+                    : 'bg-transparent text-wc-text-muted border-wc-border-primary hover:border-wc-border-muted hover:text-wc-text-primary'
                 }`}
               >
                 {f}

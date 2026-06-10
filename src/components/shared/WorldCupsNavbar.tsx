@@ -28,8 +28,8 @@ export interface WorldCupsNavbarProps {
   links?: NavLink[];
 }
 
-const ACTIVE_LINK_CLASS = 'text-[#e8c84a]';
-const INACTIVE_LINK_CLASS = 'text-[#8a8fa8]';
+const ACTIVE_LINK_CLASS = 'text-wc-accent-gold';
+const INACTIVE_LINK_CLASS = 'text-wc-text-muted';
 
 // ---------------------------------------------------------------------------
 // Subcomponentes internos
@@ -43,9 +43,9 @@ function NavLogo({ text }: NavLogoProps): React.ReactElement {
   return (
     <Link
       to="/"
-      className="flex items-center gap-2 text-[15px] font-medium text-[#e8eaf0] tracking-wide no-underline"
+      className="flex items-center gap-2 text-[15px] font-medium text-wc-text-primary tracking-wide no-underline"
     >
-      <i className="ti ti-trophy text-[#e8c84a] text-[18px]" aria-hidden="true" />
+      <i className="ti ti-trophy text-wc-accent-gold text-[18px]" aria-hidden="true" />
       {text}
     </Link>
   );
@@ -65,7 +65,7 @@ function NavLinkItem({ href, label }: NavLinkItemProps): React.ReactElement {
       <RouterNavLink
         to={href}
         end={href === '/'}
-        className={`text-[13px] no-underline transition-colors duration-150 hover:text-[#c8cad8] ${
+        className={`text-[13px] no-underline transition-colors duration-150 hover:text-wc-text-soft ${
           isLinkActive ? ACTIVE_LINK_CLASS : INACTIVE_LINK_CLASS
         }`}
         aria-current={isLinkActive ? 'page' : undefined}
@@ -94,11 +94,11 @@ export default function WorldCupsNavbar({
   return (
     <>
       <nav
-        className="font-mono flex items-center justify-between px-6 py-[14px] border-b border-[#2a2d3a] bg-[#0f1117]"
+        className="font-mono flex items-center justify-between px-6 py-[14px] border-b border-wc-border-primary bg-wc-bg-primary"
         aria-label="Navegación principal"
       >
         <div className="flex items-center gap-2">
-          <Trophy size={18} className="text-[#e8c84a]" aria-hidden="true" />
+          <Trophy size={18} className="text-wc-accent-gold" aria-hidden="true" />
           <NavLogo text={logoText} />
         </div>
 

@@ -44,10 +44,10 @@ export function Tooltip({
     <div className={`relative inline-flex ${wrapperGroup} cursor-default ${className}`}>
       {children}
       <div
-        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 ${hoverGroup} transition-opacity duration-150 pointer-events-none z-10`}
+        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 ${hoverGroup} transition-opacity duration-150 pointer-events-none z-10`}
       >
         {content}
-        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
+        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
       </div>
     </div>
   );

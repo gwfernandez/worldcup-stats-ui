@@ -50,18 +50,20 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
       {/* ── Tabla ────────────────────────────────────────────────── */}
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-[#2a2d3a]">
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Estadio</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Ciudad</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Capacidad</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Partidos</th>
-            <th className="text-center text-[11px] font-normal text-[#8a8fa8] pb-2">Acciones</th>
+          <tr className="border-b border-wc-border-primary">
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Estadio</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Ciudad</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Capacidad</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Partidos</th>
+            <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-8 text-center text-sm text-[#8a8fa8]">
+              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 No se encontraron estadios
               </td>
             </tr>
@@ -69,16 +71,16 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
           {filtered.map((stadium) => (
             <tr
               key={stadium.id}
-              className="border-t border-[#1e2233] hover:bg-[#161925] transition-colors duration-150"
+              className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
             >
               {/* Nombre */}
               <td className="py-2.5 pr-3">
-                <span className="text-xs text-[#e8eaf0]">{stadium.name}</span>
+                <span className="text-xs text-wc-text-primary">{stadium.name}</span>
               </td>
 
               {/* Ciudad */}
               <td className="py-2.5 pr-3">
-                <div className="flex items-center gap-1.5 text-xs text-[#8a8fa8]">
+                <div className="flex items-center gap-1.5 text-xs text-wc-text-muted">
                   <MapPin size={11} aria-hidden="true" />
                   {stadium.city}
                 </div>
@@ -86,14 +88,14 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
 
               {/* Capacidad */}
               <td className="py-2.5 pr-3">
-                <span className="text-xs text-[#8a8fa8]">
+                <span className="text-xs text-wc-text-muted">
                   {stadium.capacity ? stadium.capacity.toLocaleString() : '—'}
                 </span>
               </td>
 
               {/* Conteo de partidos */}
               <td className="py-2.5 pr-3">
-                <div className="flex items-center gap-1.5 text-xs text-[#8a8fa8]">
+                <div className="flex items-center gap-1.5 text-xs text-wc-text-muted">
                   <Clock size={11} aria-hidden="true" />
                   {stadium.matches.length}
                 </div>
@@ -108,7 +110,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                       href={stadium.mapsUrl ?? '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#4a78d4] hover:text-[#4a78d4] transition-colors focus:outline-none"
+                      className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-conf-uefa-bar hover:text-wc-conf-uefa-bar transition-colors focus:outline-none"
                       aria-label={`Ver ${stadium.name} en el mapa`}
                       onClick={(e) => {
                         if (!stadium.mapsUrl) e.preventDefault();
@@ -116,9 +118,9 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                     >
                       <Map size={13} aria-hidden="true" />
                     </a>
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/map:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 group-hover/map:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
                       Ver en mapa
-                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
                     </div>
                   </div>
 
@@ -126,14 +128,14 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
                   <div className="relative group/matches">
                     <button
                       onClick={() => setSelectedStadium(stadium)}
-                      className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] transition-colors focus:outline-none"
+                      className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
                       aria-label={`Ver partidos en ${stadium.name}`}
                     >
                       <Clock size={13} aria-hidden="true" />
                     </button>
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-md text-[10px] text-[#e8eaf0] whitespace-nowrap opacity-0 group-hover/matches:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 group-hover/matches:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
                       Partidos
-                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#2a2d3a]" />
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
                     </div>
                   </div>
                 </div>

@@ -59,15 +59,15 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
       aria-label={`Detalle del partido ${homeTeam} vs ${awayTeam}`}
     >
       <div
-        className="bg-[#161925] border border-[#2a2d3a] rounded-xl w-full max-w-sm max-h-[85vh] overflow-y-auto"
+        className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-sm max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
-          <span className="text-sm font-medium text-[#e8eaf0]">Detalle del partido</span>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
+          <span className="text-sm font-medium text-wc-text-primary">Detalle del partido</span>
           <button
             onClick={onClose}
-            className="text-[#8a8fa8] hover:text-[#e8eaf0] transition-colors focus:outline-none"
+            className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
             aria-label="Cerrar"
           >
             <X size={16} />
@@ -87,9 +87,9 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
                 height={27}
                 className="rounded"
               />
-              <span className="text-xs text-[#e8eaf0] text-center">{homeTeam}</span>
+              <span className="text-xs text-wc-text-primary text-center">{homeTeam}</span>
             </div>
-            <div className="text-2xl font-medium text-[#e8c84a] px-3">
+            <div className="text-2xl font-medium text-wc-accent-gold px-3">
               {homeScore !== null && awayScore !== null ? `${homeScore} – ${awayScore}` : 'vs'}
             </div>
             <div className="flex flex-col items-center gap-1 flex-1">
@@ -101,28 +101,28 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
                 height={27}
                 className="rounded"
               />
-              <span className="text-xs text-[#e8eaf0] text-center">{awayTeam}</span>
+              <span className="text-xs text-wc-text-primary text-center">{awayTeam}</span>
             </div>
           </div>
 
           {/* Metadata */}
           <div className="flex flex-wrap gap-1.5 mb-4">
             {date && (
-              <span className="text-[11px] px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-full text-[#8a8fa8]">
+              <span className="text-[11px] px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-full text-wc-text-muted">
                 {date}
               </span>
             )}
             {stadium && (
-              <span className="text-[11px] px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-full text-[#8a8fa8]">
+              <span className="text-[11px] px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-full text-wc-text-muted">
                 {stadium}
               </span>
             )}
             {attendance && (
-              <span className="text-[11px] px-2 py-1 bg-[#1e2233] border border-[#2a2d3a] rounded-full text-[#8a8fa8]">
+              <span className="text-[11px] px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-full text-wc-text-muted">
                 {attendance.toLocaleString()} esp.
               </span>
             )}
-            <span className="text-[11px] px-2 py-1 bg-[#1e2a14] border border-[#3a5a1a] rounded-full text-[#8fc44a]">
+            <span className="text-[11px] px-2 py-1 bg-wc-success-surface border border-wc-success-border rounded-full text-wc-success">
               {phase}
             </span>
           </div>
@@ -130,13 +130,15 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
           {/* Goles */}
           {goals.length > 0 && (
             <div>
-              <p className="text-[10px] text-[#8a8fa8] uppercase tracking-wider mb-1">Goles</p>
+              <p className="text-[10px] text-wc-text-muted uppercase tracking-wider mb-1">Goles</p>
               {goals.map((goal) => (
                 <div
                   key={goal.id}
-                  className="flex items-center gap-2 py-1.5 border-t border-[#1e2233] text-xs text-[#e8eaf0]"
+                  className="flex items-center gap-2 py-1.5 border-t border-wc-surface-secondary text-xs text-wc-text-primary"
                 >
-                  <span className="text-[11px] text-[#e8c84a] min-w-[28px]">{goal.minute}'</span>
+                  <span className="text-[11px] text-wc-accent-gold min-w-[28px]">
+                    {goal.minute}'
+                  </span>
                   <FlagImage
                     countryCode={goal.teamCode}
                     alt=""
@@ -146,7 +148,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
                   />
                   <span>{goal.playerName}</span>
                   {goal.type && goal.type !== 'normal' && (
-                    <span className="text-[10px] text-[#8a8fa8]">
+                    <span className="text-[10px] text-wc-text-muted">
                       ({GOAL_TYPE_LABEL[goal.type] ?? goal.type})
                     </span>
                   )}
@@ -156,7 +158,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
           )}
 
           {goals.length === 0 && (
-            <p className="text-xs text-[#8a8fa8] text-center py-2">
+            <p className="text-xs text-wc-text-muted text-center py-2">
               Sin detalle de goles disponible
             </p>
           )}
