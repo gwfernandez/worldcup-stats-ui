@@ -98,5 +98,12 @@ npx vitest run --coverage
      - Impacto SemVer estimado (MAJOR/MINOR/PATCH)
      - Confirmación de cumplimiento de los `✅ Criterios de Aceptación`
      - Link al issue: `Closes #numero_issue`
+   - **Formato obligatorio de la descripción:**
+     - Escribir la descripción completa en un archivo Markdown temporal (por ejemplo `/tmp/pr-body.md` o `/private/tmp/pr-body.md`)
+     - Crear o editar el PR usando `--body-file <archivo>` para preservar saltos de línea, listas y checklists
+     - No pasar descripciones largas inline con `--body "..."`, porque puede generar escapes `\n` y dejar el PR ilegible
+     - Usar secciones Markdown claras: `Resumen`, `Cambios Realizados`, `Rutas Impactadas` (si aplica), `Validación`, `Criterios de Aceptación`, `Impacto SemVer` y `Closes #numero_issue`
 2. Asignarme como reviewer (si la API lo permite, si no, dejar documentado)
 3. **Usar la herramienta de comentarios de GitHub** para publicar el documento de resumen ("Walkthrough") como un comentario final en el issue original, indicando que el trabajo ha concluido.
+   - Para comentarios largos, escribir el contenido en un archivo Markdown temporal y publicarlo con `--body-file <archivo>`
+   - No usar bodies largos inline con `--body "..."`
