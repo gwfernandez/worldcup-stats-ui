@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
@@ -62,5 +63,41 @@ describe('ChampionsPage', () => {
 
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('filtra campeones por búsqueda de selección', async () => {
+    const user = userEvent.setup();
+    vi.mocked(useChampions).mockReturnValue({
+      champions: MOCK_CHAMPIONS,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+
+    renderPage();
+
+    await user.type(screen.getByPlaceholderText('Buscar selección...'), 'Argentina');
+
+    const table = screen.getByRole('table');
+    expect(within(table).getByText('Argentina')).toBeInTheDocument();
+    expect(within(table).queryByText('Brasil')).not.toBeInTheDocument();
+  });
+
+  it('abre el modal de títulos al hacer click en una acción de la tabla', async () => {
+    const user = userEvent.setup();
+    vi.mocked(useChampions).mockReturnValue({
+      champions: MOCK_CHAMPIONS,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Ver títulos de Argentina' }));
+
+    const dialog = screen.getByRole('dialog', { name: 'Títulos de Argentina' });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getAllByText('2022')).toHaveLength(2);
   });
 });
