@@ -5,8 +5,11 @@ import { ScorersTab } from '@/features/championships/components/tabs/ScorersTab'
 import { TeamsTab } from '@/features/championships/components/tabs/TeamsTab';
 import { StadiumsTab } from '@/features/championships/components/tabs/StadiumsTab';
 import { StandingsTab } from '@/features/championships/components/tabs/StandingsTab';
+import { GroupsTabSkeleton } from '@/features/championships/components/tabs/GroupsTabSkeleton';
 import { useChampionshipDetail } from '@/features/championships/hooks/useChampionshipDetail';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
+import { TableSkeleton } from '@/components/shared';
+import { Skeleton } from '@/components/ui/Skeleton';
 import {
   Globe,
   House,
@@ -70,6 +73,71 @@ function parseYearParam(yearParam: string | undefined): number | null {
   return year;
 }
 
+// ─── Skeleton de la página completa ───────────────────────────────────────────
+
+function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
+  return (
+    <>
+      {/* Hero skeleton */}
+      <section className="font-mono bg-[#161925] border-b border-[#2a2d3a]">
+        <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
+          <div className="flex-1 flex flex-col gap-3">
+            <Skeleton className="h-5 w-48 rounded-full" />
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 max-w-full" />
+            <div className="flex gap-2 mt-1">
+              <Skeleton className="h-6 w-28 rounded-full" />
+              <Skeleton className="h-6 w-28 rounded-full" />
+              <Skeleton className="h-6 w-28 rounded-full" />
+            </div>
+            <div className="flex gap-6 mt-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col items-center gap-1">
+                  <Skeleton className="w-3.5 h-3.5 rounded-sm" />
+                  <Skeleton className="h-5 w-6" />
+                  <Skeleton className="h-3 w-12" />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Image placeholder */}
+          <Skeleton className="w-48 h-36 rounded-xl shrink-0" />
+        </div>
+      </section>
+
+      {/* Tabs skeleton */}
+      <div className="font-mono border-b border-[#2a2d3a] bg-[#0f1117] overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex">
+            {TABS.map((tab) => (
+              <div
+                key={tab.id}
+                className="flex items-center gap-1.5 text-xs px-3 py-3 border-b-2 whitespace-nowrap border-transparent"
+              >
+                <Skeleton className="w-3 h-3 rounded-sm" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Tab content skeleton */}
+      <main className="font-mono max-w-7xl mx-auto px-6 py-5" role="status">
+        <span className="sr-only">Cargando mundial...</span>
+        {activeTab === 'groups' ? (
+          <GroupsTabSkeleton />
+        ) : (
+          <TableSkeleton
+            cols={activeTab === 'standings' ? 7 : activeTab === 'stadiums' ? 5 : 5}
+            rows={8}
+          />
+        )}
+      </main>
+    </>
+  );
+}
+
 // ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
@@ -87,7 +155,7 @@ export default function ChampionshipDetailPage() {
   }
 
   if (isLoading || detail === null) {
-    return <p className="font-mono text-sm text-[#8a8fa8] px-6 py-5">Cargando mundial...</p>;
+    return <ChampionshipDetailSkeleton activeTab={activeTab} />;
   }
 
   if (isError) {

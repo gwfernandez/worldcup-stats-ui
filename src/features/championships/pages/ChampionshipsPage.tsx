@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
 import { ChampionshipCard } from '@/features/championships/components/ChampionshipCard';
+import { ChampionshipCardSkeleton } from '@/features/championships/components/ChampionshipCardSkeleton';
 import { useChampionships } from '@/features/championships/hooks/useChampionships';
 import {
   CONTINENT_BY_COUNTRY_CODE,
@@ -8,6 +9,8 @@ import {
 } from '@/features/championships/utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
+
+const SKELETON_COUNT = 22;
 
 export default function ChampionshipsPage() {
   const { championships, isLoading, isError, error } = useChampionships();
@@ -21,6 +24,14 @@ export default function ChampionshipsPage() {
       : championships.filter(
           (wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter,
         );
+
+  const cardsSkeleton = (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+        <ChampionshipCardSkeleton key={i} />
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -62,7 +73,7 @@ export default function ChampionshipsPage() {
           </div>
         </div>
 
-        <QueryStatus isLoading={isLoading} isError={isError} error={error}>
+        <QueryStatus isLoading={isLoading} isError={isError} error={error} skeleton={cardsSkeleton}>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {filtered.map((wc) => (
               <ChampionshipCard key={wc.year} championship={wc} />
