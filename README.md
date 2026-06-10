@@ -19,20 +19,20 @@ Aplicación web para explorar estadísticas históricas de los Mundiales de Fút
 
 ## 🛠️ Stack tecnológico
 
-| Categoría | Tecnología |
-|---|---|
-| Framework | React 19 + Vite |
-| Lenguaje | TypeScript (strict) |
-| Routing | React Router v7 |
-| Data fetching | TanStack Query v5 + Axios |
-| Validación de esquemas | Zod |
-| Estado global | Zustand |
-| Estilos | Tailwind CSS v4 + shadcn/ui |
-| Iconografía | Lucide React |
-| Gráficos | Recharts |
-| i18n | react-i18next |
-| Testing | Vitest + React Testing Library |
-| Calidad | ESLint + Prettier + Husky + lint-staged |
+| Categoría              | Tecnología                              |
+| ---------------------- | --------------------------------------- |
+| Framework              | React 19 + Vite                         |
+| Lenguaje               | TypeScript (strict)                     |
+| Routing                | React Router v7                         |
+| Data fetching          | TanStack Query v5 + Axios               |
+| Validación de esquemas | Zod                                     |
+| Estado global          | Zustand                                 |
+| Estilos                | Tailwind CSS v4 + shadcn/ui             |
+| Iconografía            | Lucide React                            |
+| Gráficos               | Recharts                                |
+| i18n                   | react-i18next                           |
+| Testing                | Vitest + React Testing Library          |
+| Calidad                | ESLint + Prettier + Husky + lint-staged |
 
 ---
 
@@ -87,10 +87,10 @@ Crear un archivo `.env` en la raíz del proyecto basándose en `.env.example`:
 cp .env.example .env
 ```
 
-| Variable | Descripción |
-|---|---|
-| `VITE_API_BASE_URL` | URL base de la REST API de datos |
-| `VITE_USE_MOCK` | Habilita datos mockeados locales cuando vale `true` |
+| Variable            | Descripción                                         |
+| ------------------- | --------------------------------------------------- |
+| `VITE_API_BASE_URL` | URL base de la REST API de datos                    |
+| `VITE_USE_MOCK`     | Habilita datos mockeados locales cuando vale `true` |
 
 ### Modo mock local
 
@@ -142,14 +142,14 @@ npm run format
 
 ## 🗺️ Rutas de la aplicación
 
-| Ruta | Descripción |
-|---|---|
-| `/` | Home — listado de todas las ediciones |
-| `/worldcup/:year` | Vista general de un mundial |
-| `/worldcup/:year/teams` | Equipos participantes |
-| `/worldcup/:year/fixture` | Fixture y resultados |
-| `/worldcup/:year/scorers` | Tabla de goleadores |
-| `/worldcup/:year/team/:id` | Plantel de una selección |
+| Ruta                       | Descripción                           |
+| -------------------------- | ------------------------------------- |
+| `/`                        | Home — listado de todas las ediciones |
+| `/worldcup/:year`          | Vista general de un mundial           |
+| `/worldcup/:year/teams`    | Equipos participantes                 |
+| `/worldcup/:year/fixture`  | Fixture y resultados                  |
+| `/worldcup/:year/scorers`  | Tabla de goleadores                   |
+| `/worldcup/:year/team/:id` | Plantel de una selección              |
 
 ---
 
@@ -178,13 +178,13 @@ Coverage mínimo requerido: **80%**
 
 ### Nombres de archivos
 
-| Tipo | Convención | Ejemplo |
-|---|---|---|
-| Componente | `PascalCase.tsx` | `MatchCard.tsx` |
-| Hook | `camelCase.ts` (prefijo `use`) | `useFixture.ts` |
-| Service | `camelCase.ts` | `fixtureService.ts` |
-| Tipos | `camelCase.types.ts` | `fixture.types.ts` |
-| Test | `{archivo}.test.tsx/ts` | `MatchCard.test.tsx` |
+| Tipo       | Convención                     | Ejemplo              |
+| ---------- | ------------------------------ | -------------------- |
+| Componente | `PascalCase.tsx`               | `MatchCard.tsx`      |
+| Hook       | `camelCase.ts` (prefijo `use`) | `useFixture.ts`      |
+| Service    | `camelCase.ts`                 | `fixtureService.ts`  |
+| Tipos      | `camelCase.types.ts`           | `fixture.types.ts`   |
+| Test       | `{archivo}.test.tsx/ts`        | `MatchCard.test.tsx` |
 
 ### Commits
 
@@ -198,6 +198,33 @@ types(players): agregar interfaz PlayerStats
 ```
 
 Los commits se validan automáticamente en el pre-commit hook mediante **Husky** y **lint-staged**.
+
+### Design tokens
+
+La paleta visual de la aplicación está centralizada en `src/index.css` mediante custom properties
+con prefijo `--wc-*`, expuestas a Tailwind v4 como clases semánticas `wc-*`.
+
+Usar estos tokens en lugar de hexadecimales hardcodeados:
+
+```tsx
+<div className="bg-wc-bg-primary text-wc-text-primary border-wc-border-primary">
+  <span className="text-wc-accent-gold">Argentina 1978</span>
+</div>
+```
+
+Tokens principales:
+
+| Uso                   | Clase Tailwind                              | CSS custom property      |
+| --------------------- | ------------------------------------------- | ------------------------ |
+| Fondo principal       | `bg-wc-bg-primary`                          | `--wc-bg-primary`        |
+| Superficie primaria   | `bg-wc-surface-primary`                     | `--wc-surface-primary`   |
+| Superficie secundaria | `bg-wc-surface-secondary`                   | `--wc-surface-secondary` |
+| Borde principal       | `border-wc-border-primary`                  | `--wc-border-primary`    |
+| Texto principal       | `text-wc-text-primary`                      | `--wc-text-primary`      |
+| Texto secundario      | `text-wc-text-muted`                        | `--wc-text-muted`        |
+| Acento dorado         | `text-wc-accent-gold` / `bg-wc-accent-gold` | `--wc-accent-gold`       |
+| Éxito                 | `text-wc-success` / `bg-wc-success-surface` | `--wc-success`           |
+| Error                 | `text-wc-danger`                            | `--wc-danger`            |
 
 ---
 
