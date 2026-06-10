@@ -11,10 +11,9 @@ describe('GroupsTabSkeleton', () => {
 
   it('renders the default number of group card skeletons (4)', () => {
     const { container } = render(<GroupsTabSkeleton groupCount={4} />);
-    // Each GroupCardSkeleton has the header div with border-b inside
-    const groupCards = container.querySelectorAll('[data-testid="groups-tab-skeleton"] > div:nth-child(2) .bg-\\[\\#161925\\]');
-    // We simply check there is content rendered
+    // Simply verify there is content rendered inside the skeleton wrapper
     expect(screen.getByTestId('groups-tab-skeleton').children.length).toBeGreaterThan(0);
+    expect(container).toBeTruthy();
   });
 
   it('renders a custom groupCount', () => {
