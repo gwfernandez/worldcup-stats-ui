@@ -26,7 +26,7 @@ describe('StadiumsTab', () => {
 
     await user.type(screen.getByPlaceholderText('Buscar estadio...'), 'Sin coincidencias');
 
-    expect(screen.getByText('No se encontraron estadios')).toBeInTheDocument();
+    expect(screen.getByText('No se encontraron estadios con esos filtros')).toBeInTheDocument();
   });
 
   it('renderiza guion y evita navegar cuando un estadio no tiene capacidad ni mapa', async () => {
@@ -68,6 +68,8 @@ describe('StadiumsTab', () => {
     });
     expect(matchDialog).toBeInTheDocument();
     expect(within(matchDialog).getByText('Pelé')).toBeInTheDocument();
-    expect(screen.queryByRole('dialog', { name: 'Partidos en Estadio Azteca' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('dialog', { name: 'Partidos en Estadio Azteca' }),
+    ).not.toBeInTheDocument();
   });
 });

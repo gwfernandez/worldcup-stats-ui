@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
@@ -102,5 +103,23 @@ describe('WorldCupsNavbar', () => {
     expect(screen.getByText('Campeones')).toHaveClass(INACTIVE_CLASS);
     expect(screen.getByText('Posiciones')).toHaveClass(INACTIVE_CLASS);
     expect(screen.getByText('Goleadores')).toHaveClass(INACTIVE_CLASS);
+  });
+
+  it('changes default navigation labels when selecting English', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('link', { name: 'Mundiales' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Inglés' }));
+
+    expect(screen.getByRole('link', { name: 'World Cups' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Champions' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true');
   });
 });

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { Scorer } from '@/types/scorer.types';
 import { FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const FINAL_PHASES = ['Final', 'Semifinales', 'Cuartos de final', 'Tercer puesto'];
 
@@ -19,6 +20,8 @@ export interface ScorerModalProps {
  * Muestra resumen de stats y tabla con cada gol: fecha, minuto, rival y fase.
  */
 export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     if (!scorer) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -38,7 +41,7 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={`Detalle de goles de ${playerName}`}
+      aria-label={t('dialogs.goalsFor', { player: playerName })}
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
@@ -53,7 +56,7 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
           <button
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
-            aria-label="Cerrar"
+            aria-label={t('actions.close')}
           >
             <X size={16} />
           </button>
@@ -63,10 +66,10 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
           {/* Stats resumen */}
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
-              { val: totalGoals, lbl: 'Goles' },
-              { val: matchesPlayed, lbl: 'Partidos' },
-              { val: average.toFixed(2), lbl: 'Promedio' },
-              { val: new Set(goals.map((g) => g.phase)).size, lbl: 'Fases' },
+              { val: totalGoals, lbl: t('labels.goals') },
+              { val: matchesPlayed, lbl: t('labels.matches') },
+              { val: average.toFixed(2), lbl: t('labels.average') },
+              { val: new Set(goals.map((g) => g.phase)).size, lbl: t('labels.phases') },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
                 <p className="text-lg font-medium text-wc-accent-gold leading-none">{val}</p>
@@ -80,15 +83,17 @@ export function ScorerModal({ scorer, onClose }: ScorerModalProps) {
             <thead>
               <tr className="border-b border-wc-border-primary">
                 <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
-                  Fecha
+                  {t('labels.date')}
                 </th>
                 <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
-                  Min.
+                  {t('labels.minute')}
                 </th>
                 <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pr-3">
-                  Rival
+                  {t('labels.rival')}
                 </th>
-                <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Fase</th>
+                <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+                  {t('labels.phase')}
+                </th>
               </tr>
             </thead>
             <tbody>

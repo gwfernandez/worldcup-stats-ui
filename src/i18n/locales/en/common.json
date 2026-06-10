@@ -1,6 +1,7 @@
 {
   "app": {
-    "logo": "World Cups History"
+    "logo": "World Cups History",
+    "heroImagePlaceholder": "World Cup image"
   },
   "language": {
     "ariaLabel": "Select language",
@@ -22,7 +23,7 @@
   },
   "pagination": {
     "items": "items",
-    "range": "{{from}}-{{to}} of {{total}} {{itemsLabel}}",
+    "range": "{{from}}–{{to}} of {{total}} {{itemsLabel}}",
     "previous": "Previous page",
     "next": "Next page",
     "page": "Page {{page}}"
@@ -73,7 +74,22 @@
     "host": "Host",
     "champion": "Champion",
     "runnerUp": "Runner-up",
-    "topScorer": "Top scorer"
+    "topScorer": "Top scorer",
+    "coach": "Coach",
+    "actions": "Actions",
+    "stadium": "Stadium",
+    "capacity": "Capacity",
+    "capacityShort": "Cap.",
+    "phase": "Stage",
+    "phases": "Stages",
+    "date": "Date",
+    "minute": "Min.",
+    "rival": "Opponent",
+    "name": "First name",
+    "lastName": "Last name",
+    "form": "Form",
+    "spectatorsShort": "att.",
+    "medal": "Medal"
   },
   "actions": {
     "close": "Close",
@@ -90,7 +106,43 @@
     "teams": "No teams matched those filters",
     "scorers": "No scorers matched those filters",
     "players": "No players matched those filters",
-    "stadiums": "No stadiums matched those filters"
+    "stadiums": "No stadiums matched those filters",
+    "noGoals": "No goal details available"
+  },
+  "dialogs": {
+    "goalsFor": "Goal details for {{player}}",
+    "matchDetailFor": "Match details {{homeTeam}} vs {{awayTeam}}",
+    "matchDetail": "Match details",
+    "squadFor": "{{team}} squad",
+    "squad": "Squad",
+    "matchesAt": "Matches at {{stadium}}",
+    "historicalScorerFor": "Historical details for {{player}}"
+  },
+  "goalTypes": {
+    "penalty": "penalty",
+    "own_goal": "own goal",
+    "header": "header"
+  },
+  "performance": {
+    "champion": "🏆 Champion",
+    "runner_up": "🥈 Runner-up",
+    "third": "🥉 3rd Place",
+    "fourth": "4th Place",
+    "quarters": "Quarter-finals",
+    "round_of_16": "Round of 16",
+    "group_stage": "Group stage",
+    "host": "🏠 Host"
+  },
+  "positions": {
+    "goalkeeper": "Goalkeeper",
+    "defender": "Defender",
+    "midfielder": "Midfielder",
+    "forward": "Forward"
+  },
+  "form": {
+    "W": "Win",
+    "D": "Draw",
+    "L": "Loss"
   },
   "titlesDialog": {
     "titleFor": "Titles for {{team}}"

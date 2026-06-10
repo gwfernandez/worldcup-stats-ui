@@ -1,6 +1,7 @@
 {
   "app": {
-    "logo": "World Cups History"
+    "logo": "World Cups History",
+    "heroImagePlaceholder": "Imagen del mundial"
   },
   "language": {
     "ariaLabel": "Seleccionar idioma",
@@ -22,7 +23,7 @@
   },
   "pagination": {
     "items": "elementos",
-    "range": "{{from}}-{{to}} de {{total}} {{itemsLabel}}",
+    "range": "{{from}}–{{to}} de {{total}} {{itemsLabel}}",
     "previous": "Página anterior",
     "next": "Página siguiente",
     "page": "Página {{page}}"
@@ -73,7 +74,22 @@
     "host": "Anfitrión",
     "champion": "Campeón",
     "runnerUp": "Subcampeón",
-    "topScorer": "Goleador"
+    "topScorer": "Goleador",
+    "coach": "DT",
+    "actions": "Acciones",
+    "stadium": "Estadio",
+    "capacity": "Capacidad",
+    "capacityShort": "Cap.",
+    "phase": "Fase",
+    "phases": "Fases",
+    "date": "Fecha",
+    "minute": "Min.",
+    "rival": "Rival",
+    "name": "Nombre",
+    "lastName": "Apellido",
+    "form": "Forma",
+    "spectatorsShort": "esp.",
+    "medal": "Medalla"
   },
   "actions": {
     "close": "Cerrar",
@@ -90,7 +106,43 @@
     "teams": "No se encontraron selecciones con esos filtros",
     "scorers": "No se encontraron goleadores con esos filtros",
     "players": "No se encontraron jugadores con esos filtros",
-    "stadiums": "No se encontraron estadios con esos filtros"
+    "stadiums": "No se encontraron estadios con esos filtros",
+    "noGoals": "Sin detalle de goles disponible"
+  },
+  "dialogs": {
+    "goalsFor": "Detalle de goles de {{player}}",
+    "matchDetailFor": "Detalle del partido {{homeTeam}} vs {{awayTeam}}",
+    "matchDetail": "Detalle del partido",
+    "squadFor": "Plantel de {{team}}",
+    "squad": "Plantel",
+    "matchesAt": "Partidos en {{stadium}}",
+    "historicalScorerFor": "Detalle histórico de {{player}}"
+  },
+  "goalTypes": {
+    "penalty": "penal",
+    "own_goal": "en propia",
+    "header": "cabeza"
+  },
+  "performance": {
+    "champion": "🏆 Campeón",
+    "runner_up": "🥈 Subcampeón",
+    "third": "🥉 3er Puesto",
+    "fourth": "4to Puesto",
+    "quarters": "Cuartos",
+    "round_of_16": "Octavos",
+    "group_stage": "Fase de grupos",
+    "host": "🏠 Anfitrión"
+  },
+  "positions": {
+    "goalkeeper": "Arquero",
+    "defender": "Defensor",
+    "midfielder": "Mediocampista",
+    "forward": "Delantero"
+  },
+  "form": {
+    "W": "Victoria",
+    "D": "Empate",
+    "L": "Derrota"
   },
   "titlesDialog": {
     "titleFor": "Títulos de {{team}}"

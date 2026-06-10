@@ -2,13 +2,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { Match } from '@/types/championship.types';
 import { FlagImage } from '@/components/shared';
-
-const GOAL_TYPE_LABEL: Record<string, string> = {
-  penalty: 'penal',
-  own_goal: 'en propia',
-  header: 'cabeza',
-  normal: '',
-};
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -24,6 +18,8 @@ export interface MatchModalProps {
  * Muestra equipos, resultado, metadata y lista de goles.
  */
 export function MatchModal({ match, onClose }: MatchModalProps) {
+  const { t } = useTranslation('common');
+
   // Cerrar con Escape
   useEffect(() => {
     if (!match) return;
@@ -56,7 +52,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={`Detalle del partido ${homeTeam} vs ${awayTeam}`}
+      aria-label={t('dialogs.matchDetailFor', { homeTeam, awayTeam })}
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-sm max-h-[85vh] overflow-y-auto"
@@ -64,11 +60,13 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
-          <span className="text-sm font-medium text-wc-text-primary">Detalle del partido</span>
+          <span className="text-sm font-medium text-wc-text-primary">
+            {t('dialogs.matchDetail')}
+          </span>
           <button
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
-            aria-label="Cerrar"
+            aria-label={t('actions.close')}
           >
             <X size={16} />
           </button>
@@ -119,7 +117,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
             )}
             {attendance && (
               <span className="text-[11px] px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-full text-wc-text-muted">
-                {attendance.toLocaleString()} esp.
+                {attendance.toLocaleString()} {t('labels.spectatorsShort')}
               </span>
             )}
             <span className="text-[11px] px-2 py-1 bg-wc-success-surface border border-wc-success-border rounded-full text-wc-success">
@@ -130,7 +128,9 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
           {/* Goles */}
           {goals.length > 0 && (
             <div>
-              <p className="text-[10px] text-wc-text-muted uppercase tracking-wider mb-1">Goles</p>
+              <p className="text-[10px] text-wc-text-muted uppercase tracking-wider mb-1">
+                {t('labels.goals')}
+              </p>
               {goals.map((goal) => (
                 <div
                   key={goal.id}
@@ -149,7 +149,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
                   <span>{goal.playerName}</span>
                   {goal.type && goal.type !== 'normal' && (
                     <span className="text-[10px] text-wc-text-muted">
-                      ({GOAL_TYPE_LABEL[goal.type] ?? goal.type})
+                      ({t(`goalTypes.${goal.type}`, { defaultValue: goal.type })})
                     </span>
                   )}
                 </div>
@@ -158,9 +158,7 @@ export function MatchModal({ match, onClose }: MatchModalProps) {
           )}
 
           {goals.length === 0 && (
-            <p className="text-xs text-wc-text-muted text-center py-2">
-              Sin detalle de goles disponible
-            </p>
+            <p className="text-xs text-wc-text-muted text-center py-2">{t('empty.noGoals')}</p>
           )}
         </div>
       </div>

@@ -59,10 +59,12 @@ function StatItem({ icon: Icon, value, label }: HeroStat) {
 }
 
 function HeroImagePlaceholder() {
+  const { t } = useTranslation('common');
+
   return (
     <div
       className="w-48 h-36 shrink-0 bg-wc-surface-secondary border border-wc-border-primary rounded-xl flex flex-col items-center justify-center gap-2"
-      aria-label="Imagen del mundial — reemplazar con asset real"
+      aria-label={t('app.heroImagePlaceholder')}
     >
       <Trophy size={40} className="text-wc-accent-gold opacity-40" aria-hidden="true" />
       <span className="text-xs text-wc-text-muted">hero image</span>
