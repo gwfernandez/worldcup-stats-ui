@@ -4,7 +4,7 @@ import type { Team } from '@/types/team.types';
 import { PERFORMANCE_LABEL, PERFORMANCE_STYLES, CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
-import { PlayersModal } from '@/features/championships/components/shared/PlayersModal';
+import { PlayersModal } from '../shared/PlayersModal';
 
 const PAGE_SIZE = 10;
 

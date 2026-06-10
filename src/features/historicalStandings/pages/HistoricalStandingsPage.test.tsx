@@ -3,10 +3,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import HistoricalStandingsPage from './HistoricalStandingsPage';
-import { useHistoricalStandings } from '@/features/historicalStandings/hooks/useHistoricalStandings';
-import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
+import { useHistoricalStandings } from '../hooks/useHistoricalStandings';
+import { MOCK_HISTORICAL_STANDINGS } from '../mocks/historicalStandings.mock';
 
-vi.mock('@/features/historicalStandings/hooks/useHistoricalStandings', () => ({
+vi.mock('../hooks/useHistoricalStandings', () => ({
   useHistoricalStandings: vi.fn(),
 }));
 

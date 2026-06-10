@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Building, X, MapPin, Users, AlertCircle } from 'lucide-react';
 import type { Stadium } from '@/types/stadium.types';
-import { MatchRow } from '@/features/championships/components/shared/MatchRow';
+import { MatchRow } from './MatchRow';
 import type { Match } from '@/types/championship.types';
 
 // ─── Props ────────────────────────────────────────────────────────────────────

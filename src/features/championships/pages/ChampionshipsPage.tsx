@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
-import { ChampionshipCard } from '@/features/championships/components/ChampionshipCard';
-import { ChampionshipCardSkeleton } from '@/features/championships/components/ChampionshipCardSkeleton';
-import { useChampionships } from '@/features/championships/hooks/useChampionships';
+import { ChampionshipCard } from '../components/ChampionshipCard';
+import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton';
+import { useChampionships } from '../hooks/useChampionships';
 import {
   CONTINENT_BY_COUNTRY_CODE,
   type FilterType,
-} from '@/features/championships/utils/championshipFilter.utils';
+} from '../utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
 

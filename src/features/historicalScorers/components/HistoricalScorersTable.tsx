@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import type { HistoricalScorer } from '@/types/historicalScorer.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
-import { HistoricalScorerModal } from '@/features/historicalScorers/components/HistoricalScorerModal';
+import { HistoricalScorerModal } from './HistoricalScorerModal';
 import { SearchInput, FilterSelect, Tooltip, FlagImage, Pagination } from '@/components/shared';
 
 const PAGE_SIZE = 10;

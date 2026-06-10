@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { StandingsTab } from './StandingsTab';
-import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
+import { MOCK_STANDINGS } from '../../mocks/standings.mock';
 
 describe('StandingsTab', () => {
   it('ordena selecciones por posición y muestra métricas principales', () => {

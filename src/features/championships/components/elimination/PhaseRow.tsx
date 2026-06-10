@@ -1,6 +1,6 @@
 import { Trophy, Repeat } from 'lucide-react';
 import type { EliminationPhase, Match } from '@/types/championship.types';
-import { MatchRow } from '@/features/championships/components/shared/MatchRow';
+import { MatchRow } from '../shared/MatchRow';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 

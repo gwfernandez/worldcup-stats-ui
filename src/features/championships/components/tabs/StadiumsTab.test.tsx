@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { StadiumsTab } from './StadiumsTab';
-import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
+import { MOCK_STADIUMS } from '../../mocks/stadiums.mock';
 import type { Stadium } from '@/types/stadium.types';
 
 describe('StadiumsTab', () => {

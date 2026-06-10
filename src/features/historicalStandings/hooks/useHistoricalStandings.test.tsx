@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse, delay } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
-import { MOCK_HISTORICAL_STANDINGS } from '@/features/historicalStandings/mocks/historicalStandings.mock';
+import { MOCK_HISTORICAL_STANDINGS } from '../mocks/historicalStandings.mock';
 import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { useHistoricalStandings } from './useHistoricalStandings';
 

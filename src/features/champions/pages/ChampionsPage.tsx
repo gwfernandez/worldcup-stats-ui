@@ -1,7 +1,7 @@
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
-import { ChampionsTable } from '@/features/champions/components/ChampionsTable';
-import { useChampions } from '@/features/champions/hooks/useChampions';
+import { ChampionsTable } from '../components/ChampionsTable';
+import { useChampions } from '../hooks/useChampions';
 import { Globe, Trophy } from 'lucide-react';
 
 /**
