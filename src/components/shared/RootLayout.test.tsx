@@ -51,4 +51,35 @@ describe('RootLayout', () => {
     expect(consoleError).not.toHaveBeenCalled();
     consoleError.mockRestore();
   });
+
+  it('captures child route render error and keeps navigation visible and functional', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const BuggyRouteComponent = () => {
+      throw new Error('Route component crashed');
+    };
+
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <RootLayout />,
+          children: [{ index: true, element: <BuggyRouteComponent /> }],
+        },
+      ],
+      { initialEntries: ['/'] },
+    );
+
+    render(<RouterProvider router={router} />);
+
+    // El Navbar debe seguir siendo visible
+    expect(screen.getByRole('navigation', { name: 'Navegación principal' })).toBeInTheDocument();
+    expect(screen.getByText('Mundiales')).toBeInTheDocument();
+
+    // Debe mostrarse la UI del ErrorBoundary
+    expect(screen.getByText('Ha ocurrido un error')).toBeInTheDocument();
+    expect(screen.getByText('Error: Route component crashed')).toBeInTheDocument();
+
+    consoleError.mockRestore();
+  });
 });
