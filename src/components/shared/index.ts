@@ -5,3 +5,4 @@ export { FlagImage, type FlagImageProps } from './FlagImage';
 export { Pagination, type PaginationProps } from './Pagination';
 export { QueryStatus, type QueryStatusProps } from './QueryStatus';
 export { ErrorBoundary, type ErrorBoundaryProps } from './ErrorBoundary';
+export { TableSkeleton, type TableSkeletonProps } from './TableSkeleton';

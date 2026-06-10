@@ -5,11 +5,14 @@ export interface QueryStatusProps {
   isError: boolean;
   error?: Error | null;
   loadingMessage?: string;
+  /** Optional skeleton to render instead of the generic loading text. */
+  skeleton?: ReactNode;
   children: ReactNode;
 }
 
 /**
  * Muestra estados básicos de carga y error para queries de TanStack Query.
+ * Si se proporciona `skeleton`, lo renderiza cuando `isLoading` es true.
  * Renderiza `children` cuando los datos están disponibles.
  */
 export function QueryStatus({
@@ -17,9 +20,18 @@ export function QueryStatus({
   isError,
   error,
   loadingMessage = 'Cargando...',
+  skeleton,
   children,
 }: QueryStatusProps) {
   if (isLoading) {
+    if (skeleton) {
+      return (
+        <div role="status">
+          <span className="sr-only">{loadingMessage}</span>
+          {skeleton}
+        </div>
+      );
+    }
     return (
       <p role="status" className="text-sm text-[#8a8fa8] font-mono py-8 text-center">
         {loadingMessage}
