@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { Scorer } from '@/types/scorer.types';
-import { ScorerModal } from '@/features/championships/components/shared/ScorerModal';
+import { ScorerModal } from '../shared/ScorerModal';
 import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, FlagImage } from '@/components/shared';
 

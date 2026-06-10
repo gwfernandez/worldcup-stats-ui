@@ -333,5 +333,5 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
   },
 ];
 
-export type { FilterType } from '@/features/championships/utils/championshipFilter.utils';
-export { CONTINENT_BY_COUNTRY_CODE as MOCK_CONTINENT_BY_COUNTRY_CODE } from '@/features/championships/utils/championshipFilter.utils';
+export type { FilterType } from '../utils/championshipFilter.utils';
+export { CONTINENT_BY_COUNTRY_CODE as MOCK_CONTINENT_BY_COUNTRY_CODE } from '../utils/championshipFilter.utils';

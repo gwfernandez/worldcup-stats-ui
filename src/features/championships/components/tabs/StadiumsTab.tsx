@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { MapPin, Clock, Map } from 'lucide-react';
 import type { Stadium } from '@/types/stadium.types';
 import type { Match } from '@/types/championship.types';
-import { StadiumMatchesModal } from '@/features/championships/components/shared/StadiumMatchesModal';
-import { MatchModal } from '@/features/championships/components/shared/MatchModal';
+import { MatchModal } from '../shared/MatchModal';
+import { StadiumMatchesModal } from '../shared/StadiumMatchesModal';
 import { SearchInput } from '@/components/shared';
 
 // ─── Props ────────────────────────────────────────────────────────────────────

@@ -1,10 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@/components/shared/RootLayout';
-import ChampionshipsPage from '@/features/championships/pages/ChampionshipsPage';
-import ChampionshipDetailPage from '@/features/championships/pages/ChampionshipDetailPage';
-import HistoricalStandingsPage from '@/features/historicalStandings/pages/HistoricalStandingsPage';
-import HistoricalScorersPage from '@/features/historicalScorers/pages/HistoricalScorersPage';
-import ChampionsPage from '@/features/champions/pages/ChampionsPage';
+import { ChampionsPage } from '@/features/champions';
+import { ChampionshipDetailPage, ChampionshipsPage } from '@/features/championships';
+import { HistoricalScorersPage } from '@/features/historicalScorers';
+import { HistoricalStandingsPage } from '@/features/historicalStandings';
 
 export const router = createBrowserRouter([
   {

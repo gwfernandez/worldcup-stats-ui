@@ -1,7 +1,7 @@
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
-import { HistoricalScorersTable } from '@/features/historicalScorers/components/HistoricalScorersTable';
-import { useHistoricalScorers } from '@/features/historicalScorers/hooks/useHistoricalScorers';
+import { HistoricalScorersTable } from '../components/HistoricalScorersTable';
+import { useHistoricalScorers } from '../hooks/useHistoricalScorers';
 import { Award, Trophy, Users, Volleyball } from 'lucide-react';
 
 /**

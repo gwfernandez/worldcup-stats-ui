@@ -1,6 +1,6 @@
-import { StandingsLegend } from '@/features/historicalStandings/components/StandingsLegend';
-import { HistoricalStandingsTable } from '@/features/historicalStandings/components/HistoricalStandingsTable';
-import { useHistoricalStandings } from '@/features/historicalStandings/hooks/useHistoricalStandings';
+import { HistoricalStandingsTable } from '../components/HistoricalStandingsTable';
+import { StandingsLegend } from '../components/StandingsLegend';
+import { useHistoricalStandings } from '../hooks/useHistoricalStandings';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
 import { Globe, Swords, Trophy } from 'lucide-react';

@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse, delay } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
-import { MOCK_CHAMPIONSHIPS } from '@/features/championships/mocks/championship.mock';
+import { MOCK_CHAMPIONSHIPS } from '../mocks/championship.mock';
 import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { useChampionships } from './useChampionships';
 

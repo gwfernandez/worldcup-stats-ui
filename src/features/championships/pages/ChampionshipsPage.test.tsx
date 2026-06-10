@@ -4,10 +4,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import ChampionshipsPage from './ChampionshipsPage';
-import { useChampionships } from '@/features/championships/hooks/useChampionships';
-import { MOCK_CHAMPIONSHIPS } from '@/features/championships/mocks/championship.mock';
+import { useChampionships } from '../hooks/useChampionships';
+import { MOCK_CHAMPIONSHIPS } from '../mocks/championship.mock';
 
-vi.mock('@/features/championships/hooks/useChampionships', () => ({
+vi.mock('../hooks/useChampionships', () => ({
   useChampionships: vi.fn(),
 }));
 

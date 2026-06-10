@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { LayoutGrid, Repeat } from 'lucide-react';
 import type { Group, EliminationPhase, Match } from '@/types/championship.types';
-import { GroupCard } from '@/features/championships/components/groups/GroupCard';
-import { PhaseRow } from '@/features/championships/components/elimination/PhaseRow';
-import { MatchModal } from '@/features/championships/components/shared/MatchModal';
+import { PhaseRow } from '../elimination/PhaseRow';
+import { GroupCard } from '../groups/GroupCard';
+import { MatchModal } from '../shared/MatchModal';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
