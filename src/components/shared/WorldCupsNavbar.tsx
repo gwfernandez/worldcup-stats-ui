@@ -10,7 +10,8 @@
  */
 
 import React from 'react';
-import { Trophy } from 'lucide-react';
+import { Globe2, Trophy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import { isNavLinkActive } from './worldCupsNavbar.utils';
 
@@ -80,34 +81,71 @@ function NavLinkItem({ href, label }: NavLinkItemProps): React.ReactElement {
 // Componente principal
 // ---------------------------------------------------------------------------
 
-const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Mundiales', href: '/' },
-  { label: 'Campeones', href: '/champions' },
-  { label: 'Posiciones', href: '/standings' },
-  { label: 'Goleadores', href: '/scorers' },
+const DEFAULT_LINK_KEYS = [
+  { labelKey: 'navigation.worldcups', href: '/' },
+  { labelKey: 'navigation.champions', href: '/champions' },
+  { labelKey: 'navigation.standings', href: '/standings' },
+  { labelKey: 'navigation.scorers', href: '/scorers' },
 ];
 
 export default function WorldCupsNavbar({
-  logoText = 'World Cups History',
+  logoText,
   links = DEFAULT_LINKS,
 }: WorldCupsNavbarProps): React.ReactElement {
+  const { i18n, t } = useTranslation('common');
+  const translatedLinks =
+    links === DEFAULT_LINKS
+      ? DEFAULT_LINK_KEYS.map((link) => ({ href: link.href, label: t(link.labelKey) }))
+      : links;
+  const selectedLanguage = i18n.language.startsWith('en') ? 'en' : 'es';
+
   return (
     <>
       <nav
         className="font-mono flex items-center justify-between px-6 py-[14px] border-b border-wc-border-primary bg-wc-bg-primary"
-        aria-label="Navegación principal"
+        aria-label={t('navigation.ariaLabel')}
       >
         <div className="flex items-center gap-2">
           <Trophy size={18} className="text-wc-accent-gold" aria-hidden="true" />
-          <NavLogo text={logoText} />
+          <NavLogo text={logoText ?? t('app.logo')} />
         </div>
 
-        <ul className="flex gap-6 list-none m-0 p-0">
-          {links.map((link) => (
-            <NavLinkItem key={link.href} href={link.href} label={link.label} />
-          ))}
-        </ul>
+        <div className="flex items-center gap-5">
+          <ul className="flex gap-6 list-none m-0 p-0">
+            {translatedLinks.map((link) => (
+              <NavLinkItem key={link.href} href={link.href} label={link.label} />
+            ))}
+          </ul>
+
+          <div
+            className="flex items-center gap-1 rounded-md border border-wc-border-primary px-1 py-1"
+            aria-label={t('language.ariaLabel')}
+          >
+            <Globe2 size={13} className="text-wc-text-muted" aria-hidden="true" />
+            {(['es', 'en'] as const).map((language) => (
+              <button
+                key={language}
+                type="button"
+                onClick={() => void i18n.changeLanguage(language)}
+                className={`h-6 px-2 text-[11px] rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-wc-accent-gold ${
+                  selectedLanguage === language
+                    ? 'bg-wc-success-surface text-wc-accent-gold'
+                    : 'text-wc-text-muted hover:text-wc-text-primary'
+                }`}
+                aria-pressed={selectedLanguage === language}
+                aria-label={t(`language.${language === 'es' ? 'spanish' : 'english'}`)}
+              >
+                {t(`language.${language}`)}
+              </button>
+            ))}
+          </div>
+        </div>
       </nav>
     </>
   );
 }
+
+const DEFAULT_LINKS: NavLink[] = DEFAULT_LINK_KEYS.map((link) => ({
+  href: link.href,
+  label: link.labelKey,
+}));

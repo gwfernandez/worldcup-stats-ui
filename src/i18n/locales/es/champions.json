@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "title": "Tabla de",
+    "titleAccent": "Campeones",
+    "description": "Las selecciones con más títulos en la historia de los Mundiales de Fútbol.",
+    "champions": "Campeones",
+    "mostTitles": "Más títulos (5)"
+  }
+}

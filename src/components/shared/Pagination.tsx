@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface PaginationProps {
   currentPage: number;
@@ -19,9 +20,12 @@ export function Pagination({
   totalPages,
   totalItems,
   pageSize,
-  itemsLabel = 'elementos',
+  itemsLabel,
   onPageChange,
 }: PaginationProps) {
+  const { t } = useTranslation('common');
+  const resolvedItemsLabel = itemsLabel ?? t('pagination.items');
+
   // Range of visible pages (max 5 buttons)
   const pageRange = useMemo((): (number | '...')[] => {
     if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -42,7 +46,12 @@ export function Pagination({
     <div className="flex items-center justify-between mt-4 pt-3 border-t border-wc-border-primary">
       {/* Range info */}
       <span className="text-[11px] text-wc-text-muted">
-        {from}–{to} de {totalItems} {itemsLabel}
+        {t('pagination.range', {
+          from,
+          to,
+          total: totalItems,
+          itemsLabel: resolvedItemsLabel,
+        })}
       </span>
 
       {/* Buttons */}
@@ -52,7 +61,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
-          aria-label="Página anterior"
+          aria-label={t('pagination.previous')}
         >
           <ChevronLeft size={12} aria-hidden="true" />
         </button>
@@ -75,7 +84,7 @@ export function Pagination({
                   ? 'bg-wc-success-surface border-wc-success-border text-wc-accent-gold font-medium'
                   : 'border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold'
               }`}
-              aria-label={`Página ${page}`}
+              aria-label={t('pagination.page', { page })}
               aria-current={currentPage === page ? 'page' : undefined}
             >
               {page}
@@ -88,7 +97,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
-          aria-label="Página siguiente"
+          aria-label={t('pagination.next')}
         >
           <ChevronRight size={12} aria-hidden="true" />
         </button>

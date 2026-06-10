@@ -1,0 +1,11 @@
+{
+  "hero": {
+    "title": "Tabla de",
+    "titleAccent": "Goleadores Históricos",
+    "description": "Los máximos anotadores en la historia de los Mundiales de Fútbol.",
+    "totalGoals": "Goles totales",
+    "scorers": "Goleadores",
+    "recordGoals": "Récord de goles",
+    "historicalScorer": "Goleador histórico"
+  }
+}

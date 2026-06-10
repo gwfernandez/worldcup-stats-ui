@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { ChampionTeam } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -17,6 +18,8 @@ export interface ChampionshipsModalProps {
  * Muestra año, sede y resultado de la final.
  */
 export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     if (!team) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -38,7 +41,7 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={`Títulos de ${team.teamName}`}
+      aria-label={t('titlesDialog.titleFor', { team: team.teamName })}
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
@@ -54,12 +57,12 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
               height={15}
               className="rounded-[2px]"
             />
-            {team.teamName} — Títulos
+            {team.teamName} - {t('labels.titles')}
           </div>
           <button
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
-            aria-label="Cerrar"
+            aria-label={t('actions.close')}
           >
             <X size={16} />
           </button>
@@ -69,9 +72,9 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
           {/* Stats resumen */}
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
-              { val: `${team.titles} 🏆`, lbl: 'Títulos totales' },
-              { val: firstTitle ?? '—', lbl: 'Primer título' },
-              { val: lastTitle ?? '—', lbl: 'Último título' },
+              { val: `${team.titles} 🏆`, lbl: t('labels.totalTitles') },
+              { val: firstTitle ?? '-', lbl: t('labels.firstTitle') },
+              { val: lastTitle ?? '-', lbl: t('labels.lastTitle') },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
                 <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
@@ -84,9 +87,15 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
           <table className="w-full border-collapse text-[11px]">
             <thead>
               <tr className="border-b border-wc-border-primary">
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">Año</th>
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">Sede</th>
-                <th className="text-right font-normal text-wc-text-muted pb-2">Final</th>
+                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
+                  {t('labels.year')}
+                </th>
+                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
+                  {t('labels.host')}
+                </th>
+                <th className="text-right font-normal text-wc-text-muted pb-2">
+                  {t('labels.final')}
+                </th>
               </tr>
             </thead>
             <tbody>

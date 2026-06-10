@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "badge": "Football World Cup history",
+    "title": "All",
+    "titleAccent": "Football World Cups",
+    "description": "Fixtures, champions, squads and scorers since Uruguay 1930.",
+    "defaultDescription": "Stats, fixtures, squads and scorers from Uruguay 1930 to today."
+  },
+  "stats": {
+    "editions": "Editions",
+    "teams": "Teams",
+    "matches": "Matches",
+    "players": "Players",
+    "goals": "Goals",
+    "stadiums": "Stadiums"
+  },
+  "list": {
+    "title": "Editions"
+  },
+  "detail": {
+    "loading": "Loading World Cup...",
+    "error": "The World Cup details could not be loaded.",
+    "description": "The {{year}} FIFA World Cup was held from May 31 to June 21.",
+    "comingSoon": "Stats tab - coming soon"
+  },
+  "tabs": {
+    "groups": "Groups and fixtures",
+    "teams": "Teams",
+    "scorers": "Scorers",
+    "stadiums": "Stadiums",
+    "standings": "Standings",
+    "stats": "Stats"
+  }
+}

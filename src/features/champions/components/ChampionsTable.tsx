@@ -5,6 +5,7 @@ import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { ChampionshipsModal } from './ChampionshipsModal';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -20,6 +21,7 @@ export interface ChampionsTableProps {
  * Borde lateral por confederación, trofeos visuales y modal de detalle.
  */
 export function ChampionsTable({ champions }: ChampionsTableProps) {
+  const { t } = useTranslation('common');
   const [selectedTeam, setSelectedTeam] = useState<ChampionTeam | null>(null);
   const [searchName, setSearchName] = useState('');
   const [filterConf, setFilterConf] = useState('');
@@ -45,7 +47,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar selección..."
+          placeholder={t('search.team')}
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -53,7 +55,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
           className="flex-1"
           value={filterConf}
           onChange={(e) => setFilterConf(e.target.value)}
-          placeholderOption="Todas las confederaciones"
+          placeholderOption={t('filters.allConfederations')}
           options={confOptions.map((c) => ({ value: c, label: c }))}
         />
       </div>
@@ -63,21 +65,25 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
         <thead>
           <tr className="border-b border-wc-border-primary">
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 w-9">#</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
-              Títulos 🏆
+              {t('labels.team')}
             </th>
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
-              Confederación
+              {t('labels.titles')} 🏆
             </th>
-            <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">Detalle</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.confederation')}
+            </th>
+            <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.detail')}
+            </th>
           </tr>
         </thead>
         <tbody>
           {filtered.length === 0 && (
             <tr>
               <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
-                No se encontraron selecciones con esos filtros
+                {t('empty.teams')}
               </td>
             </tr>
           )}
@@ -140,11 +146,11 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
 
                 {/* Acción */}
                 <td className="py-2.5 text-center">
-                  <Tooltip content="Ver títulos" groupName="action">
+                  <Tooltip content={t('actions.viewTitles')} groupName="action">
                     <button
                       onClick={() => setSelectedTeam(team)}
                       className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
-                      aria-label={`Ver títulos de ${team.teamName}`}
+                      aria-label={t('actions.viewTitlesFor', { team: team.teamName })}
                     >
                       <Trophy size={13} />
                     </button>

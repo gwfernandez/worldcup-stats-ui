@@ -1,0 +1,11 @@
+{
+  "hero": {
+    "title": "All-Time",
+    "titleAccent": "Scorers Table",
+    "description": "The top scorers in Football World Cup history.",
+    "totalGoals": "Total goals",
+    "scorers": "Scorers",
+    "recordGoals": "Goal record",
+    "historicalScorer": "All-time scorer"
+  }
+}

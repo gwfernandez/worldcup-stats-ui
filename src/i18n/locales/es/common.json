@@ -1,0 +1,115 @@
+{
+  "app": {
+    "logo": "World Cups History"
+  },
+  "language": {
+    "ariaLabel": "Seleccionar idioma",
+    "es": "ES",
+    "en": "EN",
+    "spanish": "Español",
+    "english": "Inglés"
+  },
+  "navigation": {
+    "ariaLabel": "Navegación principal",
+    "worldcups": "Mundiales",
+    "champions": "Campeones",
+    "standings": "Posiciones",
+    "scorers": "Goleadores"
+  },
+  "status": {
+    "loading": "Cargando...",
+    "genericError": "Ocurrió un error al cargar los datos."
+  },
+  "pagination": {
+    "items": "elementos",
+    "range": "{{from}}-{{to}} de {{total}} {{itemsLabel}}",
+    "previous": "Página anterior",
+    "next": "Página siguiente",
+    "page": "Página {{page}}"
+  },
+  "filters": {
+    "all": "Todos",
+    "allFemale": "Todas",
+    "allGroups": "Todos los grupos",
+    "allStages": "Todas las fases",
+    "allTeams": "Todas las selecciones",
+    "allConfederations": "Todas las confederaciones",
+    "continent": "Filtrar por continente",
+    "america": "América",
+    "europe": "Europa",
+    "asia": "Asia",
+    "africa": "África"
+  },
+  "search": {
+    "team": "Buscar selección...",
+    "player": "Buscar jugador...",
+    "stadium": "Buscar estadio..."
+  },
+  "labels": {
+    "year": "Año",
+    "player": "Jugador",
+    "worldCup": "Mundial",
+    "team": "Selección",
+    "teams": "Selecciones",
+    "players": "Jugadores",
+    "matches": "Partidos",
+    "goals": "Goles",
+    "stadiums": "Estadios",
+    "titles": "Títulos",
+    "totalTitles": "Títulos totales",
+    "firstTitle": "Primer título",
+    "lastTitle": "Último título",
+    "confederation": "Confederación",
+    "average": "Promedio",
+    "detail": "Detalle",
+    "city": "Ciudad",
+    "group": "Grupo",
+    "performance": "Desempeño",
+    "position": "Posición",
+    "final": "Final",
+    "totalGoals": "Goles totales",
+    "recordGoals": "Récord de goles",
+    "historicalScorer": "Goleador histórico",
+    "host": "Anfitrión",
+    "champion": "Campeón",
+    "runnerUp": "Subcampeón",
+    "topScorer": "Goleador"
+  },
+  "actions": {
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "reloadPage": "Recargar página",
+    "viewTitles": "Ver títulos",
+    "viewTitlesFor": "Ver títulos de {{team}}",
+    "viewPlayersFor": "Ver jugadores de {{team}}",
+    "viewOnMap": "Ver en mapa",
+    "viewStadiumOnMap": "Ver {{stadium}} en el mapa",
+    "viewMatchesAt": "Ver partidos en {{stadium}}"
+  },
+  "empty": {
+    "teams": "No se encontraron selecciones con esos filtros",
+    "scorers": "No se encontraron goleadores con esos filtros",
+    "players": "No se encontraron jugadores con esos filtros",
+    "stadiums": "No se encontraron estadios con esos filtros"
+  },
+  "titlesDialog": {
+    "titleFor": "Títulos de {{team}}"
+  },
+  "standingMetrics": {
+    "points": "Puntos",
+    "played": "Partidos jugados",
+    "won": "Partidos ganados",
+    "drawn": "Partidos empatados",
+    "lost": "Partidos perdidos",
+    "goalsFor": "Goles a favor",
+    "goalsAgainst": "Goles en contra",
+    "goalDiff": "Diferencia de goles",
+    "performance": "Rendimiento (%)",
+    "performanceShort": "Rend."
+  },
+  "errorBoundary": {
+    "title": "Ha ocurrido un error",
+    "description": "Se produjo un fallo inesperado al renderizar esta sección. Puedes intentar restaurar la vista o recargar la página.",
+    "details": "Detalles del error:"
+  }
+}

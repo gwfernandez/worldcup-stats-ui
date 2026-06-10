@@ -4,6 +4,7 @@ import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { HistoricalScorerModal } from './HistoricalScorerModal';
 import { SearchInput, FilterSelect, Tooltip, FlagImage, Pagination } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const PAGE_SIZE = 10;
 
@@ -20,6 +21,7 @@ export interface HistoricalScorersTableProps {
  * Incluye paginado y modal de detalle por mundial al hacer click en una fila.
  */
 export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps) {
+  const { t } = useTranslation('common');
   const [selectedScorer, setSelectedScorer] = useState<HistoricalScorer | null>(null);
   const [searchName, setSearchName] = useState('');
   const [filterTeam, setFilterTeam] = useState('');
@@ -68,7 +70,7 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar jugador..."
+          placeholder={t('search.player')}
           value={searchName}
           onChange={handleFilterChange(setSearchName)}
         />
@@ -76,14 +78,14 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
           className="flex-1"
           value={filterTeam}
           onChange={handleFilterChange(setFilterTeam)}
-          placeholderOption="Todas las selecciones"
+          placeholderOption={t('filters.allTeams')}
           options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterConf}
           onChange={handleFilterChange(setFilterConf)}
-          placeholderOption="Todas las confederaciones"
+          placeholderOption={t('filters.allConfederations')}
           options={confOptions.map((c) => ({ value: c, label: c }))}
         />
       </div>
@@ -93,16 +95,20 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
         <thead>
           <tr className="border-b border-wc-border-primary">
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 w-8">#</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Jugador</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              Goles
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.player')}
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              {t('labels.team')}
             </th>
             <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              Promedio
+              {t('labels.goals')}
+            </th>
+            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
+              {t('labels.average')}
             </th>
             <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2">
-              Confederación
+              {t('labels.confederation')}
             </th>
           </tr>
         </thead>
@@ -110,7 +116,7 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
           {paginated.length === 0 && (
             <tr>
               <td colSpan={6} className="py-8 text-center text-sm text-wc-text-muted">
-                No se encontraron goleadores con esos filtros
+                {t('empty.scorers')}
               </td>
             </tr>
           )}
@@ -199,7 +205,7 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
         totalPages={totalPages}
         totalItems={filtered.length}
         pageSize={PAGE_SIZE}
-        itemsLabel="jugadores"
+        itemsLabel={t('labels.players').toLowerCase()}
         onPageChange={setCurrentPage}
       />
 

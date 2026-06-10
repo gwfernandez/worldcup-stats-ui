@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import i18n from '@/i18n/config';
 
 export interface ErrorBoundaryProps {
   children: ReactNode;
@@ -53,18 +54,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             <h2 className="text-lg font-bold text-wc-text-primary mb-2 tracking-wide">
-              Ha ocurrido un error
+              {i18n.t('errorBoundary.title')}
             </h2>
 
             <p className="text-xs text-wc-text-muted mb-5 leading-relaxed">
-              Se produjo un fallo inesperado al renderizar esta sección. Puedes intentar restaurar
-              la vista o recargar la página.
+              {i18n.t('errorBoundary.description')}
             </p>
 
             {error && (
               <div className="text-left bg-wc-surface-secondary border border-wc-border-primary rounded-lg p-3.5 mb-6 max-h-32 overflow-y-auto">
                 <p className="text-[10px] text-wc-text-muted uppercase font-bold tracking-wider mb-1">
-                  Detalles del error:
+                  {i18n.t('errorBoundary.details')}
                 </p>
                 <code className="text-[11px] text-wc-warning whitespace-pre-wrap break-all leading-normal">
                   {error.name}: {error.message}
@@ -79,14 +79,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 className="bg-wc-accent-gold text-wc-bg-primary hover:bg-wc-accent-gold-hover font-bold h-9 px-4 text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                Reintentar
+                {i18n.t('actions.retry')}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => window.location.reload()}
                 className="border-wc-border-primary hover:bg-wc-surface-secondary hover:text-wc-text-primary h-9 px-4 text-xs font-bold text-wc-text-muted cursor-pointer"
               >
-                Recargar página
+                {i18n.t('actions.reloadPage')}
               </Button>
             </div>
           </div>

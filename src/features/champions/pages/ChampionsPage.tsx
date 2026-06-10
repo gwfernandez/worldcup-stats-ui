@@ -3,6 +3,7 @@ import { QueryStatus } from '@/components/shared';
 import { ChampionsTable } from '../components/ChampionsTable';
 import { useChampions } from '../hooks/useChampions';
 import { Globe, Trophy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Página de Tabla de Campeones.
@@ -10,19 +11,20 @@ import { Globe, Trophy } from 'lucide-react';
  * Ruta: /champions
  */
 export default function ChampionsPage() {
+  const { t } = useTranslation(['champions', 'championships']);
   const { champions, isLoading, isError, error } = useChampions();
 
   return (
     <>
       <HeroSection
-        badge="Historia de los mundiales de fútbol"
-        title="Tabla de"
-        titleAccent="Campeones"
-        description="Las selecciones con más títulos en la historia de los Mundiales de Fútbol."
+        badge={t('championships:hero.badge')}
+        title={t('champions:hero.title')}
+        titleAccent={t('champions:hero.titleAccent')}
+        description={t('champions:hero.description')}
         stats={[
-          { icon: Trophy, value: '8', label: 'Campeones' },
-          { icon: Globe, value: '22', label: 'Ediciones' },
-          { icon: Trophy, value: 'Brasil', label: 'Más títulos (5)' },
+          { icon: Trophy, value: '8', label: t('champions:hero.champions') },
+          { icon: Globe, value: '22', label: t('championships:stats.editions') },
+          { icon: Trophy, value: 'Brasil', label: t('champions:hero.mostTitles') },
         ]}
       />
 

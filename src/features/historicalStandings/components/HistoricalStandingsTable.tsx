@@ -3,6 +3,7 @@ import type { HistoricalStanding } from '@/types/historicalStanding.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const formatDiff = (diff: number): { label: string; className: string } => {
   if (diff > 0) return { label: `+${diff}`, className: 'text-wc-success' };
@@ -50,6 +51,7 @@ export interface HistoricalStandingsTableProps {
  * Incluye borde lateral por confederación, rendimiento y pill de confederación con tooltip.
  */
 export function HistoricalStandingsTable({ standings }: HistoricalStandingsTableProps) {
+  const { t } = useTranslation('common');
   const [searchName, setSearchName] = useState('');
   const [filterConf, setFilterConf] = useState('');
 
@@ -74,7 +76,7 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
-          placeholder="Buscar selección..."
+          placeholder={t('search.team')}
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -82,7 +84,7 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
           className="flex-1"
           value={filterConf}
           onChange={(e) => setFilterConf(e.target.value)}
-          placeholderOption="Todas las confederaciones"
+          placeholderOption={t('filters.allConfederations')}
           options={confOptions.map((c) => ({ value: c, label: c }))}
         />
       </div>
@@ -94,17 +96,17 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
             <tr className="border-b border-wc-border-primary">
               <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 w-9">#</th>
               <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pr-3">
-                Selección
+                {t('labels.team')}
               </th>
-              <Th label="PTS" tooltip="Puntos" />
-              <Th label="PJ" tooltip="Partidos Jugados" />
-              <Th label="PG" tooltip="Partidos Ganados" />
-              <Th label="PE" tooltip="Partidos Empatados" />
-              <Th label="PP" tooltip="Partidos Perdidos" />
-              <Th label="GF" tooltip="Goles a Favor" />
-              <Th label="GC" tooltip="Goles en Contra" />
-              <Th label="DIF" tooltip="Diferencia de Goles" />
-              <Th label="Rend." tooltip="Rendimiento (%)" className="min-w-[80px]" />
+              <Th label="PTS" tooltip={t('standingMetrics.points')} />
+              <Th label="PJ" tooltip={t('standingMetrics.played')} />
+              <Th label="PG" tooltip={t('standingMetrics.won')} />
+              <Th label="PE" tooltip={t('standingMetrics.drawn')} />
+              <Th label="PP" tooltip={t('standingMetrics.lost')} />
+              <Th label="GF" tooltip={t('standingMetrics.goalsFor')} />
+              <Th label="GC" tooltip={t('standingMetrics.goalsAgainst')} />
+              <Th label="DIF" tooltip={t('standingMetrics.goalDiff')} />
+              <Th label={t('standingMetrics.performanceShort')} tooltip={t('standingMetrics.performance')} className="min-w-[80px]" />
               <th className="text-center text-[10px] font-normal text-wc-text-muted pb-2 min-w-[90px]">
                 Conf.
               </th>
@@ -114,7 +116,7 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
             {filtered.length === 0 && (
               <tr>
                 <td colSpan={12} className="py-8 text-center text-sm text-wc-text-muted">
-                  No se encontraron selecciones con esos filtros
+                  {t('empty.teams')}
                 </td>
               </tr>
             )}
