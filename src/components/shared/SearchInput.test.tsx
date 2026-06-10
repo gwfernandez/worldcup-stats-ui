@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import { SearchInput } from './SearchInput';
@@ -9,10 +10,13 @@ describe('SearchInput', () => {
     expect(screen.getByPlaceholderText('Buscar selección...')).toHaveValue('Argentina');
   });
 
-  it('calls onChange when typing', () => {
+  it('calls onChange when typing', async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(<SearchInput value="" onChange={onChange} placeholder="Buscar..." />);
-    fireEvent.change(screen.getByPlaceholderText('Buscar...'), { target: { value: 'Bra' } });
-    expect(onChange).toHaveBeenCalled();
+
+    await user.type(screen.getByPlaceholderText('Buscar...'), 'Bra');
+
+    expect(onChange).toHaveBeenCalledTimes(3);
   });
 });
