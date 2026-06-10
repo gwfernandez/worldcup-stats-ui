@@ -23,23 +23,25 @@ export function PhaseRow({ phase, onMatchSelect }: PhaseRowProps) {
       {/* Header de fase */}
       <div
         className={`px-3 py-[6px] flex items-center gap-2 text-[11px] rounded-t-lg border ${
-          isFinal ? 'bg-[#1e2a14] border-[#3a5a1a]' : 'bg-[#161925] border-[#2a2d3a]'
+          isFinal
+            ? 'bg-wc-success-surface border-wc-success-border'
+            : 'bg-wc-surface-primary border-wc-border-primary'
         }`}
       >
         {isFinal ? (
-          <Trophy size={12} stroke="#e8c84a" aria-hidden="true" />
+          <Trophy size={12} stroke="var(--wc-accent-gold)" aria-hidden="true" />
         ) : (
-          <Repeat size={12} stroke="#e8c84a" aria-hidden="true" />
+          <Repeat size={12} stroke="var(--wc-accent-gold)" aria-hidden="true" />
         )}
-        <span className={`font-medium ${isFinal ? 'text-[#e8c84a]' : 'text-[#e8c84a]'}`}>
+        <span className={`font-medium ${isFinal ? 'text-wc-accent-gold' : 'text-wc-accent-gold'}`}>
           {phase.name}
         </span>
       </div>
 
       {/* Partidos */}
       <div
-        className={`bg-[#161925] border border-t-0 rounded-b-lg overflow-hidden ${
-          isFinal ? 'border-[#3a5a1a]' : 'border-[#2a2d3a]'
+        className={`bg-wc-surface-primary border border-t-0 rounded-b-lg overflow-hidden ${
+          isFinal ? 'border-wc-success-border' : 'border-wc-border-primary'
         }`}
       >
         {phase.matches.map((match) => (

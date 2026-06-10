@@ -79,7 +79,7 @@ function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
   return (
     <>
       {/* Hero skeleton */}
-      <section className="font-mono bg-[#161925] border-b border-[#2a2d3a]">
+      <section className="font-mono bg-wc-surface-primary border-b border-wc-border-primary">
         <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
           <div className="flex-1 flex flex-col gap-3">
             <Skeleton className="h-5 w-48 rounded-full" />
@@ -106,7 +106,7 @@ function ChampionshipDetailSkeleton({ activeTab }: { activeTab: TabId }) {
       </section>
 
       {/* Tabs skeleton */}
-      <div className="font-mono border-b border-[#2a2d3a] bg-[#0f1117] overflow-x-auto">
+      <div className="font-mono border-b border-wc-border-primary bg-wc-bg-primary overflow-x-auto">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex">
             {TABS.map((tab) => (
@@ -160,7 +160,7 @@ export default function ChampionshipDetailPage() {
 
   if (isError) {
     return (
-      <p className="font-mono text-sm text-[#d06060] px-6 py-5">
+      <p className="font-mono text-sm text-wc-danger-text px-6 py-5">
         No se pudo cargar el detalle del mundial.
       </p>
     );
@@ -185,7 +185,7 @@ export default function ChampionshipDetailPage() {
       />
 
       {/* ── Tabs ──────────────────────────────────────────────────── */}
-      <div className="font-mono border-b border-[#2a2d3a] bg-[#0f1117] overflow-x-auto">
+      <div className="font-mono border-b border-wc-border-primary bg-wc-bg-primary overflow-x-auto">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex">
             {TABS.map((tab) => (
@@ -194,8 +194,8 @@ export default function ChampionshipDetailPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 text-xs px-3 py-3 border-b-2 whitespace-nowrap transition-colors duration-150 focus:outline-none ${
                   activeTab === tab.id
-                    ? 'text-[#e8c84a] border-[#e8c84a]'
-                    : 'text-[#8a8fa8] border-transparent hover:text-[#e8eaf0]'
+                    ? 'text-wc-accent-gold border-wc-accent-gold'
+                    : 'text-wc-text-muted border-transparent hover:text-wc-text-primary'
                 }`}
               >
                 {tab.icon}
@@ -216,7 +216,7 @@ export default function ChampionshipDetailPage() {
         {activeTab === 'stadiums' && <StadiumsTab stadiums={detail.stadiums} />}
         {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
         {activeTab === 'stats' && (
-          <p className="text-sm text-[#8a8fa8]">Solapa Estadísticas — próximamente</p>
+          <p className="text-sm text-wc-text-muted">Solapa Estadísticas — próximamente</p>
         )}
       </main>
     </>

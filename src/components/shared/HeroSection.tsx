@@ -49,9 +49,9 @@ const DEFAULT_STATS: HeroStat[] = [
 function StatItem({ icon: Icon, value, label }: HeroStat) {
   return (
     <div className="text-center">
-      <Icon size={14} className="text-[#8a8fa8] mx-auto mb-1" aria-hidden="true" />
-      <p className="text-lg font-medium text-[#e8c84a] leading-none">{value}</p>
-      <p className="text-xs text-[#8a8fa8] mt-0.5">{label}</p>
+      <Icon size={14} className="text-wc-text-muted mx-auto mb-1" aria-hidden="true" />
+      <p className="text-lg font-medium text-wc-accent-gold leading-none">{value}</p>
+      <p className="text-xs text-wc-text-muted mt-0.5">{label}</p>
     </div>
   );
 }
@@ -59,11 +59,11 @@ function StatItem({ icon: Icon, value, label }: HeroStat) {
 function HeroImagePlaceholder() {
   return (
     <div
-      className="w-48 h-36 shrink-0 bg-[#1e2233] border border-[#2a2d3a] rounded-xl flex flex-col items-center justify-center gap-2"
+      className="w-48 h-36 shrink-0 bg-wc-surface-secondary border border-wc-border-primary rounded-xl flex flex-col items-center justify-center gap-2"
       aria-label="Imagen del mundial — reemplazar con asset real"
     >
-      <Trophy size={40} className="text-[#e8c84a] opacity-40" aria-hidden="true" />
-      <span className="text-xs text-[#8a8fa8]">hero image</span>
+      <Trophy size={40} className="text-wc-accent-gold opacity-40" aria-hidden="true" />
+      <span className="text-xs text-wc-text-muted">hero image</span>
     </div>
   );
 }
@@ -81,19 +81,19 @@ export default function HeroSection({
   heroImage,
 }: HeroSectionProps) {
   return (
-    <section className="font-mono bg-[#161925] border-b border-[#2a2d3a]">
+    <section className="font-mono bg-wc-surface-primary border-b border-wc-border-primary">
       <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
         {/* ── Texto ────────────────────────────────────────────────────── */}
         <div className="flex-1">
-          <span className="inline-block bg-[#1e2a14] text-[#8fc44a] text-xs px-3 py-1 rounded-full border border-[#3a5a1a] mb-3">
+          <span className="inline-block bg-wc-success-surface text-wc-success text-xs px-3 py-1 rounded-full border border-wc-success-border mb-3">
             {badge}
           </span>
 
           <h1 className="text-2xl font-medium text-white leading-snug mb-2">
-            {title} <span className="text-[#e8c84a]">{titleAccent}</span>
+            {title} <span className="text-wc-accent-gold">{titleAccent}</span>
           </h1>
 
-          <p className="text-sm text-[#8a8fa8] leading-relaxed mb-6 max-w-2sm">{description}</p>
+          <p className="text-sm text-wc-text-muted leading-relaxed mb-6 max-w-2sm">{description}</p>
 
           {/* ── Stats ─────────────────────────────────────────────────── */}
           <div className="flex gap-6">

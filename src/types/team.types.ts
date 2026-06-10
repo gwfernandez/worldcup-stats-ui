@@ -14,10 +14,13 @@ export const POSITION_LABEL: Record<PlayerPosition, string> = {
 };
 
 export const POSITION_STYLES: Record<PlayerPosition, string> = {
-  goalkeeper: 'bg-[#1e1a2e] text-[#a090d0] border-[#4a3a70]',
-  defender: 'bg-[#1a1e10] text-[#80b050] border-[#3a5020]',
-  midfielder: 'bg-[#1e1a10] text-[#c0a040] border-[#5a4810]',
-  forward: 'bg-[#1e1010] text-[#d06060] border-[#602020]',
+  goalkeeper:
+    'bg-wc-position-goalkeeper-surface text-wc-position-goalkeeper-text border-wc-position-goalkeeper-border',
+  defender:
+    'bg-wc-position-defender-surface text-wc-position-defender-text border-wc-position-defender-border',
+  midfielder:
+    'bg-wc-position-midfielder-surface text-wc-position-midfielder-text border-wc-position-midfielder-border',
+  forward: 'bg-wc-position-forward-surface text-wc-danger-text border-wc-position-forward-border',
 };
 
 // ─── Desempeño ────────────────────────────────────────────────────────────────
@@ -45,13 +48,13 @@ export const PERFORMANCE_LABEL: Record<TeamPerformance, string> = {
 };
 
 export const PERFORMANCE_STYLES: Record<TeamPerformance, string> = {
-  champion: 'bg-[#1e2a14] text-[#e8c84a] border-[#3a5a1a]',
-  runner_up: 'bg-[#1e2233] text-[#c0c8e0] border-[#3a4060]',
-  third: 'bg-[#1e1a10] text-[#c8a050] border-[#5a4020]',
-  fourth: 'bg-[#1e1a10] text-[#a09070] border-[#403020]',
-  quarters: 'bg-[#1a1e2a] text-[#8a9fc0] border-[#2a3a50]',
-  round_of_16: 'bg-[#1a1e2a] text-[#8a9fc0] border-[#2a3a50]',
-  group_stage: 'bg-[#161925] text-[#8a8fa8] border-[#2a2d3a]',
+  champion: 'bg-wc-success-surface text-wc-accent-gold border-wc-success-border',
+  runner_up: 'bg-wc-surface-secondary text-wc-silver-text border-wc-silver-border',
+  third: 'bg-wc-position-midfielder-surface text-wc-bronze-text border-wc-bronze-border',
+  fourth: 'bg-wc-position-midfielder-surface text-wc-fourth-text border-wc-fourth-border',
+  quarters: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  round_of_16: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  group_stage: 'bg-wc-surface-primary text-wc-text-muted border-wc-border-primary',
 };
 
 // ─── Confederación ────────────────────────────────────────────────────────────

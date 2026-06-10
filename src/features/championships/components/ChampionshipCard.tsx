@@ -15,17 +15,17 @@ const getLogoUrl = (year: number): string =>
 // ─── Mapa de color por código de campeón ──────────────────────────────────────
 
 const CHAMPION_ACCENT: Record<string, string> = {
-  UY: '#4a9fd4',
-  IT: '#d44a4a',
-  BR: '#4ad45a',
-  DE: '#e8c84a',
-  GB: '#d44a7a',
-  AR: '#78b4e8',
-  FR: '#4a78d4',
-  ES: '#d4874a',
+  UY: 'var(--wc-chart-cyan)',
+  IT: 'var(--wc-chart-red)',
+  BR: 'var(--wc-chart-green)',
+  DE: 'var(--wc-accent-gold)',
+  GB: 'var(--wc-chart-pink)',
+  AR: 'var(--wc-chart-sky)',
+  FR: 'var(--wc-conf-uefa-bar)',
+  ES: 'var(--wc-conf-concacaf-bar)',
 };
 
-const DEFAULT_ACCENT = '#8a8fa8';
+const DEFAULT_ACCENT = 'var(--wc-text-muted)';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -51,7 +51,7 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
   return (
     <Link
       to={`/worldcup/${year}`}
-      className="group relative w-full text-left bg-[#161925] border border-[#2a2d3a] rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-[#e8c84a] hover:bg-[#1a1e2e] focus:outline-none focus:ring-2 focus:ring-[#e8c84a] focus:ring-offset-2 focus:ring-offset-[#0f1117]"
+      className="group relative w-full text-left bg-wc-surface-primary border border-wc-border-primary rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-wc-accent-gold hover:bg-wc-conf-uefa-surface focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-2 focus:ring-offset-wc-bg-primary"
     >
       {/* Barra lateral de color del campeón */}
       <div
@@ -61,7 +61,7 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
       />
 
       {/* Logo del mundial */}
-      <div className="flex items-center justify-center h-24 bg-[#1e2233] border-b border-[#2a2d3a] px-4">
+      <div className="flex items-center justify-center h-24 bg-wc-surface-secondary border-b border-wc-border-primary px-4">
         <img
           src={logoUrl}
           alt={`Logo del Mundial ${year}`}
@@ -74,14 +74,14 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
           }}
         />
         {/* Fallback placeholder — se muestra si la imagen no carga */}
-        <span className="hidden text-2xl font-medium text-[#e8c84a] opacity-40">{year}</span>
+        <span className="hidden text-2xl font-medium text-wc-accent-gold opacity-40">{year}</span>
       </div>
 
       {/* Info */}
       <div className="pl-4 pr-3 py-3">
-        <p className="text-lg font-medium text-[#e8c84a] leading-none mb-1">{year}</p>
+        <p className="text-lg font-medium text-wc-accent-gold leading-none mb-1">{year}</p>
 
-        <p className="text-xs text-[#e8eaf0] flex items-center gap-1.5 mb-2.5">
+        <p className="text-xs text-wc-text-primary flex items-center gap-1.5 mb-2.5">
           <FlagImage
             countryCode={countryCode}
             alt={country}
@@ -92,18 +92,18 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
           {country}
         </p>
 
-        <div className="h-px bg-[#2a2d3a] mb-2.5" />
+        <div className="h-px bg-wc-border-primary mb-2.5" />
 
-        <p className="text-xs text-[#8a8fa8] flex items-center gap-1">
-          <Star size={11} className="text-[#e8c84a] shrink-0" aria-hidden="true" />
-          <span className="text-[#e8eaf0] truncate">{champion ?? '—'}</span>
+        <p className="text-xs text-wc-text-muted flex items-center gap-1">
+          <Star size={11} className="text-wc-accent-gold shrink-0" aria-hidden="true" />
+          <span className="text-wc-text-primary truncate">{champion ?? '—'}</span>
         </p>
       </div>
 
       {/* Flecha hover */}
       <ChevronRight
         size={13}
-        className="absolute bottom-3 right-2 text-[#8a8fa8] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+        className="absolute bottom-3 right-2 text-wc-text-muted opacity-0 group-hover:opacity-100 transition-opacity duration-150"
         aria-hidden="true"
       />
     </Link>

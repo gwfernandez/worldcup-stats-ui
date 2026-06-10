@@ -83,19 +83,23 @@ export function TeamsTab({ teams }: TeamsTabProps) {
 
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-[#2a2d3a]">
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Selección</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Confederación</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Grupo</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">DT</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Desempeño</th>
-            <th className="text-center text-[11px] font-normal text-[#8a8fa8] pb-2">Acciones</th>
+          <tr className="border-b border-wc-border-primary">
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              Confederación
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Grupo</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">DT</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Desempeño</th>
+            <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
           {paginatedTeams.length === 0 && (
             <tr>
-              <td colSpan={6} className="py-8 text-center text-sm text-[#8a8fa8]">
+              <td colSpan={6} className="py-8 text-center text-sm text-wc-text-muted">
                 No se encontraron selecciones con esos filtros
               </td>
             </tr>
@@ -106,27 +110,27 @@ export function TeamsTab({ teams }: TeamsTabProps) {
             return (
               <tr
                 key={team.id}
-                className="border-t border-[#1e2233] hover:bg-[#161925] transition-colors duration-150"
+                className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
               >
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
                     <FlagImage countryCode={team.teamCode} alt={team.name} />
-                    <span className="text-xs text-[#e8eaf0]">{team.name}</span>
+                    <span className="text-xs text-wc-text-primary">{team.name}</span>
                   </div>
                 </td>
 
                 <td className="py-2.5 pr-3">
                   <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
-                    <span className="text-xs text-[#8a8fa8]">{team.confederation}</span>
+                    <span className="text-xs text-wc-text-muted">{team.confederation}</span>
                   </Tooltip>
                 </td>
 
                 <td className="py-2.5 pr-3">
-                  <span className="text-xs text-[#8a8fa8]">{team.group}</span>
+                  <span className="text-xs text-wc-text-muted">{team.group}</span>
                 </td>
 
                 <td className="py-2.5 pr-3">
-                  <span className="text-xs text-[#e8eaf0]">{team.coach}</span>
+                  <span className="text-xs text-wc-text-primary">{team.coach}</span>
                 </td>
 
                 <td className="py-2.5 pr-3">
@@ -141,7 +145,7 @@ export function TeamsTab({ teams }: TeamsTabProps) {
                   <Tooltip content="Jugadores" groupName="action">
                     <button
                       onClick={() => setSelectedTeam(team)}
-                      className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] transition-colors focus:outline-none"
+                      className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
                       aria-label={`Ver jugadores de ${team.name}`}
                     >
                       <Users size={13} />

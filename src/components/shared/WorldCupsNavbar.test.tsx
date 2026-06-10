@@ -5,8 +5,8 @@ import '@testing-library/jest-dom';
 import WorldCupsNavbar from './WorldCupsNavbar';
 import { isNavLinkActive, isWorldCupDetailPage } from './worldCupsNavbar.utils';
 
-const ACTIVE_CLASS = 'text-[#e8c84a]';
-const INACTIVE_CLASS = 'text-[#8a8fa8]';
+const ACTIVE_CLASS = 'text-wc-accent-gold';
+const INACTIVE_CLASS = 'text-wc-text-muted';
 
 describe('isNavLinkActive', () => {
   it('activates Mundiales only on home', () => {
@@ -65,10 +65,7 @@ describe('WorldCupsNavbar', () => {
     );
 
     expect(screen.getByText('Campeones')).toHaveClass(ACTIVE_CLASS);
-    expect(screen.getByRole('link', { name: 'Campeones' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
+    expect(screen.getByRole('link', { name: 'Campeones' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
   });
 

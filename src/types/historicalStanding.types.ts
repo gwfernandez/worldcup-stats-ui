@@ -11,25 +11,36 @@ export const CONFEDERATION_STYLES: Record<
   }
 > = {
   CONMEBOL: {
-    pill: 'bg-[#1a2a1a] text-[#7ac470] border-[#3a6a3a]',
-    bar: '#4a9a4a',
-    perfBar: '#4a9a4a',
+    pill: 'bg-wc-conf-conmebol-surface text-wc-success-text border-wc-conf-conmebol-border',
+    bar: 'var(--wc-conf-conmebol-bar)',
+    perfBar: 'var(--wc-conf-conmebol-bar)',
   },
   UEFA: {
-    pill: 'bg-[#1a1e2e] text-[#7090d0] border-[#2a3a6a]',
-    bar: '#4a78d4',
-    perfBar: '#4a78d4',
+    pill: 'bg-wc-conf-uefa-surface text-wc-conf-uefa-text border-wc-conf-uefa-border',
+    bar: 'var(--wc-conf-uefa-bar)',
+    perfBar: 'var(--wc-conf-uefa-bar)',
   },
   CONCACAF: {
-    pill: 'bg-[#2a1e10] text-[#d09050] border-[#6a4a20]',
-    bar: '#d4874a',
-    perfBar: '#d4874a',
+    pill: 'bg-wc-conf-concacaf-surface text-wc-conf-concacaf-text border-wc-conf-concacaf-border',
+    bar: 'var(--wc-conf-concacaf-bar)',
+    perfBar: 'var(--wc-conf-concacaf-bar)',
   },
-  CAF: { pill: 'bg-[#2a1a10] text-[#d07040] border-[#6a3a10]', bar: '#c05030', perfBar: '#c05030' },
-  AFC: { pill: 'bg-[#1a1e2a] text-[#7080a0] border-[#2a3050]', bar: '#607090', perfBar: '#607090' },
-  OFC: { pill: 'bg-[#1a2a2a] text-[#70a0a0] border-[#2a5050]', bar: '#409090', perfBar: '#409090' },
+  CAF: {
+    pill: 'bg-wc-conf-caf-surface text-wc-conf-caf-text border-wc-conf-caf-border',
+    bar: 'var(--wc-conf-caf-bar)',
+    perfBar: 'var(--wc-conf-caf-bar)',
+  },
+  AFC: {
+    pill: 'bg-wc-info-surface text-wc-conf-afc-text border-wc-conf-afc-border',
+    bar: 'var(--wc-conf-afc-bar)',
+    perfBar: 'var(--wc-conf-afc-bar)',
+  },
+  OFC: {
+    pill: 'bg-wc-conf-ofc-surface text-wc-conf-ofc-text border-wc-conf-ofc-border',
+    bar: 'var(--wc-conf-ofc-bar)',
+    perfBar: 'var(--wc-conf-ofc-bar)',
+  },
 };
-
 
 // ─── Historical Standing ──────────────────────────────────────────────────────
 

@@ -29,14 +29,14 @@ export function MatchRow({ match, onSelect, showWinner = true }: MatchRowProps) 
   return (
     <button
       onClick={() => onSelect(match)}
-      className="w-full flex items-center gap-2 px-3 py-[5px] border-t border-[#1e2233] first:border-t-0 hover:bg-[#1e2233] transition-colors duration-150 focus:outline-none focus:bg-[#1e2233] text-left"
+      className="w-full flex items-center gap-2 px-3 py-[5px] border-t border-wc-surface-secondary first:border-t-0 hover:bg-wc-surface-secondary transition-colors duration-150 focus:outline-none focus:bg-wc-surface-secondary text-left"
     >
       {/* Fecha */}
-      <span className="text-[10px] text-[#8a8fa8] min-w-[46px] shrink-0">{date}</span>
+      <span className="text-[10px] text-wc-text-muted min-w-[46px] shrink-0">{date}</span>
 
       {/* Equipo local */}
       <div
-        className={`flex items-center gap-1.5 flex-1 text-xs overflow-hidden ${homeWon ? 'text-[#8fc44a] font-medium' : 'text-[#e8eaf0]'}`}
+        className={`flex items-center gap-1.5 flex-1 text-xs overflow-hidden ${homeWon ? 'text-wc-success font-medium' : 'text-wc-text-primary'}`}
       >
         <FlagImage
           countryCode={homeTeamCode}
@@ -49,13 +49,13 @@ export function MatchRow({ match, onSelect, showWinner = true }: MatchRowProps) 
       </div>
 
       {/* Marcador */}
-      <span className="text-[12px] font-medium text-[#e8c84a] min-w-[36px] text-center shrink-0">
+      <span className="text-[12px] font-medium text-wc-accent-gold min-w-[36px] text-center shrink-0">
         {formatScore(homeScore, awayScore)}
       </span>
 
       {/* Equipo visitante */}
       <div
-        className={`flex items-center justify-end gap-1.5 flex-1 text-xs overflow-hidden ${awayWon ? 'text-[#8fc44a] font-medium' : 'text-[#e8eaf0]'}`}
+        className={`flex items-center justify-end gap-1.5 flex-1 text-xs overflow-hidden ${awayWon ? 'text-wc-success font-medium' : 'text-wc-text-primary'}`}
       >
         <span className="truncate text-right">{awayTeam}</span>
         <FlagImage
@@ -68,7 +68,7 @@ export function MatchRow({ match, onSelect, showWinner = true }: MatchRowProps) 
       </div>
 
       {/* Ícono de detalle */}
-      <ExternalLink size={11} className="text-[#8a8fa8] shrink-0" aria-hidden="true" />
+      <ExternalLink size={11} className="text-wc-text-muted shrink-0" aria-hidden="true" />
     </button>
   );
 }

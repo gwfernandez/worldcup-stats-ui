@@ -41,12 +41,12 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
       aria-label={`Títulos de ${team.teamName}`}
     >
       <div
-        className="bg-[#161925] border border-[#2a2d3a] rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+        className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2d3a]">
-          <div className="flex items-center gap-2 text-sm font-medium text-[#e8eaf0]">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
+          <div className="flex items-center gap-2 text-sm font-medium text-wc-text-primary">
             <FlagImage
               countryCode={team.teamCode}
               alt={team.teamName}
@@ -58,7 +58,7 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="text-[#8a8fa8] hover:text-[#e8eaf0] transition-colors focus:outline-none"
+            className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
             aria-label="Cerrar"
           >
             <X size={16} />
@@ -67,15 +67,15 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
 
         <div className="px-4 py-4">
           {/* Stats resumen */}
-          <div className="flex gap-5 px-4 py-3 bg-[#1e2233] border border-[#2a2d3a] rounded-lg mb-4">
+          <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
               { val: `${team.titles} 🏆`, lbl: 'Títulos totales' },
               { val: firstTitle ?? '—', lbl: 'Primer título' },
               { val: lastTitle ?? '—', lbl: 'Último título' },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
-                <p className="text-[17px] font-medium text-[#e8c84a] leading-none">{val}</p>
-                <p className="text-[10px] text-[#8a8fa8] mt-1">{lbl}</p>
+                <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
+                <p className="text-[10px] text-wc-text-muted mt-1">{lbl}</p>
               </div>
             ))}
           </div>
@@ -83,18 +83,18 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
           {/* Tabla de campeonatos */}
           <table className="w-full border-collapse text-[11px]">
             <thead>
-              <tr className="border-b border-[#2a2d3a]">
-                <th className="text-left font-normal text-[#8a8fa8] pb-2 pr-3">Año</th>
-                <th className="text-left font-normal text-[#8a8fa8] pb-2 pr-3">Sede</th>
-                <th className="text-right font-normal text-[#8a8fa8] pb-2">Final</th>
+              <tr className="border-b border-wc-border-primary">
+                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">Año</th>
+                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">Sede</th>
+                <th className="text-right font-normal text-wc-text-muted pb-2">Final</th>
               </tr>
             </thead>
             <tbody>
               {sorted.map((c) => (
-                <tr key={c.year} className="border-t border-[#1e2233]">
+                <tr key={c.year} className="border-t border-wc-surface-secondary">
                   {/* Año */}
                   <td className="py-2 pr-3">
-                    <span className="font-medium text-[#e8c84a] text-[12px]">{c.year}</span>
+                    <span className="font-medium text-wc-accent-gold text-[12px]">{c.year}</span>
                   </td>
 
                   {/* Sede */}
@@ -107,14 +107,14 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
                         height={9}
                         className="rounded-[1px] shrink-0"
                       />
-                      <span className="text-[#8a8fa8]">{c.host}</span>
+                      <span className="text-wc-text-muted">{c.host}</span>
                     </div>
                   </td>
 
                   {/* Resultado de la final */}
                   <td className="py-2 text-right">
-                    <span className="font-medium text-[#e8c84a]">{c.finalScore}</span>{' '}
-                    <span className="text-[#8a8fa8]">
+                    <span className="font-medium text-wc-accent-gold">{c.finalScore}</span>{' '}
+                    <span className="text-wc-text-muted">
                       vs{' '}
                       <FlagImage
                         countryCode={c.finalOpponentCode}

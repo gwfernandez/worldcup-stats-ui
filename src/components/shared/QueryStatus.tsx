@@ -33,7 +33,7 @@ export function QueryStatus({
       );
     }
     return (
-      <p role="status" className="text-sm text-[#8a8fa8] font-mono py-8 text-center">
+      <p role="status" className="text-sm text-wc-text-muted font-mono py-8 text-center">
         {loadingMessage}
       </p>
     );

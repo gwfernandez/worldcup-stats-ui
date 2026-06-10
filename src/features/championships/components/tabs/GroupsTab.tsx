@@ -28,7 +28,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
       <section aria-labelledby="groups-heading">
         <h3
           id="groups-heading"
-          className="text-[11px] text-[#8a8fa8] uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
+          className="text-[11px] text-wc-text-muted uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
         >
           <LayoutGrid size={12} aria-hidden="true" />
           Fase de grupos
@@ -44,7 +44,7 @@ export function GroupsTab({ groups, eliminationPhases }: GroupsTabProps) {
         <section aria-labelledby="elimination-heading" className="mt-4">
           <h3
             id="elimination-heading"
-            className="text-[11px] text-[#8a8fa8] uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
+            className="text-[11px] text-wc-text-muted uppercase tracking-wider mb-2.5 flex items-center gap-1.5"
           >
             <Repeat size={12} aria-hidden="true" />
             Fase eliminatoria

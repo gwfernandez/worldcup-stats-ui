@@ -14,7 +14,7 @@ export function SearchInput({ value, onChange, placeholder, className = '' }: Se
   return (
     <div className={`relative ${className}`}>
       <Search
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8fa8] pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-wc-text-muted pointer-events-none"
         size={13}
         aria-hidden="true"
       />
@@ -23,7 +23,7 @@ export function SearchInput({ value, onChange, placeholder, className = '' }: Se
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full bg-[#161925] border border-[#2a2d3a] rounded-lg pl-8 pr-3 py-[7px] text-xs text-[#e8eaf0] placeholder:text-[#8a8fa8] outline-none focus:border-[#e8c84a] transition-colors"
+        className="w-full bg-wc-surface-primary border border-wc-border-primary rounded-lg pl-8 pr-3 py-[7px] text-xs text-wc-text-primary placeholder:text-wc-text-muted outline-none focus:border-wc-accent-gold transition-colors"
       />
     </div>
   );

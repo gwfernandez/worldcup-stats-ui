@@ -8,14 +8,14 @@ import { Skeleton } from '@/components/ui/Skeleton';
 export function ChampionshipCardSkeleton() {
   return (
     <div
-      className="relative w-full bg-[#161925] border border-[#2a2d3a] rounded-xl overflow-hidden"
+      className="relative w-full bg-wc-surface-primary border border-wc-border-primary rounded-xl overflow-hidden"
       aria-hidden="true"
     >
       {/* Barra lateral */}
       <Skeleton className="absolute top-0 left-0 w-[3px] h-full rounded-none opacity-30" />
 
       {/* Logo placeholder */}
-      <div className="flex items-center justify-center h-24 bg-[#1e2233] border-b border-[#2a2d3a] px-4">
+      <div className="flex items-center justify-center h-24 bg-wc-surface-secondary border-b border-wc-border-primary px-4">
         <Skeleton className="h-14 w-14 rounded-lg" />
       </div>
 
@@ -31,7 +31,7 @@ export function ChampionshipCardSkeleton() {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-[#2a2d3a]" />
+        <div className="h-px bg-wc-border-primary" />
 
         {/* Campeón */}
         <Skeleton className="h-3 w-20" />

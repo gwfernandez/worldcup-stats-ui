@@ -61,18 +61,22 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
       {/* ── Tabla ──────────────────────────────────────────────── */}
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-[#2a2d3a]">
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2 w-9">#</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Selección</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Títulos 🏆</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Confederación</th>
-            <th className="text-center text-[11px] font-normal text-[#8a8fa8] pb-2">Detalle</th>
+          <tr className="border-b border-wc-border-primary">
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 w-9">#</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              Títulos 🏆
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+              Confederación
+            </th>
+            <th className="text-center text-[11px] font-normal text-wc-text-muted pb-2">Detalle</th>
           </tr>
         </thead>
         <tbody>
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-8 text-center text-sm text-[#8a8fa8]">
+              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 No se encontraron selecciones con esos filtros
               </td>
             </tr>
@@ -85,17 +89,17 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
             return (
               <tr
                 key={team.teamCode}
-                className="border-t border-[#1e2233] hover:bg-[#161925] transition-colors duration-150"
+                className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
               >
                 {/* Posición con borde lateral */}
                 <td className="py-2.5 relative pl-3.5 pr-2">
                   <div
                     className="absolute left-0 top-0 bottom-0 w-[3px]"
-                    style={{ backgroundColor: confStyle?.bar ?? '#3a3d4a' }}
+                    style={{ backgroundColor: confStyle?.bar ?? 'var(--wc-surface-tertiary)' }}
                     aria-hidden="true"
                   />
                   <span
-                    className={`text-[11px] ${isTop3 ? 'text-[#e8c84a] font-medium' : 'text-[#8a8fa8]'}`}
+                    className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
                   >
                     {team.position}
                   </span>
@@ -105,7 +109,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
                     <FlagImage countryCode={team.teamCode} alt={team.teamName} />
-                    <span className="text-xs text-[#e8eaf0]">{team.teamName}</span>
+                    <span className="text-xs text-wc-text-primary">{team.teamName}</span>
                   </div>
                 </td>
 
@@ -119,7 +123,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                         </span>
                       ))}
                     </div>
-                    <span className="text-lg font-medium text-[#e8c84a]">{team.titles}</span>
+                    <span className="text-lg font-medium text-wc-accent-gold">{team.titles}</span>
                   </div>
                 </td>
 
@@ -127,7 +131,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                 <td className="py-2.5 pr-3">
                   <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-[#1e2233] text-[#8a8fa8] border-[#2a2d3a]'}`}
+                      className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
                     >
                       {team.confederation}
                     </span>
@@ -139,7 +143,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                   <Tooltip content="Ver títulos" groupName="action">
                     <button
                       onClick={() => setSelectedTeam(team)}
-                      className="flex items-center justify-center w-7 h-7 border border-[#2a2d3a] rounded-md text-[#8a8fa8] hover:border-[#e8c84a] hover:text-[#e8c84a] transition-colors focus:outline-none"
+                      className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
                       aria-label={`Ver títulos de ${team.teamName}`}
                     >
                       <Trophy size={13} />

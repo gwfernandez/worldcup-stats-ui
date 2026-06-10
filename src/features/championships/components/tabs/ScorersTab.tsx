@@ -82,12 +82,16 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
 
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-[#2a2d3a]">
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2 pl-2 w-8">#</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Jugador</th>
-            <th className="text-left text-[11px] font-normal text-[#8a8fa8] pb-2">Selección</th>
-            <th className="text-right text-[11px] font-normal text-[#8a8fa8] pb-2 pr-2">Goles</th>
-            <th className="text-right text-[11px] font-normal text-[#8a8fa8] pb-2 pr-2">
+          <tr className="border-b border-wc-border-primary">
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pl-2 w-8">
+              #
+            </th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Jugador</th>
+            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">Selección</th>
+            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
+              Goles
+            </th>
+            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
               Promedio
             </th>
           </tr>
@@ -95,7 +99,7 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
         <tbody>
           {paginated.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-8 text-center text-sm text-[#8a8fa8]">
+              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 No se encontraron goleadores con esos filtros
               </td>
             </tr>
@@ -109,17 +113,17 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
               <tr
                 key={scorer.id}
                 onClick={() => setSelectedScorer(scorer)}
-                className="border-t border-[#1e2233] cursor-pointer hover:bg-[#161925] transition-colors duration-150 group"
+                className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
               >
                 <td className="py-2.5 pl-2">
                   <span
-                    className={`text-[11px] ${isTop3 ? 'text-[#e8c84a] font-medium' : 'text-[#8a8fa8]'}`}
+                    className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
                   >
                     {rank}
                   </span>
                 </td>
                 <td className="py-2.5 pr-3">
-                  <span className="text-xs text-[#e8eaf0] group-hover:text-[#e8c84a] transition-colors">
+                  <span className="text-xs text-wc-text-primary group-hover:text-wc-accent-gold transition-colors">
                     {scorer.playerName}
                   </span>
                 </td>
@@ -132,24 +136,24 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
                       height={11}
                       className="rounded-[1px] shrink-0"
                     />
-                    <span className="text-xs text-[#e8eaf0]">{scorer.teamName}</span>
+                    <span className="text-xs text-wc-text-primary">{scorer.teamName}</span>
                   </div>
                 </td>
                 <td className="py-2.5 pr-2">
                   <div className="flex items-center justify-end gap-2">
-                    <div className="w-16 h-1 bg-[#2a2d3a] rounded-full overflow-hidden">
+                    <div className="w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#e8c84a] rounded-full"
+                        className="h-full bg-wc-accent-gold rounded-full"
                         style={{ width: `${barWidth}%` }}
                       />
                     </div>
-                    <span className="text-[13px] font-medium text-[#e8c84a] min-w-[16px] text-right">
+                    <span className="text-[13px] font-medium text-wc-accent-gold min-w-[16px] text-right">
                       {scorer.totalGoals}
                     </span>
                   </div>
                 </td>
                 <td className="py-2.5 pr-2 text-right">
-                  <span className="text-xs text-[#8a8fa8]">{scorer.average.toFixed(2)}</span>
+                  <span className="text-xs text-wc-text-muted">{scorer.average.toFixed(2)}</span>
                 </td>
               </tr>
             );
