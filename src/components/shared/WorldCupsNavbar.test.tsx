@@ -65,6 +65,10 @@ describe('WorldCupsNavbar', () => {
     );
 
     expect(screen.getByText('Campeones')).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByRole('link', { name: 'Campeones' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
     expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
   });
 

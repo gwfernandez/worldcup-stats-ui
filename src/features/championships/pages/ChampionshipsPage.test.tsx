@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
@@ -62,5 +63,23 @@ describe('ChampionshipsPage', () => {
 
     expect(screen.getByRole('link', { name: /1930/i })).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('filtra las ediciones por continente', async () => {
+    const user = userEvent.setup();
+    vi.mocked(useChampionships).mockReturnValue({
+      championships: MOCK_CHAMPIONSHIPS,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Europa' }));
+
+    expect(screen.getByRole('heading', { name: /Ediciones\(11\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /1966/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /1930/i })).not.toBeInTheDocument();
   });
 });
