@@ -19,6 +19,7 @@
   },
   "status": {
     "loading": "Cargando...",
+    "routeLoading": "Cargando vista...",
     "genericError": "Ocurrió un error al cargar los datos."
   },
   "pagination": {

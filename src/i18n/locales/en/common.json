@@ -19,6 +19,7 @@
   },
   "status": {
     "loading": "Loading...",
+    "routeLoading": "Loading view...",
     "genericError": "An error occurred while loading the data."
   },
   "pagination": {

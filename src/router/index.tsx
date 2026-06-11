@@ -1,20 +1,29 @@
+import { Suspense, type ReactNode } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@/components/shared/RootLayout';
-import { ChampionsPage } from '@/features/champions';
-import { ChampionshipDetailPage, ChampionshipsPage } from '@/features/championships';
-import { HistoricalScorersPage } from '@/features/historicalScorers';
-import { HistoricalStandingsPage } from '@/features/historicalStandings';
+import { RouteLoadingState } from '@/components/shared';
+import {
+  ChampionsPage,
+  ChampionshipDetailPage,
+  ChampionshipsPage,
+  HistoricalScorersPage,
+  HistoricalStandingsPage,
+} from './lazyRouteComponents';
+
+const withRouteSuspense = (element: ReactNode) => (
+  <Suspense fallback={<RouteLoadingState />}>{element}</Suspense>
+);
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <ChampionshipsPage /> },
-      { path: 'worldcup/:year', element: <ChampionshipDetailPage /> },
-      { path: 'standings', element: <HistoricalStandingsPage /> },
-      { path: 'scorers', element: <HistoricalScorersPage /> },
-      { path: 'champions', element: <ChampionsPage /> },
+      { index: true, element: withRouteSuspense(<ChampionshipsPage />) },
+      { path: 'worldcup/:year', element: withRouteSuspense(<ChampionshipDetailPage />) },
+      { path: 'standings', element: withRouteSuspense(<HistoricalStandingsPage />) },
+      { path: 'scorers', element: withRouteSuspense(<HistoricalScorersPage />) },
+      { path: 'champions', element: withRouteSuspense(<ChampionsPage />) },
     ],
   },
 ]);
