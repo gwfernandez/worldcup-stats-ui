@@ -2,7 +2,7 @@ import { HistoricalStandingsTable } from '../components/HistoricalStandingsTable
 import { StandingsLegend } from '../components/StandingsLegend';
 import { useHistoricalStandings } from '../hooks/useHistoricalStandings';
 import HeroSection from '@/components/shared/HeroSection';
-import { QueryStatus } from '@/components/shared';
+import { QueryStatus, SEO } from '@/components/shared';
 import { Globe, Swords, Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +17,11 @@ export default function HistoricalStandingsPage() {
 
   return (
     <>
+      <SEO
+        title={t('historicalStandings:seo.title')}
+        description={t('historicalStandings:seo.description')}
+      />
+
       <HeroSection
         badge={t('championships:hero.badge')}
         title={t('historicalStandings:hero.title')}

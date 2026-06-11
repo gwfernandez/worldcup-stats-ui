@@ -5,5 +5,9 @@
     "description": "The national teams with the most titles in Football World Cup history.",
     "champions": "Champions",
     "mostTitles": "Most titles (5)"
+  },
+  "seo": {
+    "title": "Champions Table - worldcup-stats",
+    "description": "Review the national teams that won the Football World Cup and compare their historical titles."
   }
 }

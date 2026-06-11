@@ -17,6 +17,14 @@
   "list": {
     "title": "Ediciones"
   },
+  "seo": {
+    "listTitle": "Mundiales de Fútbol - worldcup-stats",
+    "listDescription": "Explora todas las ediciones de la Copa Mundial de Fútbol con fixtures, campeones, planteles y goleadores desde Uruguay 1930.",
+    "detailLoadingTitle": "Mundial {{year}} - worldcup-stats",
+    "detailLoadingDescription": "Cargando estadísticas, fixture, selecciones y goleadores del Mundial {{year}}.",
+    "detailTitle": "Mundial {{country}} {{year}} - worldcup-stats",
+    "detailDescription": "Consulta las estadísticas del Mundial {{country}} {{year}}: campeón {{champion}}, {{teams}} selecciones, {{matches}} partidos, fixture, posiciones y goleadores."
+  },
   "detail": {
     "loading": "Cargando mundial...",
     "error": "No se pudo cargar el detalle del mundial.",

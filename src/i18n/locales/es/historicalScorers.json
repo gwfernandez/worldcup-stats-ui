@@ -7,5 +7,9 @@
     "scorers": "Goleadores",
     "recordGoals": "Récord de goles",
     "historicalScorer": "Goleador histórico"
+  },
+  "seo": {
+    "title": "Goleadores Históricos - worldcup-stats",
+    "description": "Explora los máximos goleadores de la historia de los Mundiales de Fútbol y sus registros por edición."
   }
 }

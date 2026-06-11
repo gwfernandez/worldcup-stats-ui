@@ -1,5 +1,5 @@
 import HeroSection from '@/components/shared/HeroSection';
-import { QueryStatus } from '@/components/shared';
+import { QueryStatus, SEO } from '@/components/shared';
 import { ChampionsTable } from '../components/ChampionsTable';
 import { useChampions } from '../hooks/useChampions';
 import { Globe, Trophy } from 'lucide-react';
@@ -16,6 +16,8 @@ export default function ChampionsPage() {
 
   return (
     <>
+      <SEO title={t('champions:seo.title')} description={t('champions:seo.description')} />
+
       <HeroSection
         badge={t('championships:hero.badge')}
         title={t('champions:hero.title')}

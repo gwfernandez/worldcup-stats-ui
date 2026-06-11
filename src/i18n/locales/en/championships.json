@@ -17,6 +17,14 @@
   "list": {
     "title": "Editions"
   },
+  "seo": {
+    "listTitle": "Football World Cups - worldcup-stats",
+    "listDescription": "Explore every Football World Cup edition with fixtures, champions, squads and scorers since Uruguay 1930.",
+    "detailLoadingTitle": "World Cup {{year}} - worldcup-stats",
+    "detailLoadingDescription": "Loading stats, fixtures, teams and scorers for the {{year}} World Cup.",
+    "detailTitle": "{{country}} {{year}} World Cup - worldcup-stats",
+    "detailDescription": "Explore the {{country}} {{year}} World Cup stats: champion {{champion}}, {{teams}} teams, {{matches}} matches, fixtures, standings and scorers."
+  },
   "detail": {
     "loading": "Loading World Cup...",
     "error": "The World Cup details could not be loaded.",
