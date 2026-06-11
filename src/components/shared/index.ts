@@ -7,3 +7,4 @@ export { QueryStatus, type QueryStatusProps } from './QueryStatus';
 export { ErrorBoundary, type ErrorBoundaryProps } from './ErrorBoundary';
 export { TableSkeleton, type TableSkeletonProps } from './TableSkeleton';
 export { SEO, type SEOProps } from './SEO';
+export { RouteLoadingState } from './RouteLoadingState';

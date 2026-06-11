@@ -18,12 +18,25 @@ description: Workflow que guía al agente en la resolución completa de un issue
 
 1. Leer el issue de GitHub completo usando las herramientas de búsqueda/lectura y entender el requerimiento
 2. Asignarme el issue usando la herramienta de actualización de issues de GitHub
-3. Leer el campo "Rama sugerida" del issue
+3. Cambiar el estado real del issue a **In Progress / En curso** en GitHub Projects al momento de la asignación:
+   - Consultar si el issue está asociado a uno o más Project items (`projectItems`)
+   - Si existe Project item:
+     - Identificar el campo de estado (`Status`, `Estado` o equivalente)
+     - Actualizar el valor del campo a **In Progress** o **En curso**, según las opciones disponibles del Project
+     - Verificar luego de la actualización que el valor quedó aplicado correctamente
+   - Si el issue no está asociado a ningún Project item:
+     - No considerar cumplido el cambio de estado
+     - Informarme explícitamente que el issue no pertenece a ningún Project y que no se pudo mover a **In Progress / En curso**
+     - Publicar un comentario de trazabilidad indicando que el trabajo comienza, aclarando que el estado de Project no pudo actualizarse por falta de Project item
+   - Si la API o permisos de GitHub no permiten actualizar el estado:
+     - Informarme explícitamente el motivo técnico
+     - Publicar un comentario de trazabilidad indicando que el trabajo comienza y que el cambio de estado de Project quedó pendiente
+4. Leer el campo "Rama sugerida" del issue
    - Si existe → usar ese nombre
    - Si no existe → solicitarme el nombre antes de continuar
-4. Crear el branch localmente con ese nombre desde `main`
-5. Hacer checkout al branch creado
-6. Cambiar el estado del issue a **En curso** publicando un comentario en el issue de GitHub mediante la integración
+5. Crear el branch localmente con ese nombre desde `main`
+6. Hacer checkout al branch creado
+7. Publicar un comentario breve en el issue de GitHub indicando que el trabajo está **En curso**, solo como trazabilidad; este comentario no reemplaza la actualización real del estado en GitHub Projects
 
 ---
 
@@ -97,13 +110,18 @@ npx vitest run --coverage
      - Rutas nuevas o modificadas (si aplica)
      - Impacto SemVer estimado (MAJOR/MINOR/PATCH)
      - Confirmación de cumplimiento de los `✅ Criterios de Aceptación`
-     - Link al issue: `Closes #numero_issue`
+     - Link de cierre obligatorio al issue: `Closes #numero_issue`
    - **Formato obligatorio de la descripción:**
      - Escribir la descripción completa en un archivo Markdown temporal (por ejemplo `/tmp/pr-body.md` o `/private/tmp/pr-body.md`)
      - Crear o editar el PR usando `--body-file <archivo>` para preservar saltos de línea, listas y checklists
      - No pasar descripciones largas inline con `--body "..."`, porque puede generar escapes `\n` y dejar el PR ilegible
      - Usar secciones Markdown claras: `Resumen`, `Cambios Realizados`, `Rutas Impactadas` (si aplica), `Validación`, `Criterios de Aceptación`, `Impacto SemVer` y `Closes #numero_issue`
-2. Asignarme como reviewer (si la API lo permite, si no, dejar documentado)
-3. **Usar la herramienta de comentarios de GitHub** para publicar el documento de resumen ("Walkthrough") como un comentario final en el issue original, indicando que el trabajo ha concluido.
+2. Verificar que el PR quedó vinculado al issue como cierre automático:
+   - Confirmar que la descripción del PR contiene una closing keyword válida (`Closes #numero_issue`, `Fixes #numero_issue` o `Resolves #numero_issue`)
+   - Verificar con GitHub que el PR referencia el issue en `closingIssuesReferences` o equivalente
+   - Si el vínculo de cierre no quedó aplicado, editar el PR usando `--body-file` para corregir la descripción antes de continuar
+   - Tener en cuenta que GitHub cierra el issue automáticamente al hacer **merge** del PR hacia `main`; la aprobación/review del PR por sí sola no cierra el issue
+3. Asignarme como reviewer (si la API lo permite, si no, dejar documentado)
+4. **Usar la herramienta de comentarios de GitHub** para publicar el documento de resumen ("Walkthrough") como un comentario final en el issue original, indicando que el PR quedó listo para revisión/merge.
    - Para comentarios largos, escribir el contenido en un archivo Markdown temporal y publicarlo con `--body-file <archivo>`
    - No usar bodies largos inline con `--body "..."`
