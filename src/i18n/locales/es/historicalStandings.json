@@ -9,6 +9,10 @@
     "bestTeam": "Mejor selección",
     "firstWorldCup": "1er Mundial"
   },
+  "seo": {
+    "title": "Tabla de Posiciones Histórica - worldcup-stats",
+    "description": "Ranking acumulado de selecciones en la historia de los Mundiales de Fútbol, con puntos, partidos y rendimiento histórico."
+  },
   "legend": {
     "title": "Leyenda",
     "abbreviation": "Abrev.",

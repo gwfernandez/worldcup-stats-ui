@@ -5,5 +5,9 @@
     "description": "Las selecciones con más títulos en la historia de los Mundiales de Fútbol.",
     "champions": "Campeones",
     "mostTitles": "Más títulos (5)"
+  },
+  "seo": {
+    "title": "Tabla de Campeones - worldcup-stats",
+    "description": "Consulta las selecciones campeonas de la Copa Mundial de Fútbol y compara sus títulos históricos."
   }
 }

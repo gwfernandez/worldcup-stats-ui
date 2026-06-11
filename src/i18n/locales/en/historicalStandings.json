@@ -9,6 +9,10 @@
     "bestTeam": "Best team",
     "firstWorldCup": "1st World Cup"
   },
+  "seo": {
+    "title": "All-Time Standings Table - worldcup-stats",
+    "description": "Cumulative ranking of national teams in Football World Cup history, including points, matches and historical performance."
+  },
   "legend": {
     "title": "Legend",
     "abbreviation": "Abbr.",

@@ -8,7 +8,7 @@ import { StandingsTab } from '../components/tabs/StandingsTab';
 import { TeamsTab } from '../components/tabs/TeamsTab';
 import { useChampionshipDetail } from '../hooks/useChampionshipDetail';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
-import { TableSkeleton } from '@/components/shared';
+import { SEO, TableSkeleton } from '@/components/shared';
 import { Skeleton } from '@/components/ui/Skeleton';
 import {
   Globe,
@@ -167,7 +167,15 @@ export default function ChampionshipDetailPage() {
   }
 
   if (isLoading || detail === null) {
-    return <ChampionshipDetailSkeleton activeTab={activeTab} />;
+    return (
+      <>
+        <SEO
+          title={t('championships:seo.detailLoadingTitle', { year })}
+          description={t('championships:seo.detailLoadingDescription', { year })}
+        />
+        <ChampionshipDetailSkeleton activeTab={activeTab} />
+      </>
+    );
   }
 
   if (isError) {
@@ -180,6 +188,17 @@ export default function ChampionshipDetailPage() {
 
   return (
     <>
+      <SEO
+        title={t('championships:seo.detailTitle', { country: detail.country, year: detail.year })}
+        description={t('championships:seo.detailDescription', {
+          country: detail.country,
+          year: detail.year,
+          champion: detail.champion,
+          teams: detail.totalTeams,
+          matches: detail.totalMatches,
+        })}
+      />
+
       <HeroDetailSection
         badge={t('championships:hero.badge')}
         title={detail.country}

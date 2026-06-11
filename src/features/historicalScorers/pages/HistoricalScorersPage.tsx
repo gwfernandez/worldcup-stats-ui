@@ -1,5 +1,5 @@
 import HeroSection from '@/components/shared/HeroSection';
-import { QueryStatus } from '@/components/shared';
+import { QueryStatus, SEO } from '@/components/shared';
 import { HistoricalScorersTable } from '../components/HistoricalScorersTable';
 import { useHistoricalScorers } from '../hooks/useHistoricalScorers';
 import { Award, Trophy, Users, Volleyball } from 'lucide-react';
@@ -16,6 +16,11 @@ export default function HistoricalScorersPage() {
 
   return (
     <>
+      <SEO
+        title={t('historicalScorers:seo.title')}
+        description={t('historicalScorers:seo.description')}
+      />
+
       <HeroSection
         badge={t('championships:hero.badge')}
         title={t('historicalScorers:hero.title')}

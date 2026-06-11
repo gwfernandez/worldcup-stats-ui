@@ -7,5 +7,9 @@
     "scorers": "Scorers",
     "recordGoals": "Goal record",
     "historicalScorer": "All-time scorer"
+  },
+  "seo": {
+    "title": "All-Time Scorers - worldcup-stats",
+    "description": "Explore the top scorers in Football World Cup history and their records by edition."
   }
 }

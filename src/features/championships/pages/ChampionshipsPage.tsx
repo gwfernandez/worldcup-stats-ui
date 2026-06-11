@@ -4,7 +4,7 @@ import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton
 import { useChampionships } from '../hooks/useChampionships';
 import { CONTINENT_BY_COUNTRY_CODE, type FilterType } from '../utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
-import { QueryStatus } from '@/components/shared';
+import { QueryStatus, SEO } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
@@ -42,6 +42,11 @@ export default function ChampionshipsPage() {
 
   return (
     <>
+      <SEO
+        title={t('championships:seo.listTitle')}
+        description={t('championships:seo.listDescription')}
+      />
+
       <HeroSection
         badge={t('championships:hero.badge')}
         title={t('championships:hero.title')}
