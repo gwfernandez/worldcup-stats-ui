@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Trophy, Globe, Users, Swords } from 'lucide-react';
 import { ChampionshipCard } from '../components/ChampionshipCard';
 import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton';
@@ -7,13 +6,17 @@ import { CONTINENT_BY_COUNTRY_CODE, type FilterType } from '../utils/championshi
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 const SKELETON_COUNT = 22;
 
 export default function ChampionshipsPage() {
   const { t } = useTranslation(['championships', 'common']);
   const { championships, isLoading, isError, error } = useChampionships();
-  const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
+  const activeFilter =
+    (useUIStore((state) => state.filters.championships?.continent) as FilterType | undefined) ??
+    'Todos';
+  const setFilter = useUIStore((state) => state.setFilter);
 
   const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia', 'África'];
   const filterLabels: Record<FilterType, string> = {
@@ -64,7 +67,7 @@ export default function ChampionshipsPage() {
             {filters.map((f) => (
               <button
                 key={f}
-                onClick={() => setActiveFilter(f)}
+                onClick={() => setFilter('championships', 'continent', f)}
                 className={`text-xs px-3 py-1 rounded-full border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-1 focus:ring-offset-wc-bg-primary ${
                   activeFilter === f
                     ? 'bg-wc-success-surface text-wc-success border-wc-success-border'

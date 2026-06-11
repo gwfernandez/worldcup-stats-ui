@@ -4,6 +4,7 @@ import { ScorerModal } from '../shared/ScorerModal';
 import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 const PAGE_SIZE = 10;
 
@@ -18,10 +19,12 @@ export interface ScorersTabProps {
 export function ScorersTab({ scorers }: ScorersTabProps) {
   const { t } = useTranslation('common');
   const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
-  const [searchName, setSearchName] = useState('');
-  const [filterTeam, setFilterTeam] = useState('');
-  const [filterPhase, setFilterPhase] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const filters = useUIStore((state) => state.filters.championshipScorers);
+  const setFilter = useUIStore((state) => state.setFilter);
+  const searchName = filters?.name ?? '';
+  const filterTeam = filters?.team ?? '';
+  const filterPhase = filters?.phase ?? '';
 
   const teamOptions = useMemo(() => {
     const teams = [
@@ -47,9 +50,9 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
   }, [scorers, searchName, filterTeam, filterPhase]);
 
   const handleFilterChange =
-    (setter: (v: string) => void) =>
+    (key: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setter(e.target.value);
+      setFilter('championshipScorers', key, e.target.value);
       setCurrentPage(1);
     };
 
@@ -64,19 +67,19 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
           className="flex-[2]"
           placeholder={t('search.player')}
           value={searchName}
-          onChange={handleFilterChange(setSearchName)}
+          onChange={handleFilterChange('name')}
         />
         <FilterSelect
           className="flex-1"
           value={filterTeam}
-          onChange={handleFilterChange(setFilterTeam)}
+          onChange={handleFilterChange('team')}
           placeholderOption={t('filters.allTeams')}
           options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterPhase}
-          onChange={handleFilterChange(setFilterPhase)}
+          onChange={handleFilterChange('phase')}
           placeholderOption={t('filters.allStages')}
           options={phaseOptions.map((p) => ({ value: p, label: p }))}
         />

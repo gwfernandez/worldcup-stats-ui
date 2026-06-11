@@ -6,6 +6,7 @@ import { MatchModal } from '../shared/MatchModal';
 import { StadiumMatchesModal } from '../shared/StadiumMatchesModal';
 import { SearchInput } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -23,9 +24,10 @@ export interface StadiumsTabProps {
  */
 export function StadiumsTab({ stadiums }: StadiumsTabProps) {
   const { t } = useTranslation('common');
-  const [searchName, setSearchName] = useState('');
   const [selectedStadium, setSelectedStadium] = useState<Stadium | null>(null);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const searchName = useUIStore((state) => state.filters.championshipStadiums?.name ?? '');
+  const setFilter = useUIStore((state) => state.setFilter);
 
   const filtered = useMemo(
     () => stadiums.filter((s) => s.name.toLowerCase().includes(searchName.toLowerCase())),
@@ -45,7 +47,7 @@ export function StadiumsTab({ stadiums }: StadiumsTabProps) {
           className="flex-[2]"
           placeholder={t('search.stadium')}
           value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
+          onChange={(e) => setFilter('championshipStadiums', 'name', e.target.value)}
         />
       </div>
 

@@ -5,6 +5,7 @@ import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { HistoricalScorerModal } from './HistoricalScorerModal';
 import { SearchInput, FilterSelect, Tooltip, FlagImage, Pagination } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 const PAGE_SIZE = 10;
 
@@ -23,10 +24,12 @@ export interface HistoricalScorersTableProps {
 export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps) {
   const { t } = useTranslation('common');
   const [selectedScorer, setSelectedScorer] = useState<HistoricalScorer | null>(null);
-  const [searchName, setSearchName] = useState('');
-  const [filterTeam, setFilterTeam] = useState('');
-  const [filterConf, setFilterConf] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const filters = useUIStore((state) => state.filters.historicalScorers);
+  const setFilter = useUIStore((state) => state.setFilter);
+  const searchName = filters?.name ?? '';
+  const filterTeam = filters?.team ?? '';
+  const filterConf = filters?.confederation ?? '';
 
   const maxGoals = useMemo(() => Math.max(...scorers.map((s) => s.totalGoals), 1), [scorers]);
 
@@ -55,9 +58,9 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
   }, [scorers, searchName, filterTeam, filterConf]);
 
   const handleFilterChange =
-    (setter: (v: string) => void) =>
+    (key: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setter(e.target.value);
+      setFilter('historicalScorers', key, e.target.value);
       setCurrentPage(1);
     };
 
@@ -72,19 +75,19 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
           className="flex-[2]"
           placeholder={t('search.player')}
           value={searchName}
-          onChange={handleFilterChange(setSearchName)}
+          onChange={handleFilterChange('name')}
         />
         <FilterSelect
           className="flex-1"
           value={filterTeam}
-          onChange={handleFilterChange(setFilterTeam)}
+          onChange={handleFilterChange('team')}
           placeholderOption={t('filters.allTeams')}
           options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterConf}
-          onChange={handleFilterChange(setFilterConf)}
+          onChange={handleFilterChange('confederation')}
           placeholderOption={t('filters.allConfederations')}
           options={confOptions.map((c) => ({ value: c, label: c }))}
         />

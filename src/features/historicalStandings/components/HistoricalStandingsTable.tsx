@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import type { HistoricalStanding } from '@/types/historicalStanding.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 const formatDiff = (diff: number): { label: string; className: string } => {
   if (diff > 0) return { label: `+${diff}`, className: 'text-wc-success' };
@@ -52,8 +53,10 @@ export interface HistoricalStandingsTableProps {
  */
 export function HistoricalStandingsTable({ standings }: HistoricalStandingsTableProps) {
   const { t } = useTranslation('common');
-  const [searchName, setSearchName] = useState('');
-  const [filterConf, setFilterConf] = useState('');
+  const filters = useUIStore((state) => state.filters.historicalStandings);
+  const setFilter = useUIStore((state) => state.setFilter);
+  const searchName = filters?.name ?? '';
+  const filterConf = filters?.confederation ?? '';
 
   const confOptions = useMemo(
     () => [...new Set(standings.map((s) => s.confederation))].sort(),
@@ -78,12 +81,12 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
           className="flex-[2]"
           placeholder={t('search.team')}
           value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
+          onChange={(e) => setFilter('historicalStandings', 'name', e.target.value)}
         />
         <FilterSelect
           className="flex-1"
           value={filterConf}
-          onChange={(e) => setFilterConf(e.target.value)}
+          onChange={(e) => setFilter('historicalStandings', 'confederation', e.target.value)}
           placeholderOption={t('filters.allConfederations')}
           options={confOptions.map((c) => ({ value: c, label: c }))}
         />
