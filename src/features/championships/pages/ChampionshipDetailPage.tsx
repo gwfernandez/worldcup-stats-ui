@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { GroupsTab } from '../components/tabs/GroupsTab';
 import { GroupsTabSkeleton } from '../components/tabs/GroupsTabSkeleton';
@@ -23,6 +23,7 @@ import {
   BarChart2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
@@ -153,6 +154,13 @@ export default function ChampionshipDetailPage() {
   const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
   const { detail, isLoading, isError } = useChampionshipDetail(year ?? 0, year !== null);
+  const setSelectedYear = useUIStore((state) => state.setSelectedYear);
+
+  useEffect(() => {
+    if (year !== null) {
+      setSelectedYear(year);
+    }
+  }, [setSelectedYear, year]);
 
   if (year === null) {
     return <Navigate to="/" replace />;

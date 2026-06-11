@@ -6,6 +6,7 @@ import { Pagination } from '@/components/shared/Pagination';
 import { SearchInput, FilterSelect, Tooltip, FlagImage } from '@/components/shared';
 import { PlayersModal } from '../shared/PlayersModal';
 import { useTranslation } from 'react-i18next';
+import { useUIStore } from '@/store/ui.store';
 
 const PAGE_SIZE = 10;
 
@@ -22,10 +23,12 @@ export interface TeamsTabProps {
 export function TeamsTab({ teams }: TeamsTabProps) {
   const { t } = useTranslation('common');
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [searchName, setSearchName] = useState('');
-  const [filterConfederation, setFilterConf] = useState('');
-  const [filterGroup, setFilterGroup] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const filters = useUIStore((state) => state.filters.championshipTeams);
+  const setFilter = useUIStore((state) => state.setFilter);
+  const searchName = filters?.name ?? '';
+  const filterConfederation = filters?.confederation ?? '';
+  const filterGroup = filters?.group ?? '';
 
   const confederationOptions = useMemo(
     () => [...new Set(teams.map((t) => t.confederation))].sort(),
@@ -52,9 +55,9 @@ export function TeamsTab({ teams }: TeamsTabProps) {
   }, [filtered, currentPage]);
 
   const handleFilterChange =
-    (setter: (v: string) => void) =>
+    (key: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setter(e.target.value);
+      setFilter('championshipTeams', key, e.target.value);
       setCurrentPage(1);
     };
 
@@ -65,19 +68,19 @@ export function TeamsTab({ teams }: TeamsTabProps) {
           className="flex-[2]"
           placeholder={t('search.team')}
           value={searchName}
-          onChange={handleFilterChange(setSearchName)}
+          onChange={handleFilterChange('name')}
         />
         <FilterSelect
           className="flex-1"
           value={filterConfederation}
-          onChange={handleFilterChange(setFilterConf)}
+          onChange={handleFilterChange('confederation')}
           placeholderOption={t('filters.allConfederations')}
           options={confederationOptions.map((c) => ({ value: c, label: c }))}
         />
         <FilterSelect
           className="flex-1"
           value={filterGroup}
-          onChange={handleFilterChange(setFilterGroup)}
+          onChange={handleFilterChange('group')}
           placeholderOption={t('filters.allGroups')}
           options={groupOptions.map((g) => ({ value: g, label: g }))}
         />

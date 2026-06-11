@@ -234,6 +234,12 @@ Casos de uso válidos:
 - Filtros activos (fase, grupo, selección)
 - Preferencias de UI (tema, idioma)
 
+El store global de UI vive en `src/store/ui.store.ts` y expone `useUIStore`.
+Los filtros se guardan por scope de vista para evitar mezclar estados entre tablas
+(`championshipTeams`, `championshipScorers`, `championshipStadiums`, `historicalStandings`,
+`historicalScorers`, etc.). La persistencia se limita a preferencias de UI y filtros; no se
+deben almacenar respuestas de la API ni datos derivados del servidor.
+
 ```ts
 // src/store/championship.store.ts
 interface ChampionshipStore {

@@ -14,6 +14,7 @@ import { Globe2, Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import { isNavLinkActive } from './worldCupsNavbar.utils';
+import { useUIStore, type SupportedLanguage } from '@/store/ui.store';
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -93,11 +94,23 @@ export default function WorldCupsNavbar({
   links = DEFAULT_LINKS,
 }: WorldCupsNavbarProps): React.ReactElement {
   const { i18n, t } = useTranslation('common');
+  const selectedLanguage = useUIStore((state) => state.language);
+  const setLanguage = useUIStore((state) => state.setLanguage);
   const translatedLinks =
     links === DEFAULT_LINKS
       ? DEFAULT_LINK_KEYS.map((link) => ({ href: link.href, label: t(link.labelKey) }))
       : links;
-  const selectedLanguage = i18n.language.startsWith('en') ? 'en' : 'es';
+
+  React.useEffect(() => {
+    if (!i18n.language.startsWith(selectedLanguage)) {
+      void i18n.changeLanguage(selectedLanguage);
+    }
+  }, [i18n, selectedLanguage]);
+
+  const handleLanguageChange = (language: SupportedLanguage): void => {
+    setLanguage(language);
+    void i18n.changeLanguage(language);
+  };
 
   return (
     <>
@@ -126,7 +139,7 @@ export default function WorldCupsNavbar({
               <button
                 key={language}
                 type="button"
-                onClick={() => void i18n.changeLanguage(language)}
+                onClick={() => handleLanguageChange(language)}
                 className={`h-6 px-2 text-[11px] rounded-sm transition-colors focus:outline-none focus:ring-1 focus:ring-wc-accent-gold ${
                   selectedLanguage === language
                     ? 'bg-wc-success-surface text-wc-accent-gold'
