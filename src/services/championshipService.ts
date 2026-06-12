@@ -1,22 +1,12 @@
 import { api } from '@/services/api';
-import { env } from '@/config/env';
-import { ChampionshipListSchema, type ChampionshipList } from '@/types/championship.types';
-import { MOCK_CHAMPIONSHIPS } from '@/features/championships/mocks/championship.mock';
-
-// ─── Mock ─────────────────────────────────────────────────────────────────────
-// TODO: eliminar este bloque cuando el endpoint GET /api/v1/worldcups esté disponible
+import { ChampionshipListResponseSchema, type ChampionshipList } from '@/types/championship.types';
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
 /**
  * Obtiene la lista completa de mundiales desde la API.
- * Usa mock data si VITE_USE_MOCK=true o si el endpoint aún no existe.
  */
 export const getChampionships = async (): Promise<ChampionshipList> => {
-  if (env.useMock) {
-    return ChampionshipListSchema.parse(MOCK_CHAMPIONSHIPS);
-  }
-
-  const { data } = await api.get('/worldcups');
-  return ChampionshipListSchema.parse(data);
+  const { data } = await api.get('/api/championships?size=50');
+  return ChampionshipListResponseSchema.parse(data).data;
 };
