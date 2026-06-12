@@ -3,7 +3,17 @@ export interface AppEnv {
   useMock: boolean;
 }
 
+const getApiBaseUrl = (): string => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  if (apiBaseUrl === 'same-origin') {
+    return '';
+  }
+
+  return apiBaseUrl || 'http://localhost:8080/api';
+};
+
 export const env: AppEnv = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  apiBaseUrl: getApiBaseUrl(),
   useMock: import.meta.env.VITE_USE_MOCK === 'true',
 };
