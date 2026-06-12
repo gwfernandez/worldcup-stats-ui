@@ -34,3 +34,6 @@ storybook-static/
 # Test coverage
 coverage/
 .vercel
+
+# Vercel config generated at build time
+vercel.json
