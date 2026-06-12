@@ -89,7 +89,7 @@ cp .env.example .env
 
 | Variable            | Descripción                                         |
 | ------------------- | --------------------------------------------------- |
-| `VITE_API_BASE_URL` | URL base de la REST API de datos                    |
+| `VITE_API_BASE_URL` | URL base de la REST API de datos o `same-origin`    |
 | `VITE_USE_MOCK`     | Habilita datos mockeados locales cuando vale `true` |
 
 ### Modo mock local
@@ -106,6 +106,13 @@ Con `VITE_USE_MOCK=true`, los services soportados devuelven datos locales valida
 y no realizan requests HTTP. Para probar contra la API real, configurar:
 
 ```env
+VITE_USE_MOCK=false
+```
+
+En Vercel, configurar la API como same-origin para usar el proxy definido en `vercel.json`:
+
+```env
+VITE_API_BASE_URL=same-origin
 VITE_USE_MOCK=false
 ```
 

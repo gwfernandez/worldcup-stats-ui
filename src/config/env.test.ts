@@ -25,4 +25,14 @@ describe('env', () => {
     expect(env.apiBaseUrl).toBe('http://localhost:8080/custom-api');
     expect(env.useMock).toBe(true);
   });
+
+  it('permite usar requests relativos para deployments con proxy same-origin', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', 'same-origin');
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+
+    const { env } = await import('./env');
+
+    expect(env.apiBaseUrl).toBe('');
+    expect(env.useMock).toBe(false);
+  });
 });
