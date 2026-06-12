@@ -87,10 +87,11 @@ Crear un archivo `.env` en la raíz del proyecto basándose en `.env.example`:
 cp .env.example .env
 ```
 
-| Variable            | Descripción                                         |
-| ------------------- | --------------------------------------------------- |
-| `VITE_API_BASE_URL` | URL base de la REST API de datos o `same-origin`    |
-| `VITE_USE_MOCK`     | Habilita datos mockeados locales cuando vale `true` |
+| Variable               | Descripción                                         |
+| ---------------------- | --------------------------------------------------- |
+| `VITE_API_BASE_URL`    | URL base de la REST API de datos o `same-origin`    |
+| `BACKEND_API_BASE_URL` | URL base privada usada por el proxy de Vercel       |
+| `VITE_USE_MOCK`        | Habilita datos mockeados locales cuando vale `true` |
 
 ### Modo mock local
 
@@ -109,10 +110,11 @@ y no realizan requests HTTP. Para probar contra la API real, configurar:
 VITE_USE_MOCK=false
 ```
 
-En Vercel, configurar la API como same-origin para usar el proxy definido en `vercel.json`:
+En Vercel, configurar la API como same-origin para usar el proxy definido en `vercel.ts`:
 
 ```env
 VITE_API_BASE_URL=same-origin
+BACKEND_API_BASE_URL=https://worldcup-stats-service.onrender.com/api
 VITE_USE_MOCK=false
 ```
 
