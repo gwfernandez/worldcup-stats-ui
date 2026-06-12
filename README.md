@@ -110,7 +110,7 @@ y no realizan requests HTTP. Para probar contra la API real, configurar:
 VITE_USE_MOCK=false
 ```
 
-En Vercel, configurar la API como `same-origin` para usar el proxy dinámico generado en build-time:
+En Vercel, configurar la API como `same-origin` para usar el proxy definido en `vercel.ts`:
 
 ```env
 VITE_API_BASE_URL=same-origin
@@ -118,10 +118,10 @@ BACKEND_API_BASE_URL=https://worldcup-stats-service.onrender.com/api
 VITE_USE_MOCK=false
 ```
 
-> **Cómo funciona:** Durante el build, el script `scripts/generate-vercel-config.mjs` genera un
-> `vercel.json` dinámico basado en la variable de entorno `BACKEND_API_BASE_URL`. Esto permite
-> cambiar la URL del servicio sin modificar código ni hacer commits. Para usar otro servicio
-> productivo, solo actualizar `BACKEND_API_BASE_URL` en el dashboard de Vercel.
+> **Cómo funciona:** `vercel.ts` usa `BACKEND_API_BASE_URL` como variable de entorno de Vercel
+> para reescribir `/api/*` hacia el backend. El frontend debe usar `VITE_API_BASE_URL=same-origin`
+> para llamar al mismo origen y dejar que Vercel haga el proxy. Para usar otro servicio productivo,
+> solo actualizar `BACKEND_API_BASE_URL` en el dashboard de Vercel y redeployar.
 
 > Nota técnica: el contrato frontend/backend todavía requiere alineación. El frontend conserva
 > endpoints históricos como `/worldcups`, mientras que `worldcup-stats-service` documenta rutas
