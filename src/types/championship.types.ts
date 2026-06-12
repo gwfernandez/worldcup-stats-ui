@@ -3,25 +3,41 @@ import { z } from 'zod';
 // ─── Championship ─────────────────────────────────────────────────────────────────
 
 export const ChampionshipSchema = z.object({
-  id: z.number(),
   year: z.number(),
-  country: z.string(),
-  countryCode: z.string(),
-  champion: z.string().nullable(),
-  championCode: z.string().nullable(),
-  runnerUp: z.string().nullable(),
-  topScorer: z.string().nullable(),
-  topScorerGoals: z.number().nullable(),
-  totalTeams: z.number(),
-  totalMatches: z.number(),
   startDate: z.string(),
   endDate: z.string(),
+  hosts: z.array(
+    z.object({
+      code: z.string(),
+      name: z.string(),
+    }),
+  ),
+  champion: z.object({
+    code: z.string(),
+    name: z.string(),
+  }),
 });
 
 export const ChampionshipListSchema = z.array(ChampionshipSchema);
 
+export const PaginationInfoSchema = z.object({
+  page: z.number(),
+  size: z.number(),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
+
+export const ChampionshipListResponseSchema = z.object({
+  data: ChampionshipListSchema,
+  pagination: PaginationInfoSchema,
+});
+
 export type Championship = z.infer<typeof ChampionshipSchema>;
 export type ChampionshipList = z.infer<typeof ChampionshipListSchema>;
+export type PaginationInfo = z.infer<typeof PaginationInfoSchema>;
+export type ChampionshipListResponse = z.infer<typeof ChampionshipListResponseSchema>;
 
 // ─── Match ────────────────────────────────────────────────────────────────────
 

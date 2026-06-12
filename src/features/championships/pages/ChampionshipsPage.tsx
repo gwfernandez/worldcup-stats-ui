@@ -30,7 +30,9 @@ export default function ChampionshipsPage() {
   const filtered =
     activeFilter === 'Todos'
       ? championships
-      : championships.filter((wc) => CONTINENT_BY_COUNTRY_CODE[wc.countryCode] === activeFilter);
+      : championships.filter((wc) =>
+          wc.hosts.some((host) => CONTINENT_BY_COUNTRY_CODE[host.code] === activeFilter),
+        );
 
   const cardsSkeleton = (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">

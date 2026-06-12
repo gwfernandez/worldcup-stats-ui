@@ -9,4 +9,10 @@ describe('getFlagUrl', () => {
   it('returns md flag url when size is md', () => {
     expect(getFlagUrl('DE', 'md')).toBe('https://flagcdn.com/48x36/de.png');
   });
+
+  it('normalizes API country codes that FlagCDN does not support directly', () => {
+    expect(getFlagUrl('USA')).toBe('https://flagcdn.com/24x18/us.png');
+    expect(getFlagUrl('MEX')).toBe('https://flagcdn.com/24x18/mx.png');
+    expect(getFlagUrl('CAN')).toBe('https://flagcdn.com/24x18/ca.png');
+  });
 });

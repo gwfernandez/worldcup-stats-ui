@@ -37,14 +37,12 @@ export interface ChampionshipCardProps {
 
 /**
  * Card que representa una edición del mundial.
- * Muestra el logo oficial, año, país organizador y campeón.
+ * Muestra el logo oficial, año, sedes organizadoras y campeón.
  */
 export function ChampionshipCard({ championship }: ChampionshipCardProps) {
-  const { year, country, countryCode, champion, championCode } = championship;
+  const { year, hosts, champion } = championship;
 
-  const accentColor = championCode
-    ? (CHAMPION_ACCENT[championCode] ?? DEFAULT_ACCENT)
-    : DEFAULT_ACCENT;
+  const accentColor = CHAMPION_ACCENT[champion.code] ?? DEFAULT_ACCENT;
 
   const logoUrl = getLogoUrl(year);
 
@@ -79,24 +77,33 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
 
       {/* Info */}
       <div className="pl-4 pr-3 py-3">
-        <p className="text-lg font-medium text-wc-accent-gold leading-none mb-1">{year}</p>
+        <div className="flex items-start justify-between gap-3 mb-2.5">
+          <p className="text-lg font-medium text-wc-accent-gold leading-none shrink-0">{year}</p>
 
-        <p className="text-xs text-wc-text-primary flex items-center gap-1.5 mb-2.5">
-          <FlagImage
-            countryCode={countryCode}
-            alt={country}
-            width={16}
-            height={12}
-            className="rounded-[2px] shrink-0"
-          />
-          {country}
-        </p>
+          <ul className="flex min-w-0 flex-col items-end gap-1" aria-label="Sedes">
+            {hosts.map((host) => (
+              <li
+                key={`${year}-${host.code}`}
+                className="max-w-full text-xs text-wc-text-primary flex items-center justify-end gap-1.5"
+              >
+                <FlagImage
+                  countryCode={host.code}
+                  alt={host.name}
+                  width={16}
+                  height={12}
+                  className="rounded-[2px] shrink-0"
+                />
+                <span className="truncate">{host.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="h-px bg-wc-border-primary mb-2.5" />
 
         <p className="text-xs text-wc-text-muted flex items-center gap-1">
           <Star size={11} className="text-wc-accent-gold shrink-0" aria-hidden="true" />
-          <span className="text-wc-text-primary truncate">{champion ?? '—'}</span>
+          <span className="text-wc-text-primary truncate">{champion.name}</span>
         </p>
       </div>
 

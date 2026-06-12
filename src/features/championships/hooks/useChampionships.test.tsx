@@ -2,16 +2,16 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse, delay } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
-import { MOCK_CHAMPIONSHIPS } from '../mocks/championship.mock';
+import { MOCK_CHAMPIONSHIPS, MOCK_CHAMPIONSHIPS_RESPONSE } from '../mocks/championship.mock';
 import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { useChampionships } from './useChampionships';
 
 describe('useChampionships', () => {
   it('retorna el estado inicial de carga', () => {
     server.use(
-      http.get('*/worldcups', async () => {
+      http.get('*/api/championships', async () => {
         await delay('infinite');
-        return HttpResponse.json([]);
+        return HttpResponse.json(MOCK_CHAMPIONSHIPS_RESPONSE);
       }),
     );
 
@@ -41,7 +41,9 @@ describe('useChampionships', () => {
 
   it('retorna estado de error cuando la petición falla', async () => {
     server.use(
-      http.get('*/worldcups', () => HttpResponse.json({ message: 'API Error' }, { status: 500 })),
+      http.get('*/api/championships', () =>
+        HttpResponse.json({ message: 'API Error' }, { status: 500 }),
+      ),
     );
 
     const { result } = renderHook(() => useChampionships(), {

@@ -65,6 +65,22 @@ describe('ChampionshipsPage', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
+  it('renderiza todas las sedes cuando un mundial tiene multiples anfitriones', () => {
+    vi.mocked(useChampionships).mockReturnValue({
+      championships: MOCK_CHAMPIONSHIPS,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+
+    renderPage();
+
+    expect(screen.getByRole('link', { name: /2026/i })).toBeInTheDocument();
+    expect(screen.getAllByText('Estados Unidos').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Mexico').length).toBeGreaterThan(0);
+    expect(screen.getByText('Canada')).toBeInTheDocument();
+  });
+
   it('filtra las ediciones por continente', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampionships).mockReturnValue({
