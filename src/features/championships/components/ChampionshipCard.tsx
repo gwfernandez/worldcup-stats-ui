@@ -16,13 +16,22 @@ const getLogoUrl = (year: number): string =>
 
 const CHAMPION_ACCENT: Record<string, string> = {
   UY: 'var(--wc-chart-cyan)',
+  URU: 'var(--wc-chart-cyan)',
   IT: 'var(--wc-chart-red)',
+  ITA: 'var(--wc-chart-red)',
   BR: 'var(--wc-chart-green)',
+  BRA: 'var(--wc-chart-green)',
   DE: 'var(--wc-accent-gold)',
+  GER: 'var(--wc-accent-gold)',
+  FRG: 'var(--wc-accent-gold)',
   GB: 'var(--wc-chart-pink)',
+  ENG: 'var(--wc-chart-pink)',
   AR: 'var(--wc-chart-sky)',
+  ARG: 'var(--wc-chart-sky)',
   FR: 'var(--wc-conf-uefa-bar)',
+  FRA: 'var(--wc-conf-uefa-bar)',
   ES: 'var(--wc-conf-concacaf-bar)',
+  ESP: 'var(--wc-conf-concacaf-bar)',
 };
 
 const DEFAULT_ACCENT = 'var(--wc-text-muted)';

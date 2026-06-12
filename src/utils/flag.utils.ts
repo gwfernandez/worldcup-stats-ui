@@ -6,8 +6,25 @@ const FLAG_DIMENSIONS: Record<FlagSize, string> = {
 };
 
 const FLAGCDN_COUNTRY_CODE_BY_API_CODE: Record<string, string> = {
+  ARG: 'AR',
+  BRA: 'BR',
   CAN: 'CA',
+  CHI: 'CL',
+  ENG: 'GB',
+  ESP: 'ES',
+  FRA: 'FR',
+  FRG: 'DE',
+  GER: 'DE',
+  ITA: 'IT',
+  JPN: 'JP',
+  KOR: 'KR',
   MEX: 'MX',
+  QAT: 'QA',
+  RSA: 'ZA',
+  RUS: 'RU',
+  SUI: 'CH',
+  SWE: 'SE',
+  URU: 'UY',
   USA: 'US',
 };
 
