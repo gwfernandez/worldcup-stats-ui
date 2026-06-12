@@ -11,6 +11,11 @@ describe('getFlagUrl', () => {
   });
 
   it('normalizes API country codes that FlagCDN does not support directly', () => {
+    expect(getFlagUrl('URU')).toBe('https://flagcdn.com/24x18/uy.png');
+    expect(getFlagUrl('ITA')).toBe('https://flagcdn.com/24x18/it.png');
+    expect(getFlagUrl('BRA')).toBe('https://flagcdn.com/24x18/br.png');
+    expect(getFlagUrl('GER')).toBe('https://flagcdn.com/24x18/de.png');
+    expect(getFlagUrl('FRG')).toBe('https://flagcdn.com/24x18/de.png');
     expect(getFlagUrl('USA')).toBe('https://flagcdn.com/24x18/us.png');
     expect(getFlagUrl('MEX')).toBe('https://flagcdn.com/24x18/mx.png');
     expect(getFlagUrl('CAN')).toBe('https://flagcdn.com/24x18/ca.png');
