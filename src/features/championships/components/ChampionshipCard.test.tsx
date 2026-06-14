@@ -20,12 +20,13 @@ describe('ChampionshipCard', () => {
   });
 
   it('renderiza una bandera estatica para un mundial con sede unica', () => {
-    renderCard(10);
+    renderCard(2);
 
-    expect(screen.getByText('1978')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Argentina' })).toHaveClass('fi-ar');
-    expect(screen.getByLabelText('Sede')).toHaveTextContent('Argentina');
+    expect(screen.getByText('1938')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Francia' })).toHaveClass('fi-fr');
+    expect(screen.getByLabelText('Sede')).toHaveTextContent('Francia');
     expect(screen.getAllByRole('img')).toHaveLength(1);
+    expect(screen.queryByText('Italia')).not.toBeInTheDocument();
   });
 
   it('inicia el carrusel multi-sede con el primer anfitrion y avanza tras 1.5s', () => {

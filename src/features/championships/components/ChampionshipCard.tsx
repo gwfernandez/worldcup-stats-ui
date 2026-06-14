@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ChevronRight } from 'lucide-react';
 import type { Championship } from '@/types/championship.types';
 import { FlagImage } from '@/components/shared';
 
@@ -45,6 +44,7 @@ export interface ChampionshipCardProps {
  */
 export function ChampionshipCard({ championship }: ChampionshipCardProps) {
   const { year, hosts, champion } = championship;
+  // champion.code se usa solo para la barra lateral de color
   const [activeHostIndex, setActiveHostIndex] = useState(0);
   const [isHostVisible, setIsHostVisible] = useState(true);
 
@@ -80,7 +80,7 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
   return (
     <Link
       to={`/worldcup/${year}`}
-      className="group relative w-full text-left bg-wc-surface-primary border border-wc-border-primary rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-wc-accent-gold hover:bg-wc-conf-uefa-surface focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-2 focus:ring-offset-wc-bg-primary"
+      className="group relative w-full text-left bg-wc-surface-primary border border-wc-border-primary rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-wc-accent-gold focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-2 focus:ring-offset-wc-bg-primary"
     >
       {/* Barra lateral de color del campeón */}
       <div
@@ -89,8 +89,8 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
         aria-hidden="true"
       />
 
-      {/* Bandera del anfitrión */}
-      <div className="flex h-24 items-center justify-center bg-wc-surface-secondary border-b border-wc-border-primary px-4">
+      {/* Contenido centrado: bandera → año → país */}
+      <div className="flex flex-col items-center gap-2.5 px-4 py-5">
         <FlagImage
           countryCode={activeHost.code}
           alt={activeHost.name}
@@ -100,37 +100,18 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
             isActiveHostVisible ? 'opacity-90 group-hover:opacity-100' : 'opacity-0'
           }`}
         />
-      </div>
 
-      {/* Info */}
-      <div className="pl-4 pr-3 py-3">
-        <div className="flex items-start justify-between gap-3 mb-2.5">
-          <p className="text-lg font-medium text-wc-accent-gold leading-none shrink-0">{year}</p>
+        <p className="text-[22px] font-medium text-wc-accent-gold leading-none">{year}</p>
 
-          <p
-            className={`min-w-0 text-right text-xs text-wc-text-primary truncate transition-opacity duration-300 ease-in-out ${
-              isActiveHostVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-            aria-label={hasMultipleHosts ? 'Sede activa' : 'Sede'}
-          >
-            {activeHost.name}
-          </p>
-        </div>
-
-        <div className="h-px bg-wc-border-primary mb-2.5" />
-
-        <p className="text-xs text-wc-text-muted flex items-center gap-1">
-          <Star size={11} className="text-wc-accent-gold shrink-0" aria-hidden="true" />
-          <span className="text-wc-text-primary truncate">{champion.name}</span>
+        <p
+          className={`text-xs text-wc-text-secondary text-center truncate w-full transition-opacity duration-300 ease-in-out ${
+            isActiveHostVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+          aria-label={hasMultipleHosts ? 'Sede activa' : 'Sede'}
+        >
+          {activeHost.name}
         </p>
       </div>
-
-      {/* Flecha hover */}
-      <ChevronRight
-        size={13}
-        className="absolute bottom-3 right-2 text-wc-text-muted opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-        aria-hidden="true"
-      />
     </Link>
   );
 }

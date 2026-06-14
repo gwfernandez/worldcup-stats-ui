@@ -14,11 +14,11 @@ describe('ChampionshipCardSkeleton', () => {
     expect(container.firstChild).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('renders the logo placeholder area', () => {
+  it('renders the centered minimal card placeholders', () => {
     const { container } = render(<ChampionshipCardSkeleton />);
-    // logo area has a fixed height class h-24
-    const logoArea = container.querySelector('.h-24');
-    expect(logoArea).toBeInTheDocument();
+    expect(container.querySelector('.h-\\[72px\\].w-24')).toBeInTheDocument();
+    expect(container.querySelector('.h-\\[22px\\].w-14')).toBeInTheDocument();
+    expect(container.querySelector('.h-3.w-20')).toBeInTheDocument();
   });
 
   it('contains multiple skeleton pulse elements', () => {
