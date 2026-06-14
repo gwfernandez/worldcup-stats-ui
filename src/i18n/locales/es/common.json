@@ -15,7 +15,9 @@
     "worldcups": "Mundiales",
     "champions": "Campeones",
     "standings": "Posiciones",
-    "scorers": "Goleadores"
+    "scorers": "Goleadores",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "status": {
     "loading": "Cargando...",

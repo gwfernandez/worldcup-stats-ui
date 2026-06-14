@@ -15,7 +15,9 @@
     "worldcups": "World Cups",
     "champions": "Champions",
     "standings": "Standings",
-    "scorers": "Scorers"
+    "scorers": "Scorers",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "status": {
     "loading": "Loading...",
