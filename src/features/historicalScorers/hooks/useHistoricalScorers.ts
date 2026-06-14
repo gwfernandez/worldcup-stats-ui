@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getHistoricalScorers } from '@/services/historicalScorersService';
+import { useUIStore } from '@/store/ui.store';
 import type { HistoricalScorerList } from '@/types/historicalScorer.types';
 
 // ─── Query key ────────────────────────────────────────────────────────────────
@@ -21,8 +22,9 @@ interface UseHistoricalScorersResult {
  * Los datos se obtienen desde `historicalScorersService` y se cachean con TanStack Query.
  */
 export const useHistoricalScorers = (): UseHistoricalScorersResult => {
+  const language = useUIStore((state) => state.language);
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: HISTORICAL_SCORERS_QUERY_KEY,
+    queryKey: [...HISTORICAL_SCORERS_QUERY_KEY, language],
     queryFn: getHistoricalScorers,
     staleTime: 1000 * 60 * 5, // 5 minutos — los datos históricos no cambian seguido
   });

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getChampionships } from '@/services/championshipService';
+import { useUIStore } from '@/store/ui.store';
 import type { ChampionshipList } from '@/types/championship.types';
 
 // ─── Query key ────────────────────────────────────────────────────────────────
@@ -21,8 +22,9 @@ interface UseChampionshipsResult {
  * Los datos se obtienen desde `championshipService` y se cachean con TanStack Query.
  */
 export const useChampionships = (): UseChampionshipsResult => {
+  const language = useUIStore((state) => state.language);
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: CHAMPIONSHIPS_QUERY_KEY,
+    queryKey: [...CHAMPIONSHIPS_QUERY_KEY, language],
     queryFn: getChampionships,
     staleTime: 1000 * 60 * 5, // 5 minutos — los datos históricos no cambian seguido
   });
