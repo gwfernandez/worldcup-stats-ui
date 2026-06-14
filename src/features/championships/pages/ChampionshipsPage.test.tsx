@@ -65,7 +65,7 @@ describe('ChampionshipsPage', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
-  it('renderiza todas las sedes cuando un mundial tiene multiples anfitriones', () => {
+  it('renderiza la primera sede activa cuando un mundial tiene multiples anfitriones', () => {
     vi.mocked(useChampionships).mockReturnValue({
       championships: MOCK_CHAMPIONSHIPS,
       isLoading: false,
@@ -77,8 +77,8 @@ describe('ChampionshipsPage', () => {
 
     expect(screen.getByRole('link', { name: /2026/i })).toBeInTheDocument();
     expect(screen.getAllByText('Estados Unidos').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Mexico').length).toBeGreaterThan(0);
-    expect(screen.getByText('Canada')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Estados Unidos' })).toHaveClass('fi-us');
+    expect(screen.queryByText('Canada')).not.toBeInTheDocument();
   });
 
   it('filtra las ediciones por continente', async () => {
