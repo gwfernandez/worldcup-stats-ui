@@ -2,37 +2,31 @@ import { Trophy, Globe, Users, Swords } from 'lucide-react';
 import { ChampionshipCard } from '../components/ChampionshipCard';
 import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton';
 import { useChampionships } from '../hooks/useChampionships';
-import { CONTINENT_BY_COUNTRY_CODE, type FilterType } from '../utils/championshipFilter.utils';
 import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus, SEO } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
 const SKELETON_COUNT = 22;
+const ALL_CONFEDERATIONS_FILTER = '';
 
 export default function ChampionshipsPage() {
   const { t } = useTranslation(['championships', 'common']);
   const { championships, isLoading, isError, error } = useChampionships();
   const activeFilter =
-    (useUIStore((state) => state.filters.championships?.continent) as FilterType | undefined) ??
-    'Todos';
+    useUIStore((state) => state.filters.championships?.confederation) ??
+    ALL_CONFEDERATIONS_FILTER;
   const setFilter = useUIStore((state) => state.setFilter);
 
-  const filters: FilterType[] = ['Todos', 'América', 'Europa', 'Asia', 'África'];
-  const filterLabels: Record<FilterType, string> = {
-    Todos: t('common:filters.all'),
-    América: t('common:filters.america'),
-    Europa: t('common:filters.europe'),
-    Asia: t('common:filters.asia'),
-    África: t('common:filters.africa'),
-  };
+  const filters = [
+    ALL_CONFEDERATIONS_FILTER,
+    ...new Set(championships.flatMap((championship) => championship.confederationCodes)),
+  ];
 
   const filtered =
-    activeFilter === 'Todos'
+    activeFilter === ALL_CONFEDERATIONS_FILTER
       ? championships
-      : championships.filter((wc) =>
-          wc.hosts.some((host) => CONTINENT_BY_COUNTRY_CODE[host.code] === activeFilter),
-        );
+      : championships.filter((wc) => wc.confederationCodes.includes(activeFilter));
 
   const cardsSkeleton = (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -70,18 +64,22 @@ export default function ChampionshipsPage() {
             <span className="text-xs text-wc-text-muted font-normal ml-1">({filtered.length})</span>
           </h2>
 
-          <div className="flex gap-2" role="group" aria-label={t('common:filters.continent')}>
+          <div
+            className="flex gap-2"
+            role="group"
+            aria-label={t('common:labels.confederation')}
+          >
             {filters.map((f) => (
               <button
                 key={f}
-                onClick={() => setFilter('championships', 'continent', f)}
+                onClick={() => setFilter('championships', 'confederation', f)}
                 className={`text-xs px-3 py-1 rounded-full border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-1 focus:ring-offset-wc-bg-primary ${
                   activeFilter === f
                     ? 'bg-wc-success-surface text-wc-success border-wc-success-border'
                     : 'bg-transparent text-wc-text-muted border-wc-border-primary hover:border-wc-border-muted hover:text-wc-text-primary'
                 }`}
               >
-                {filterLabels[f]}
+                {f === ALL_CONFEDERATIONS_FILTER ? t('common:filters.all') : f}
               </button>
             ))}
           </div>

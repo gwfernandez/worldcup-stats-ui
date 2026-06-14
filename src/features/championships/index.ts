@@ -22,8 +22,3 @@ export {
   useChampionshipDetail,
 } from './hooks/useChampionshipDetail';
 export { CHAMPIONSHIPS_QUERY_KEY, useChampionships } from './hooks/useChampionships';
-export {
-  CONTINENT_BY_COUNTRY_CODE,
-  type FilterType,
-} from './utils/championshipFilter.utils';
-

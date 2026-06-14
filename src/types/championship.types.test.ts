@@ -20,6 +20,7 @@ const validChampionship = {
   endDate: '2022-12-18',
   hosts: [{ code: 'QA', name: 'Qatar' }],
   champion: { code: 'AR', name: 'Argentina' },
+  confederationCodes: ['AFC'],
 };
 
 const validPaginationInfo = {
@@ -106,6 +107,9 @@ describe('championship schemas', () => {
     expect(() => ChampionshipSchema.parse({ ...validChampionship, hosts: undefined })).toThrow(
       ZodError,
     );
+    expect(() =>
+      ChampionshipSchema.parse({ ...validChampionship, confederationCodes: ['AFC', 1] }),
+    ).toThrow(ZodError);
     expect(() =>
       ChampionshipListResponseSchema.parse({
         ...validChampionshipListResponse,

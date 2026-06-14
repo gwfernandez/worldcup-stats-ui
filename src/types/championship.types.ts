@@ -16,6 +16,7 @@ export const ChampionshipSchema = z.object({
     code: z.string(),
     name: z.string(),
   }),
+  confederationCodes: z.array(z.string()),
 });
 
 export const ChampionshipListSchema = z.array(ChampionshipSchema);

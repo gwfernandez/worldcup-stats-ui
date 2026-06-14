@@ -35,12 +35,7 @@
     "allGroups": "All groups",
     "allStages": "All stages",
     "allTeams": "All teams",
-    "allConfederations": "All confederations",
-    "continent": "Filter by continent",
-    "america": "Americas",
-    "europe": "Europe",
-    "asia": "Asia",
-    "africa": "Africa"
+    "allConfederations": "All confederations"
   },
   "search": {
     "team": "Search team...",

@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import { MOCK_CHAMPIONSHIPS } from '../mocks/championship.mock';
 import { ChampionshipCard } from './ChampionshipCard';
+import type { Championship } from '@/types/championship.types';
 
 function renderCard(index = 0) {
   return render(
@@ -27,6 +28,25 @@ describe('ChampionshipCard', () => {
     expect(screen.getByLabelText('Sede')).toHaveTextContent('Francia');
     expect(screen.getAllByRole('img')).toHaveLength(1);
     expect(screen.queryByText('Italia')).not.toBeInTheDocument();
+  });
+
+  it('usa la confederacion organizadora para colorear la barra lateral', () => {
+    const championship: Championship = {
+      ...MOCK_CHAMPIONSHIPS[0],
+      champion: { code: 'BR', name: 'Brasil' },
+      confederationCodes: ['UEFA'],
+    };
+
+    const { container } = render(
+      <MemoryRouter>
+        <ChampionshipCard championship={championship} />
+      </MemoryRouter>,
+    );
+
+    expect(container.querySelector('[aria-hidden="true"]')).toHaveAttribute(
+      'style',
+      'background-color: var(--wc-conf-uefa-bar);',
+    );
   });
 
   it('inicia el carrusel multi-sede con el primer anfitrion y avanza tras 1.5s', () => {

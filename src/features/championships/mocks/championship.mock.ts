@@ -7,6 +7,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1930-07-30',
     hosts: [{ code: 'UY', name: 'Uruguay' }],
     champion: { code: 'UY', name: 'Uruguay' },
+    confederationCodes: ['CONMEBOL'],
   },
   {
     year: 1934,
@@ -14,6 +15,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1934-06-10',
     hosts: [{ code: 'IT', name: 'Italia' }],
     champion: { code: 'IT', name: 'Italia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1938,
@@ -21,6 +23,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1938-06-19',
     hosts: [{ code: 'FR', name: 'Francia' }],
     champion: { code: 'IT', name: 'Italia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1950,
@@ -28,6 +31,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1950-07-16',
     hosts: [{ code: 'BR', name: 'Brasil' }],
     champion: { code: 'UY', name: 'Uruguay' },
+    confederationCodes: ['CONMEBOL'],
   },
   {
     year: 1954,
@@ -35,6 +39,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1954-07-04',
     hosts: [{ code: 'CH', name: 'Suiza' }],
     champion: { code: 'DE', name: 'Alemania' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1958,
@@ -42,6 +47,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1958-06-29',
     hosts: [{ code: 'SE', name: 'Suecia' }],
     champion: { code: 'BR', name: 'Brasil' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1962,
@@ -49,6 +55,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1962-06-17',
     hosts: [{ code: 'CL', name: 'Chile' }],
     champion: { code: 'BR', name: 'Brasil' },
+    confederationCodes: ['CONMEBOL'],
   },
   {
     year: 1966,
@@ -56,6 +63,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1966-07-30',
     hosts: [{ code: 'GB', name: 'Inglaterra' }],
     champion: { code: 'GB', name: 'Inglaterra' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1970,
@@ -63,6 +71,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1970-06-21',
     hosts: [{ code: 'MX', name: 'Mexico' }],
     champion: { code: 'BR', name: 'Brasil' },
+    confederationCodes: ['CONCACAF'],
   },
   {
     year: 1974,
@@ -70,6 +79,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1974-07-07',
     hosts: [{ code: 'DE', name: 'Alemania' }],
     champion: { code: 'DE', name: 'Alemania' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1978,
@@ -77,6 +87,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1978-06-25',
     hosts: [{ code: 'AR', name: 'Argentina' }],
     champion: { code: 'AR', name: 'Argentina' },
+    confederationCodes: ['CONMEBOL'],
   },
   {
     year: 1982,
@@ -84,6 +95,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1982-07-11',
     hosts: [{ code: 'ES', name: 'Espana' }],
     champion: { code: 'IT', name: 'Italia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1986,
@@ -91,6 +103,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1986-06-29',
     hosts: [{ code: 'MX', name: 'Mexico' }],
     champion: { code: 'AR', name: 'Argentina' },
+    confederationCodes: ['CONCACAF'],
   },
   {
     year: 1990,
@@ -98,6 +111,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1990-07-08',
     hosts: [{ code: 'IT', name: 'Italia' }],
     champion: { code: 'DE', name: 'Alemania' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 1994,
@@ -105,6 +119,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1994-07-17',
     hosts: [{ code: 'US', name: 'EE.UU.' }],
     champion: { code: 'BR', name: 'Brasil' },
+    confederationCodes: ['CONCACAF'],
   },
   {
     year: 1998,
@@ -112,6 +127,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '1998-07-12',
     hosts: [{ code: 'FR', name: 'Francia' }],
     champion: { code: 'FR', name: 'Francia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 2002,
@@ -122,6 +138,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
       { code: 'JP', name: 'Japon' },
     ],
     champion: { code: 'BR', name: 'Brasil' },
+    confederationCodes: ['AFC'],
   },
   {
     year: 2006,
@@ -129,6 +146,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '2006-07-09',
     hosts: [{ code: 'DE', name: 'Alemania' }],
     champion: { code: 'IT', name: 'Italia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 2010,
@@ -136,6 +154,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '2010-07-11',
     hosts: [{ code: 'ZA', name: 'Sudafrica' }],
     champion: { code: 'ES', name: 'Espana' },
+    confederationCodes: ['CAF'],
   },
   {
     year: 2014,
@@ -143,6 +162,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '2014-07-13',
     hosts: [{ code: 'BR', name: 'Brasil' }],
     champion: { code: 'DE', name: 'Alemania' },
+    confederationCodes: ['CONMEBOL'],
   },
   {
     year: 2018,
@@ -150,6 +170,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '2018-07-15',
     hosts: [{ code: 'RU', name: 'Rusia' }],
     champion: { code: 'FR', name: 'Francia' },
+    confederationCodes: ['UEFA'],
   },
   {
     year: 2022,
@@ -157,6 +178,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
     endDate: '2022-12-18',
     hosts: [{ code: 'QA', name: 'Qatar' }],
     champion: { code: 'AR', name: 'Argentina' },
+    confederationCodes: ['AFC'],
   },
   {
     year: 2026,
@@ -168,6 +190,7 @@ export const MOCK_CHAMPIONSHIPS: Championship[] = [
       { code: 'CAN', name: 'Canada' },
     ],
     champion: { code: 'USA', name: 'Estados Unidos' },
+    confederationCodes: ['CONCACAF'],
   },
 ];
 
@@ -182,6 +205,3 @@ export const MOCK_CHAMPIONSHIPS_RESPONSE: ChampionshipListResponse = {
     hasPrevious: false,
   },
 };
-
-export type { FilterType } from '../utils/championshipFilter.utils';
-export { CONTINENT_BY_COUNTRY_CODE as MOCK_CONTINENT_BY_COUNTRY_CODE } from '../utils/championshipFilter.utils';
