@@ -3,7 +3,7 @@ import { ChampionshipCard } from '../components/ChampionshipCard';
 import { ChampionshipCardSkeleton } from '../components/ChampionshipCardSkeleton';
 import { useChampionships } from '../hooks/useChampionships';
 import HeroSection from '@/components/shared/HeroSection';
-import { QueryStatus, SEO } from '@/components/shared';
+import { FilterSelect, QueryStatus, SEO } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
@@ -22,6 +22,9 @@ export default function ChampionshipsPage() {
     ALL_CONFEDERATIONS_FILTER,
     ...new Set(championships.flatMap((championship) => championship.confederationCodes)),
   ];
+  const confederationOptions = filters
+    .filter((filter) => filter !== ALL_CONFEDERATIONS_FILTER)
+    .map((filter) => ({ value: filter, label: filter }));
 
   const filtered =
     activeFilter === ALL_CONFEDERATIONS_FILTER
@@ -57,15 +60,25 @@ export default function ChampionshipsPage() {
       />
 
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-medium text-wc-text-primary flex items-center gap-2">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h2 className="min-w-0 text-sm font-medium text-wc-text-primary flex items-center gap-2">
             <Trophy size={14} className="text-wc-text-muted" aria-hidden="true" />
             {t('championships:list.title')}
             <span className="text-xs text-wc-text-muted font-normal ml-1">({filtered.length})</span>
           </h2>
 
+          <FilterSelect
+            value={activeFilter}
+            onChange={(event) =>
+              setFilter('championships', 'confederation', event.target.value)
+            }
+            placeholderOption={t('common:filters.allFemale')}
+            options={confederationOptions}
+            className="w-1/2 min-w-[132px] md:hidden"
+          />
+
           <div
-            className="flex gap-2"
+            className="hidden gap-2 md:flex"
             role="group"
             aria-label={t('common:labels.confederation')}
           >

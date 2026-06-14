@@ -99,6 +99,33 @@ describe('ChampionshipsPage', () => {
     expect(screen.queryByRole('link', { name: /1930/i })).not.toBeInTheDocument();
   });
 
+  it('filtra las ediciones con el select mobile de confederacion', async () => {
+    const user = userEvent.setup();
+    vi.mocked(useChampionships).mockReturnValue({
+      championships: MOCK_CHAMPIONSHIPS,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+
+    renderPage();
+
+    const mobileConfederationSelect = screen.getByDisplayValue('Todas');
+
+    expect(mobileConfederationSelect.parentElement).toHaveClass(
+      'w-1/2',
+      'min-w-[132px]',
+      'md:hidden',
+    );
+
+    await user.selectOptions(mobileConfederationSelect, 'AFC');
+
+    expect(screen.getByRole('heading', { name: /Ediciones\s*\(2\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /2002/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /2022/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /1930/i })).not.toBeInTheDocument();
+  });
+
   it('incluye mundiales multi-sede al filtrar por su confederacion', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampionships).mockReturnValue({
