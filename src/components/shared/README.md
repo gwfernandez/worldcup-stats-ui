@@ -41,14 +41,13 @@ Tooltip CSS al hover. Usa `groupName` fijos (`conf`, `action`, `th`, `tooltip`) 
 
 ## FlagImage
 
-Imagen de bandera vía [FlagCDN](https://flagcdn.com). Oculta la imagen si falla la carga.
+Bandera de selección renderizada con `flag-icons`. Usa `fifaToAlpha2()` para mapear códigos FIFA
+a alpha-2 y muestra un fallback neutral para códigos históricos o no soportados.
 
 ```tsx
 <FlagImage countryCode={team.teamCode} alt={team.name} />
 <FlagImage countryCode={homeTeamCode} alt={homeTeam} size="md" width={36} height={27} />
 ```
-
-La URL se construye con `getFlagUrl()` en `src/utils/flag.utils.ts`.
 
 ## Pagination
 

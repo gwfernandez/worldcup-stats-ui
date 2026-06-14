@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import { createQueryClient } from '@/config/queryClient';
 import { router } from '@/router';
 import '@/i18n/config';
+import 'flag-icons/css/flag-icons.min.css';
 import './index.css';
 
 const queryClient = createQueryClient();
