@@ -3,8 +3,10 @@ import {
   getChampionshipDetail,
   type ChampionshipDetail,
 } from '@/services/championshipDetailService';
+import { useUIStore } from '@/store/ui.store';
 
-export const championshipDetailQueryKey = (year: number) => ['championship-detail', year] as const;
+export const championshipDetailQueryKey = (year: number, language: string) =>
+  ['championship-detail', year, language] as const;
 
 interface UseChampionshipDetailResult {
   detail: ChampionshipDetail | null;
@@ -17,8 +19,9 @@ export const useChampionshipDetail = (
   year: number,
   enabled: boolean,
 ): UseChampionshipDetailResult => {
+  const language = useUIStore((state) => state.language);
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: championshipDetailQueryKey(year),
+    queryKey: championshipDetailQueryKey(year, language),
     queryFn: () => getChampionshipDetail(year),
     enabled,
     staleTime: 1000 * 60 * 5,

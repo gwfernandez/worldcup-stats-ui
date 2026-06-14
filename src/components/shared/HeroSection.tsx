@@ -121,7 +121,7 @@ export default function HeroSection({
         </div>
 
         {/* ── Imagen: slot externo o placeholder ───────────────────────── */}
-        {heroImage ?? <HeroImagePlaceholder />}
+        <div className="hidden shrink-0 md:block">{heroImage ?? <HeroImagePlaceholder />}</div>
       </div>
     </section>
   );

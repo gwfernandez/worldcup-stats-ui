@@ -15,7 +15,9 @@
     "worldcups": "World Cups",
     "champions": "Champions",
     "standings": "Standings",
-    "scorers": "Scorers"
+    "scorers": "Scorers",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "status": {
     "loading": "Loading...",
@@ -35,12 +37,7 @@
     "allGroups": "All groups",
     "allStages": "All stages",
     "allTeams": "All teams",
-    "allConfederations": "All confederations",
-    "continent": "Filter by continent",
-    "america": "Americas",
-    "europe": "Europe",
-    "asia": "Asia",
-    "africa": "Africa"
+    "allConfederations": "All confederations"
   },
   "search": {
     "team": "Search team...",

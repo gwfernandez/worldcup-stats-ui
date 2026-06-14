@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
@@ -77,8 +77,8 @@ describe('WorldCupsNavbar', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Mundiales')).toHaveClass(ACTIVE_CLASS);
-    expect(screen.getByText('Campeones')).toHaveClass(INACTIVE_CLASS);
+    expect(screen.getByRole('link', { name: 'Mundiales' })).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByRole('link', { name: 'Campeones' })).toHaveClass(INACTIVE_CLASS);
   });
 
   it('highlights Campeones on /champions with default links', () => {
@@ -88,8 +88,8 @@ describe('WorldCupsNavbar', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Campeones')).toHaveClass(ACTIVE_CLASS);
-    expect(screen.getByText('Mundiales')).toHaveClass(INACTIVE_CLASS);
+    expect(screen.getByRole('link', { name: 'Campeones' })).toHaveClass(ACTIVE_CLASS);
+    expect(screen.getByRole('link', { name: 'Mundiales' })).toHaveClass(INACTIVE_CLASS);
   });
 
   it('does not highlight any link on world cup detail pages', () => {
@@ -121,5 +121,74 @@ describe('WorldCupsNavbar', () => {
     expect(screen.getByRole('link', { name: 'World Cups' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Champions' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('renders a mobile toggler that opens and closes the menu', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    const openButton = screen.getByRole('button', { name: 'Abrir menú' });
+    expect(openButton).toHaveAttribute('aria-expanded', 'false');
+    expect(document.getElementById('mobile-navigation-menu')).toHaveAttribute('hidden');
+
+    await user.click(openButton);
+
+    expect(screen.getByRole('button', { name: 'Cerrar menú' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
+    const mobileMenu = document.getElementById('mobile-navigation-menu');
+    expect(mobileMenu).not.toHaveAttribute('hidden');
+    expect(mobileMenu).toHaveClass('absolute', 'left-0', 'right-0', 'top-full');
+    expect(within(mobileMenu!).getByRole('link', { name: 'Posiciones' })).toBeInTheDocument();
+  });
+
+  it('closes the mobile menu after selecting a mobile link', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menú' }));
+    await user.click(
+      within(document.getElementById('mobile-navigation-menu')!).getByRole('link', {
+        name: 'Goleadores',
+      }),
+    );
+
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+    expect(document.getElementById('mobile-navigation-menu')).toHaveAttribute('hidden');
+  });
+
+  it('keeps the language selector available while using the mobile menu', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <WorldCupsNavbar />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menú' }));
+    await user.click(screen.getByRole('button', { name: 'Inglés' }));
+
+    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Close menu' })).toBeInTheDocument();
+    expect(
+      within(document.getElementById('mobile-navigation-menu')!).getByRole('link', {
+        name: 'Scorers',
+      }),
+    ).toBeInTheDocument();
   });
 });

@@ -1,29 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Championship } from '@/types/championship.types';
+import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { FlagImage } from '@/components/shared';
-
-// ─── Mapa de color por código de campeón ──────────────────────────────────────
-
-const CHAMPION_ACCENT: Record<string, string> = {
-  UY: 'var(--wc-chart-cyan)',
-  URU: 'var(--wc-chart-cyan)',
-  IT: 'var(--wc-chart-red)',
-  ITA: 'var(--wc-chart-red)',
-  BR: 'var(--wc-chart-green)',
-  BRA: 'var(--wc-chart-green)',
-  DE: 'var(--wc-accent-gold)',
-  GER: 'var(--wc-accent-gold)',
-  FRG: 'var(--wc-accent-gold)',
-  GB: 'var(--wc-chart-pink)',
-  ENG: 'var(--wc-chart-pink)',
-  AR: 'var(--wc-chart-sky)',
-  ARG: 'var(--wc-chart-sky)',
-  FR: 'var(--wc-conf-uefa-bar)',
-  FRA: 'var(--wc-conf-uefa-bar)',
-  ES: 'var(--wc-conf-concacaf-bar)',
-  ESP: 'var(--wc-conf-concacaf-bar)',
-};
 
 const DEFAULT_ACCENT = 'var(--wc-text-muted)';
 const HOST_ROTATION_MS = 1500;
@@ -43,12 +22,11 @@ export interface ChampionshipCardProps {
  * alterna bandera y nombre del país con un carrusel automático sincronizado.
  */
 export function ChampionshipCard({ championship }: ChampionshipCardProps) {
-  const { year, hosts, champion } = championship;
-  // champion.code se usa solo para la barra lateral de color
+  const { year, hosts, confederationCodes } = championship;
   const [activeHostIndex, setActiveHostIndex] = useState(0);
   const [isHostVisible, setIsHostVisible] = useState(true);
 
-  const accentColor = CHAMPION_ACCENT[champion.code] ?? DEFAULT_ACCENT;
+  const accentColor = CONFEDERATION_STYLES[confederationCodes[0]]?.bar ?? DEFAULT_ACCENT;
   const hasMultipleHosts = hosts.length > 1;
   const activeHost = hosts[hasMultipleHosts ? activeHostIndex % hosts.length : 0] ?? hosts[0];
   const isActiveHostVisible = hasMultipleHosts ? isHostVisible : true;
@@ -82,7 +60,7 @@ export function ChampionshipCard({ championship }: ChampionshipCardProps) {
       to={`/worldcup/${year}`}
       className="group relative w-full text-left bg-wc-surface-primary border border-wc-border-primary rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-wc-accent-gold focus:outline-none focus:ring-2 focus:ring-wc-accent-gold focus:ring-offset-2 focus:ring-offset-wc-bg-primary"
     >
-      {/* Barra lateral de color del campeón */}
+      {/* Barra lateral de color de la confederación organizadora */}
       <div
         className="absolute top-0 left-0 w-[3px] h-full opacity-60 group-hover:opacity-100 transition-opacity duration-200"
         style={{ backgroundColor: accentColor }}

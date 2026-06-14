@@ -15,7 +15,9 @@
     "worldcups": "Mundiales",
     "champions": "Campeones",
     "standings": "Posiciones",
-    "scorers": "Goleadores"
+    "scorers": "Goleadores",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "status": {
     "loading": "Cargando...",
@@ -35,12 +37,7 @@
     "allGroups": "Todos los grupos",
     "allStages": "Todas las fases",
     "allTeams": "Todas las selecciones",
-    "allConfederations": "Todas las confederaciones",
-    "continent": "Filtrar por continente",
-    "america": "América",
-    "europe": "Europa",
-    "asia": "Asia",
-    "africa": "África"
+    "allConfederations": "Todas las confederaciones"
   },
   "search": {
     "team": "Buscar selección...",
