@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Trophy } from 'lucide-react';
 import type { Champion } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +64,22 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
         <div className="px-4 py-4">
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
-              { val: `${team.wins} 🏆`, lbl: t('labels.totalTitles') },
+              {
+                val:
+                  team.wins > 0 ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Trophy
+                        size={18}
+                        className="text-wc-accent-gold opacity-40"
+                        aria-hidden="true"
+                      />
+                      <span className="font-medium text-wc-accent-gold">{team.wins}</span>
+                    </div>
+                  ) : (
+                    '-'
+                  ),
+                lbl: t('labels.totalTitles'),
+              },
               { val: years[0] ?? '-', lbl: t('labels.firstTitle') },
               { val: years[years.length - 1] ?? '-', lbl: t('labels.lastTitle') },
             ].map(({ val, lbl }) => (

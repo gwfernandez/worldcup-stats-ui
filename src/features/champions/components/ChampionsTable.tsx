@@ -69,7 +69,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
               {t('labels.team')}
             </th>
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
-              {t('labels.titles')} 🏆
+              {t('labels.titles')}
             </th>
             <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
               {t('labels.confederation')}
@@ -120,16 +120,18 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                   </div>
                 </td>
 
-                {/* Títulos con trofeos */}
+                {/* Títulos: un solo icono por fila (lucide) */}
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex gap-0.5 flex-wrap">
-                      {Array.from({ length: team.wins }).map((_, i) => (
-                        <span key={i} className="text-sm leading-none" aria-hidden="true">
-                          🏆
-                        </span>
-                      ))}
-                    </div>
+                    {team.wins > 0 ? (
+                      <Trophy
+                        size={14}
+                        className="text-wc-accent-gold opacity-40"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <span className="text-wc-text-muted">—</span>
+                    )}
                     <span className="text-lg font-medium text-wc-accent-gold">{team.wins}</span>
                   </div>
                 </td>
