@@ -1,35 +1,47 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
-import { ChampionTeamListSchema, ChampionTeamSchema, ChampionWinnerSchema } from './champion.types';
+import { ChampionListResponseSchema, ChampionSchema } from './champion.types';
 
-const validWinner = {
-  year: 2022,
-  host: 'Qatar',
-  hostCode: 'QA',
-  finalScore: '3-3 (pen)',
-  finalOpponent: 'France',
-  finalOpponentCode: 'FR',
+const validChampion = {
+  team: { code: 'BRA', name: 'Brasil' },
+  wins: 5,
+  years: [1958, 1962, 1970, 1994, 2002],
+  confederationCode: 'CONMEBOL',
 };
 
-const validChampionTeam = {
-  position: 1,
-  teamName: 'Brazil',
-  teamCode: 'BR',
-  confederation: 'CONMEBOL',
-  titles: 5,
-  championships: [validWinner],
+const validResponse = {
+  data: [validChampion],
+  pagination: {
+    page: 1,
+    size: 15,
+    totalElements: 8,
+    totalPages: 1,
+    hasNext: false,
+    hasPrevious: false,
+  },
 };
 
 describe('champion schemas', () => {
-  it('parses valid champion payloads', () => {
-    expect(ChampionWinnerSchema.parse(validWinner)).toEqual(validWinner);
-    expect(ChampionTeamSchema.parse(validChampionTeam)).toEqual(validChampionTeam);
-    expect(ChampionTeamListSchema.parse([validChampionTeam])).toEqual([validChampionTeam]);
+  it('parses the paginated champions API contract', () => {
+    expect(ChampionSchema.parse(validChampion)).toEqual(validChampion);
+    expect(ChampionListResponseSchema.parse(validResponse)).toEqual(validResponse);
   });
 
-  it('throws when champion payloads are invalid', () => {
-    expect(() => ChampionWinnerSchema.parse({ ...validWinner, year: '2022' })).toThrow(ZodError);
-    expect(() => ChampionTeamSchema.parse({ ...validChampionTeam, championships: [{ ...validWinner, hostCode: 1 }] }))
-      .toThrow(ZodError);
+  it('throws when champion data is invalid', () => {
+    expect(() =>
+      ChampionSchema.parse({
+        ...validChampion,
+        team: { code: 'BRA', name: 10 },
+      }),
+    ).toThrow(ZodError);
+  });
+
+  it('throws when pagination metadata is invalid', () => {
+    expect(() =>
+      ChampionListResponseSchema.parse({
+        ...validResponse,
+        pagination: { ...validResponse.pagination, hasNext: 'false' },
+      }),
+    ).toThrow(ZodError);
   });
 });

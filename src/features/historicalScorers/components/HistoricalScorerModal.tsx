@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Trophy } from 'lucide-react';
 import type { HistoricalScorer } from '@/types/historicalScorer.types';
 import { MEDAL_LABEL } from '@/types/historicalScorer.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
@@ -77,7 +77,22 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
               { val: scorer.totalGoals, lbl: t('labels.totalGoals') },
               { val: scorer.worldCups.length, lbl: t('navigation.worldcups') },
               { val: scorer.average.toFixed(2), lbl: t('labels.average') },
-              { val: titles > 0 ? `🏆 ${titles}` : '-', lbl: t('labels.titles') },
+              {
+                val:
+                  titles > 0 ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Trophy
+                        size={16}
+                        className="text-wc-accent-gold opacity-40"
+                        aria-hidden="true"
+                      />
+                      <span className="font-medium text-wc-accent-gold">{titles}</span>
+                    </div>
+                  ) : (
+                    '-'
+                  ),
+                lbl: t('labels.titles'),
+              },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
                 <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>

@@ -1,29 +1,22 @@
 import { useEffect } from 'react';
-import { X } from 'lucide-react';
-import type { ChampionTeam } from '@/types/champion.types';
+import { X, Trophy } from 'lucide-react';
+import type { Champion } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-
-// ─── Props ────────────────────────────────────────────────────────────────────
+import { MOCK_CHAMPION_TITLE_DETAILS } from '../mocks/championTitleDetails.mock';
 
 export interface ChampionshipsModalProps {
-  team: ChampionTeam | null;
+  team: Champion | null;
   onClose: () => void;
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
-
-/**
- * Modal con el detalle de todos los campeonatos ganados por una selección.
- * Muestra año, sede y resultado de la final.
- */
 export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
   const { t } = useTranslation('common');
 
   useEffect(() => {
     if (!team) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
@@ -31,9 +24,10 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
 
   if (!team) return null;
 
-  const sorted = [...team.championships].sort((a, b) => a.year - b.year);
-  const firstTitle = sorted[0]?.year;
-  const lastTitle = sorted[sorted.length - 1]?.year;
+  const years = [...team.years].sort((a, b) => a - b);
+  const detailsByYear = new Map(
+    (MOCK_CHAMPION_TITLE_DETAILS[team.team.code] ?? []).map((detail) => [detail.year, detail]),
+  );
 
   return (
     <div
@@ -41,23 +35,22 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={t('titlesDialog.titleFor', { team: team.teamName })}
+      aria-label={t('titlesDialog.titleFor', { team: team.team.name })}
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
           <div className="flex items-center gap-2 text-sm font-medium text-wc-text-primary">
             <FlagImage
-              countryCode={team.teamCode}
-              alt={team.teamName}
+              countryCode={team.team.code}
+              alt={team.team.name}
               width={20}
               height={15}
               className="rounded-[2px]"
             />
-            {team.teamName} - {t('labels.titles')}
+            {team.team.name} - {t('labels.titles')}
           </div>
           <button
             onClick={onClose}
@@ -69,12 +62,26 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
         </div>
 
         <div className="px-4 py-4">
-          {/* Stats resumen */}
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
-              { val: `${team.titles} 🏆`, lbl: t('labels.totalTitles') },
-              { val: firstTitle ?? '-', lbl: t('labels.firstTitle') },
-              { val: lastTitle ?? '-', lbl: t('labels.lastTitle') },
+              {
+                val:
+                  team.wins > 0 ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Trophy
+                        size={18}
+                        className="text-wc-accent-gold opacity-40"
+                        aria-hidden="true"
+                      />
+                      <span className="font-medium text-wc-accent-gold">{team.wins}</span>
+                    </div>
+                  ) : (
+                    '-'
+                  ),
+                lbl: t('labels.totalTitles'),
+              },
+              { val: years[0] ?? '-', lbl: t('labels.firstTitle') },
+              { val: years[years.length - 1] ?? '-', lbl: t('labels.lastTitle') },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
                 <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
@@ -83,7 +90,6 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
             ))}
           </div>
 
-          {/* Tabla de campeonatos */}
           <table className="w-full border-collapse text-[11px]">
             <thead>
               <tr className="border-b border-wc-border-primary">
@@ -99,44 +105,55 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
               </tr>
             </thead>
             <tbody>
-              {sorted.map((c) => (
-                <tr key={c.year} className="border-t border-wc-surface-secondary">
-                  {/* Año */}
-                  <td className="py-2 pr-3">
-                    <span className="font-medium text-wc-accent-gold text-[12px]">{c.year}</span>
-                  </td>
+              {years.map((year) => {
+                const detail = detailsByYear.get(year);
 
-                  {/* Sede */}
-                  <td className="py-2 pr-3">
-                    <div className="flex items-center gap-1.5">
-                      <FlagImage
-                        countryCode={c.hostCode}
-                        alt={c.host}
-                        width={13}
-                        height={9}
-                        className="rounded-[1px] shrink-0"
-                      />
-                      <span className="text-wc-text-muted">{c.host}</span>
-                    </div>
-                  </td>
-
-                  {/* Resultado de la final */}
-                  <td className="py-2 text-right">
-                    <span className="font-medium text-wc-accent-gold">{c.finalScore}</span>{' '}
-                    <span className="text-wc-text-muted">
-                      vs{' '}
-                      <FlagImage
-                        countryCode={c.finalOpponentCode}
-                        alt=""
-                        width={12}
-                        height={8}
-                        className="rounded-[1px] inline-block mx-0.5 align-middle"
-                      />
-                      {c.finalOpponent}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                return (
+                  <tr key={year} className="border-t border-wc-surface-secondary">
+                    <td className="py-2 pr-3">
+                      <span className="font-medium text-wc-accent-gold text-[12px]">{year}</span>
+                    </td>
+                    <td className="py-2 pr-3">
+                      {detail ? (
+                        <div className="flex items-center gap-1.5">
+                          <FlagImage
+                            countryCode={detail.hostCode}
+                            alt={detail.host}
+                            width={13}
+                            height={9}
+                            className="rounded-[1px] shrink-0"
+                          />
+                          <span className="text-wc-text-muted">{detail.host}</span>
+                        </div>
+                      ) : (
+                        <span className="text-wc-text-muted">—</span>
+                      )}
+                    </td>
+                    <td className="py-2 text-right">
+                      {detail ? (
+                        <>
+                          <span className="font-medium text-wc-accent-gold">
+                            {detail.finalScore}
+                          </span>{' '}
+                          <span className="text-wc-text-muted">
+                            vs{' '}
+                            <FlagImage
+                              countryCode={detail.finalOpponentCode}
+                              alt=""
+                              width={12}
+                              height={8}
+                              className="rounded-[1px] inline-block mx-0.5 align-middle"
+                            />
+                            {detail.finalOpponent}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-wc-text-muted">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

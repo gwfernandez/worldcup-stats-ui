@@ -10,7 +10,7 @@ const getApiBaseUrl = (): string => {
     return '';
   }
 
-  return apiBaseUrl || 'http://localhost:8080/api';
+  return apiBaseUrl || 'http://localhost:8080';
 };
 
 export const env: AppEnv = {
