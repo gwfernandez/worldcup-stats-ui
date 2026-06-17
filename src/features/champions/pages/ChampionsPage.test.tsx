@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import ChampionsPage from './ChampionsPage';
 import { useChampions } from '../hooks/useChampions';
-import { MOCK_CHAMPIONS, MOCK_CHAMPIONS_RESPONSE } from '../mocks/champions.mock';
+import { CHAMPIONS_FIXTURE, CHAMPIONS_RESPONSE_FIXTURE } from '@/test/fixtures/champions.fixture';
 
 vi.mock('../hooks/useChampions', () => ({
   useChampions: vi.fn(),
@@ -64,8 +64,8 @@ describe('ChampionsPage', () => {
 
   it('renders the eight champions and the API total', () => {
     vi.mocked(useChampions).mockReturnValue({
-      champions: MOCK_CHAMPIONS,
-      pagination: MOCK_CHAMPIONS_RESPONSE.pagination,
+      champions: CHAMPIONS_FIXTURE,
+      pagination: CHAMPIONS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: false,
       error: null,
@@ -81,8 +81,8 @@ describe('ChampionsPage', () => {
   it('filters champions locally by team name', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampions).mockReturnValue({
-      champions: MOCK_CHAMPIONS,
-      pagination: MOCK_CHAMPIONS_RESPONSE.pagination,
+      champions: CHAMPIONS_FIXTURE,
+      pagination: CHAMPIONS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: false,
       error: null,
@@ -99,8 +99,8 @@ describe('ChampionsPage', () => {
   it('filters champions locally by confederation', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampions).mockReturnValue({
-      champions: MOCK_CHAMPIONS,
-      pagination: MOCK_CHAMPIONS_RESPONSE.pagination,
+      champions: CHAMPIONS_FIXTURE,
+      pagination: CHAMPIONS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: false,
       error: null,
@@ -117,8 +117,8 @@ describe('ChampionsPage', () => {
   it('opens the mocked title details for a champion', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampions).mockReturnValue({
-      champions: MOCK_CHAMPIONS,
-      pagination: MOCK_CHAMPIONS_RESPONSE.pagination,
+      champions: CHAMPIONS_FIXTURE,
+      pagination: CHAMPIONS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: false,
       error: null,
@@ -142,7 +142,7 @@ describe('ChampionsPage', () => {
     };
     vi.mocked(useChampions).mockReturnValue({
       champions: [championWithoutDetails],
-      pagination: { ...MOCK_CHAMPIONS_RESPONSE.pagination, totalElements: 1 },
+      pagination: { ...CHAMPIONS_RESPONSE_FIXTURE.pagination, totalElements: 1 },
       isLoading: false,
       isError: false,
       error: null,

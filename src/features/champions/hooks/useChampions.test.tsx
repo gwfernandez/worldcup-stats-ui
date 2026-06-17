@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse, delay } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
-import { MOCK_CHAMPIONS, MOCK_CHAMPIONS_RESPONSE } from '../mocks/champions.mock';
+import { CHAMPIONS_FIXTURE, CHAMPIONS_RESPONSE_FIXTURE } from '@/test/fixtures/champions.fixture';
 import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { useUIStore } from '@/store/ui.store';
 import { useChampions } from './useChampions';
@@ -12,7 +12,7 @@ describe('useChampions', () => {
     server.use(
       http.get('*/api/champions', async () => {
         await delay('infinite');
-        return HttpResponse.json(MOCK_CHAMPIONS_RESPONSE);
+        return HttpResponse.json(CHAMPIONS_RESPONSE_FIXTURE);
       }),
     );
 
@@ -32,7 +32,7 @@ describe('useChampions', () => {
     server.use(
       http.get('*/api/champions', ({ request }) => {
         requestedUrl = request.url;
-        return HttpResponse.json(MOCK_CHAMPIONS_RESPONSE);
+        return HttpResponse.json(CHAMPIONS_RESPONSE_FIXTURE);
       }),
     );
 
@@ -48,8 +48,8 @@ describe('useChampions', () => {
     expect(url.pathname).toBe('/api/champions');
     expect(url.searchParams.get('page')).toBe('1');
     expect(url.searchParams.get('size')).toBe('15');
-    expect(result.current.champions).toEqual(MOCK_CHAMPIONS);
-    expect(result.current.pagination).toEqual(MOCK_CHAMPIONS_RESPONSE.pagination);
+    expect(result.current.champions).toEqual(CHAMPIONS_FIXTURE);
+    expect(result.current.pagination).toEqual(CHAMPIONS_RESPONSE_FIXTURE.pagination);
     expect(result.current.isError).toBe(false);
   });
 
@@ -60,8 +60,8 @@ describe('useChampions', () => {
         const language = request.headers.get('Accept-Language') ?? 'es';
         receivedLanguages.push(language);
         return HttpResponse.json({
-          ...MOCK_CHAMPIONS_RESPONSE,
-          data: MOCK_CHAMPIONS_RESPONSE.data.map((champion) => ({
+          ...CHAMPIONS_RESPONSE_FIXTURE,
+          data: CHAMPIONS_RESPONSE_FIXTURE.data.map((champion) => ({
             ...champion,
             team: {
               ...champion.team,

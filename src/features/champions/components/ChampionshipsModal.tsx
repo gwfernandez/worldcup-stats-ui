@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import type { Champion } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-import { MOCK_CHAMPION_TITLE_DETAILS } from '../mocks/champions.mock';
+import { MOCK_CHAMPION_TITLE_DETAILS } from '../mocks/championTitleDetails.mock';
 
 export interface ChampionshipsModalProps {
   team: Champion | null;

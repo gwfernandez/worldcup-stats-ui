@@ -87,11 +87,11 @@ Crear un archivo `.env` en la raíz del proyecto basándose en `.env.example`:
 cp .env.example .env
 ```
 
-| Variable               | Descripción                                         |
-| ---------------------- | --------------------------------------------------- |
-| `VITE_API_BASE_URL`    | URL base de la REST API de datos o `same-origin`    |
-| `BACKEND_API_BASE_URL` | URL base privada usada por el proxy de Vercel       |
-| `VITE_USE_MOCK`        | Habilita datos mockeados locales cuando vale `true` |
+| Variable               | Descripción                                      |
+| ---------------------- | ------------------------------------------------ |
+| `VITE_API_BASE_URL`    | URL base de la REST API de datos o `same-origin` |
+| `BACKEND_API_BASE_URL` | URL base privada usada por el proxy de Vercel    |
+| `VITE_USE_MOCK`        | Mantiene mocks en los services aún no integrados |
 
 ### Modo mock local
 
@@ -103,8 +103,11 @@ VITE_API_BASE_URL=http://localhost:8080
 VITE_USE_MOCK=true
 ```
 
-Con `VITE_USE_MOCK=true`, los services soportados devuelven datos locales validados con Zod
-y no realizan requests HTTP. Para probar contra la API real, configurar:
+`VITE_USE_MOCK` se evalúa por service. Con `true`, las features que todavía no están integradas
+con `worldcup-stats-service` conservan sus datos locales validados con Zod. Las páginas de
+mundiales y campeones ya consultan siempre sus endpoints reales aunque esta variable siga activa.
+
+Para deshabilitar todos los fallbacks mock disponibles, configurar:
 
 ```env
 VITE_USE_MOCK=false
@@ -127,7 +130,8 @@ VITE_USE_MOCK=false
 > endpoints históricos como `/worldcups`, mientras que `worldcup-stats-service` documenta rutas
 > actuales como `/championships`. Mantener el modo mock activo hasta completar esa planificación.
 
-La página `/champions` ya consume el endpoint real `GET /api/champions` con `page=1&size=15`.
+La página `/champions` consume siempre el endpoint real `GET /api/champions` con
+`page=1&size=15`, independientemente de `VITE_USE_MOCK`.
 Los filtros por selección y confederación se aplican localmente sobre esa página de resultados.
 El detalle de sedes y finales del modal continúa enriquecido temporalmente con datos mockeados
 hasta que la API exponga esa información.

@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ZodError } from 'zod';
-import {
-  getMockChampionsResponse,
-  MOCK_CHAMPIONS_RESPONSE,
-} from '@/features/champions/mocks/champions.mock';
+import { CHAMPIONS_RESPONSE_FIXTURE } from '@/test/fixtures/champions.fixture';
 import { api } from '@/services/api';
 
 vi.mock('@/services/api', () => ({
@@ -19,30 +16,23 @@ describe('championsService', () => {
     vi.unstubAllEnvs();
   });
 
-  it('returns the paginated mock response when VITE_USE_MOCK is true', async () => {
+  it('requests champions from the API even when VITE_USE_MOCK is true', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
+    vi.mocked(api.get).mockResolvedValue({ data: CHAMPIONS_RESPONSE_FIXTURE });
     const { getChampions } = await import('./championsService');
 
-    const result = await getChampions();
+    const result = await getChampions(1, 15, 'es');
 
-    expect(result).toEqual(MOCK_CHAMPIONS_RESPONSE);
-    expect(api.get).not.toHaveBeenCalled();
-  });
-
-  it('localizes mock champion names using the selected language', async () => {
-    vi.stubEnv('VITE_USE_MOCK', 'true');
-    const { getChampions } = await import('./championsService');
-
-    const result = await getChampions(1, 15, 'en');
-
-    expect(result).toEqual(getMockChampionsResponse('en'));
-    expect(result.data[0].team.name).toBe('Brazil');
-    expect(result.data[1].team.name).toBe('Germany');
+    expect(api.get).toHaveBeenCalledWith('/api/champions', {
+      params: { page: 1, size: 15 },
+      headers: { 'Accept-Language': 'es' },
+    });
+    expect(result).toEqual(CHAMPIONS_RESPONSE_FIXTURE);
   });
 
   it('requests the first 15 champions from the API', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
-    vi.mocked(api.get).mockResolvedValue({ data: MOCK_CHAMPIONS_RESPONSE });
+    vi.mocked(api.get).mockResolvedValue({ data: CHAMPIONS_RESPONSE_FIXTURE });
     const { getChampions } = await import('./championsService');
 
     const result = await getChampions(1, 15, 'en');
@@ -51,15 +41,15 @@ describe('championsService', () => {
       params: { page: 1, size: 15 },
       headers: { 'Accept-Language': 'en' },
     });
-    expect(result).toEqual(MOCK_CHAMPIONS_RESPONSE);
+    expect(result).toEqual(CHAMPIONS_RESPONSE_FIXTURE);
   });
 
   it('rejects an invalid API response', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     vi.mocked(api.get).mockResolvedValue({
       data: {
-        ...MOCK_CHAMPIONS_RESPONSE,
-        data: [{ ...MOCK_CHAMPIONS_RESPONSE.data[0], wins: '5' }],
+        ...CHAMPIONS_RESPONSE_FIXTURE,
+        data: [{ ...CHAMPIONS_RESPONSE_FIXTURE.data[0], wins: '5' }],
       },
     });
     const { getChampions } = await import('./championsService');
