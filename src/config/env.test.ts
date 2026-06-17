@@ -12,7 +12,7 @@ describe('env', () => {
 
     const { env } = await import('./env');
 
-    expect(env.apiBaseUrl).toBe('http://localhost:8080/api');
+    expect(env.apiBaseUrl).toBe('http://localhost:8080');
     expect(env.useMock).toBe(false);
   });
 

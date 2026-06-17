@@ -1,19 +1,24 @@
 import { api } from '@/services/api';
 import { env } from '@/config/env';
-import { ChampionTeamListSchema, type ChampionTeamList } from '@/types/champion.types';
-import { MOCK_CHAMPIONS } from '@/features/champions/mocks/champions.mock';
+import { ChampionListResponseSchema, type ChampionListResponse } from '@/types/champion.types';
+import { getMockChampionsResponse } from '@/features/champions/mocks/champions.mock';
+import type { SupportedLanguage } from '@/store/ui.store';
 
-// ─── Service ──────────────────────────────────────────────────────────────────
+export const CHAMPIONS_PAGE = 1;
+export const CHAMPIONS_PAGE_SIZE = 15;
 
-/**
- * Obtiene el listado histórico de campeones desde la API.
- * Usa mock data si VITE_USE_MOCK=true.
- */
-export const getChampions = async (): Promise<ChampionTeamList> => {
+export const getChampions = async (
+  page = CHAMPIONS_PAGE,
+  size = CHAMPIONS_PAGE_SIZE,
+  language: SupportedLanguage = 'es',
+): Promise<ChampionListResponse> => {
   if (env.useMock) {
-    return ChampionTeamListSchema.parse(MOCK_CHAMPIONS);
+    return ChampionListResponseSchema.parse(getMockChampionsResponse(language));
   }
 
-  const { data } = await api.get('/champions');
-  return ChampionTeamListSchema.parse(data);
+  const { data } = await api.get('/api/champions', {
+    params: { page, size },
+    headers: { 'Accept-Language': language },
+  });
+  return ChampionListResponseSchema.parse(data);
 };

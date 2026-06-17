@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function ChampionsPage() {
   const { t } = useTranslation(['champions', 'championships']);
-  const { champions, isLoading, isError, error } = useChampions();
+  const { champions, pagination, isLoading, isError, error } = useChampions();
 
   return (
     <>
@@ -24,7 +24,11 @@ export default function ChampionsPage() {
         titleAccent={t('champions:hero.titleAccent')}
         description={t('champions:hero.description')}
         stats={[
-          { icon: Trophy, value: '8', label: t('champions:hero.champions') },
+          {
+            icon: Trophy,
+            value: String(pagination.totalElements),
+            label: t('champions:hero.champions'),
+          },
           { icon: Globe, value: '22', label: t('championships:stats.editions') },
           { icon: Trophy, value: 'Brasil', label: t('champions:hero.mostTitles') },
         ]}

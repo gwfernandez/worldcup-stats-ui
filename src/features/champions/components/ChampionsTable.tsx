@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Trophy } from 'lucide-react';
-import type { ChampionTeam } from '@/types/champion.types';
+import type { Champion } from '@/types/champion.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { ChampionshipsModal } from './ChampionshipsModal';
@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface ChampionsTableProps {
-  champions: ChampionTeam[];
+  champions: Champion[];
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -22,20 +22,20 @@ export interface ChampionsTableProps {
  */
 export function ChampionsTable({ champions }: ChampionsTableProps) {
   const { t } = useTranslation('common');
-  const [selectedTeam, setSelectedTeam] = useState<ChampionTeam | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Champion | null>(null);
   const [searchName, setSearchName] = useState('');
   const [filterConf, setFilterConf] = useState('');
 
   const confOptions = useMemo(
-    () => [...new Set(champions.map((c) => c.confederation))].sort(),
+    () => [...new Set(champions.map((c) => c.confederationCode))].sort(),
     [champions],
   );
 
   const filtered = useMemo(
     () =>
       champions.filter((c) => {
-        const matchesName = c.teamName.toLowerCase().includes(searchName.toLowerCase());
-        const matchesConf = filterConf === '' || c.confederation === filterConf;
+        const matchesName = c.team.name.toLowerCase().includes(searchName.toLowerCase());
+        const matchesConf = filterConf === '' || c.confederationCode === filterConf;
         return matchesName && matchesConf;
       }),
     [champions, searchName, filterConf],
@@ -88,13 +88,14 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
             </tr>
           )}
           {filtered.map((team) => {
-            const confStyle = CONFEDERATION_STYLES[team.confederation];
-            const confTooltip = CONFEDERATION_TOOLTIP[team.confederation] ?? '';
-            const isTop3 = team.position <= 3;
+            const position = champions.indexOf(team) + 1;
+            const confStyle = CONFEDERATION_STYLES[team.confederationCode];
+            const confTooltip = CONFEDERATION_TOOLTIP[team.confederationCode] ?? '';
+            const isTop3 = position <= 3;
 
             return (
               <tr
-                key={team.teamCode}
+                key={team.team.code}
                 className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
               >
                 {/* Posición con borde lateral */}
@@ -107,15 +108,15 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                   <span
                     className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
                   >
-                    {team.position}
+                    {position}
                   </span>
                 </td>
 
                 {/* Selección */}
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
-                    <FlagImage countryCode={team.teamCode} alt={team.teamName} />
-                    <span className="text-xs text-wc-text-primary">{team.teamName}</span>
+                    <FlagImage countryCode={team.team.code} alt={team.team.name} />
+                    <span className="text-xs text-wc-text-primary">{team.team.name}</span>
                   </div>
                 </td>
 
@@ -123,13 +124,13 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-0.5 flex-wrap">
-                      {Array.from({ length: team.titles }).map((_, i) => (
+                      {Array.from({ length: team.wins }).map((_, i) => (
                         <span key={i} className="text-sm leading-none" aria-hidden="true">
                           🏆
                         </span>
                       ))}
                     </div>
-                    <span className="text-lg font-medium text-wc-accent-gold">{team.titles}</span>
+                    <span className="text-lg font-medium text-wc-accent-gold">{team.wins}</span>
                   </div>
                 </td>
 
@@ -139,7 +140,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
                     >
-                      {team.confederation}
+                      {team.confederationCode}
                     </span>
                   </Tooltip>
                 </td>
@@ -150,7 +151,7 @@ export function ChampionsTable({ champions }: ChampionsTableProps) {
                     <button
                       onClick={() => setSelectedTeam(team)}
                       className="flex items-center justify-center w-7 h-7 border border-wc-border-primary rounded-md text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors focus:outline-none"
-                      aria-label={t('actions.viewTitlesFor', { team: team.teamName })}
+                      aria-label={t('actions.viewTitlesFor', { team: team.team.name })}
                     >
                       <Trophy size={13} />
                     </button>

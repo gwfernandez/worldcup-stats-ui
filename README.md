@@ -99,7 +99,7 @@ Mientras la integración con `worldcup-stats-service` no esté cerrada, el modo 
 para desarrollo frontend es usar datos mockeados:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8080/api
+VITE_API_BASE_URL=http://localhost:8080
 VITE_USE_MOCK=true
 ```
 
@@ -126,6 +126,11 @@ VITE_USE_MOCK=false
 > Nota técnica: el contrato frontend/backend todavía requiere alineación. El frontend conserva
 > endpoints históricos como `/worldcups`, mientras que `worldcup-stats-service` documenta rutas
 > actuales como `/championships`. Mantener el modo mock activo hasta completar esa planificación.
+
+La página `/champions` ya consume el endpoint real `GET /api/champions` con `page=1&size=15`.
+Los filtros por selección y confederación se aplican localmente sobre esa página de resultados.
+El detalle de sedes y finales del modal continúa enriquecido temporalmente con datos mockeados
+hasta que la API exponga esa información.
 
 ### Comandos disponibles
 

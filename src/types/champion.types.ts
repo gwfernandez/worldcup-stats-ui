@@ -1,30 +1,43 @@
 import { z } from 'zod';
 
-// ─── Título individual ────────────────────────────────────────────────────────
-
-export const ChampionWinnerSchema = z.object({
-  year: z.number(),
-  host: z.string(),
-  hostCode: z.string(),
-  finalScore: z.string(), // ej: "4–1", "0–0 (pen)"
-  finalOpponent: z.string(), // ej: "Italia"
-  finalOpponentCode: z.string(),
+export const ChampionTeamSummarySchema = z.object({
+  code: z.string(),
+  name: z.string(),
 });
 
-export type ChampionWinner = z.infer<typeof ChampionWinnerSchema>;
-
-// ─── Champion team ────────────────────────────────────────────────────────────
-
-export const ChampionTeamSchema = z.object({
-  position: z.number(),
-  teamName: z.string(),
-  teamCode: z.string(),
-  confederation: z.string(),
-  titles: z.number(),
-  championships: z.array(ChampionWinnerSchema),
+export const ChampionSchema = z.object({
+  team: ChampionTeamSummarySchema,
+  wins: z.number(),
+  years: z.array(z.number()),
+  confederationCode: z.string(),
 });
 
-export const ChampionTeamListSchema = z.array(ChampionTeamSchema);
+export const ChampionListSchema = z.array(ChampionSchema);
 
-export type ChampionTeam = z.infer<typeof ChampionTeamSchema>;
-export type ChampionTeamList = z.infer<typeof ChampionTeamListSchema>;
+export const ChampionPaginationSchema = z.object({
+  page: z.number(),
+  size: z.number(),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
+
+export const ChampionListResponseSchema = z.object({
+  data: ChampionListSchema,
+  pagination: ChampionPaginationSchema,
+});
+
+export type Champion = z.infer<typeof ChampionSchema>;
+export type ChampionList = z.infer<typeof ChampionListSchema>;
+export type ChampionPagination = z.infer<typeof ChampionPaginationSchema>;
+export type ChampionListResponse = z.infer<typeof ChampionListResponseSchema>;
+
+export interface ChampionTitleDetail {
+  year: number;
+  host: string;
+  hostCode: string;
+  finalScore: string;
+  finalOpponent: string;
+  finalOpponentCode: string;
+}
