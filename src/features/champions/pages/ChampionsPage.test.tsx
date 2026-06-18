@@ -5,10 +5,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import ChampionsPage from './ChampionsPage';
 import { useChampions } from '../hooks/useChampions';
+import { useChampionFinals } from '../hooks/useChampionFinals';
+import { CHAMPION_FINALS_RESPONSE_FIXTURE } from '@/test/fixtures/championFinals.fixture';
 import { CHAMPIONS_FIXTURE, CHAMPIONS_RESPONSE_FIXTURE } from '@/test/fixtures/champions.fixture';
 
 vi.mock('../hooks/useChampions', () => ({
   useChampions: vi.fn(),
+}));
+
+vi.mock('../hooks/useChampionFinals', () => ({
+  useChampionFinals: vi.fn(),
 }));
 
 const emptyPagination = {
@@ -31,6 +37,14 @@ function renderPage() {
 describe('ChampionsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useChampionFinals).mockReturnValue({
+      finals: CHAMPION_FINALS_RESPONSE_FIXTURE.data,
+      pagination: CHAMPION_FINALS_RESPONSE_FIXTURE.pagination,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
   });
 
   it('shows the loading state while the query is pending', () => {
@@ -114,7 +128,7 @@ describe('ChampionsPage', () => {
     expect(within(table).queryByText('Alemania')).not.toBeInTheDocument();
   });
 
-  it('opens the mocked title details for a champion', async () => {
+  it('opens the title details returned by the API for a champion', async () => {
     const user = userEvent.setup();
     vi.mocked(useChampions).mockReturnValue({
       champions: CHAMPIONS_FIXTURE,
@@ -132,7 +146,7 @@ describe('ChampionsPage', () => {
     expect(within(dialog).getByText('Qatar')).toBeInTheDocument();
   });
 
-  it('falls back to the API years when mocked title details are unavailable', async () => {
+  it('shows an empty state when title details are unavailable', async () => {
     const user = userEvent.setup();
     const championWithoutDetails = {
       team: { code: 'NLD', name: 'Países Bajos' },
@@ -147,12 +161,29 @@ describe('ChampionsPage', () => {
       isError: false,
       error: null,
     });
+    vi.mocked(useChampionFinals).mockReturnValue({
+      finals: [],
+      pagination: {
+        page: 1,
+        size: 20,
+        totalElements: 0,
+        totalPages: 0,
+        hasNext: false,
+        hasPrevious: false,
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
 
     renderPage();
     await user.click(screen.getByRole('button', { name: 'Ver títulos de Países Bajos' }));
 
     const dialog = screen.getByRole('dialog', { name: 'Títulos de Países Bajos' });
-    expect(within(dialog).getAllByText('2030')).toHaveLength(3);
-    expect(within(dialog).getAllByText('—')).toHaveLength(2);
+    expect(within(dialog).getAllByText('2030')).toHaveLength(2);
+    expect(
+      within(dialog).getByText('No hay finales ganadas disponibles para esta selección.'),
+    ).toBeInTheDocument();
   });
 });

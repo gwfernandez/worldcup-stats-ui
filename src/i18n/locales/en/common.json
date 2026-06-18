@@ -83,6 +83,7 @@
     "date": "Date",
     "minute": "Min.",
     "rival": "Opponent",
+    "versus": "vs",
     "name": "First name",
     "lastName": "Last name",
     "form": "Form",
@@ -143,7 +144,10 @@
     "L": "Loss"
   },
   "titlesDialog": {
-    "titleFor": "Titles for {{team}}"
+    "titleFor": "Titles for {{team}}",
+    "loading": "Loading won finals...",
+    "loadError": "The won finals could not be loaded.",
+    "empty": "No won finals are available for this team."
   },
   "standingMetrics": {
     "points": "Points",

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
-import { ChampionListResponseSchema, ChampionSchema } from './champion.types';
+import {
+  ChampionFinalListResponseSchema,
+  ChampionFinalSchema,
+  ChampionListResponseSchema,
+  ChampionSchema,
+} from './champion.types';
+import { CHAMPION_FINALS_RESPONSE_FIXTURE } from '@/test/fixtures/championFinals.fixture';
 
 const validChampion = {
   team: { code: 'BRA', name: 'Brasil' },
@@ -41,6 +47,32 @@ describe('champion schemas', () => {
       ChampionListResponseSchema.parse({
         ...validResponse,
         pagination: { ...validResponse.pagination, hasNext: 'false' },
+      }),
+    ).toThrow(ZodError);
+  });
+
+  it('parses finals with multiple hosts and nullable match fields', () => {
+    expect(ChampionFinalListResponseSchema.parse(CHAMPION_FINALS_RESPONSE_FIXTURE)).toEqual(
+      CHAMPION_FINALS_RESPONSE_FIXTURE,
+    );
+
+    const finalWithMissingData = {
+      ...CHAMPION_FINALS_RESPONSE_FIXTURE.data[0],
+      hostCodes: [],
+      matchDate: null,
+      matchTime: null,
+      homeTeamScore: null,
+      awayTeamScore: null,
+    };
+
+    expect(ChampionFinalSchema.parse(finalWithMissingData)).toEqual(finalWithMissingData);
+  });
+
+  it('throws when a champion final has an invalid nullable field', () => {
+    expect(() =>
+      ChampionFinalSchema.parse({
+        ...CHAMPION_FINALS_RESPONSE_FIXTURE.data[0],
+        homeTeamScore: '3',
       }),
     ).toThrow(ZodError);
   });
