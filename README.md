@@ -105,7 +105,8 @@ VITE_USE_MOCK=true
 
 `VITE_USE_MOCK` se evalúa por service. Con `true`, las features que todavía no están integradas
 con `worldcup-stats-service` conservan sus datos locales validados con Zod. Las páginas de
-mundiales y campeones ya consultan siempre sus endpoints reales aunque esta variable siga activa.
+mundiales, campeones y posiciones históricas ya consultan siempre sus endpoints reales aunque
+esta variable siga activa.
 
 Para deshabilitar todos los fallbacks mock disponibles, configurar:
 
@@ -135,6 +136,10 @@ La página `/champions` consume siempre el endpoint real `GET /api/champions` co
 Los filtros por selección y confederación se aplican localmente sobre esa página de resultados.
 El modal de títulos consulta `GET /api/champions/:teamCode` sin parámetros de paginado y muestra
 los anfitriones, rivales y resultados localizados provistos por el backend.
+
+La página `/standings` consume siempre `GET /api/standings` con filtros remotos por selección y
+confederación. Solicita hasta 100 registros por página y reúne automáticamente páginas adicionales,
+pero presenta todas las selecciones en una única tabla sin controles de paginación.
 
 ### Comandos disponibles
 

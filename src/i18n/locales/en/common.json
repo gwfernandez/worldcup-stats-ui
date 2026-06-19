@@ -157,6 +157,16 @@
     "awayTeam": "Away Team"
   },
   "standingMetrics": {
+    "abbreviations": {
+      "points": "PTS",
+      "played": "MP",
+      "won": "W",
+      "drawn": "D",
+      "lost": "L",
+      "goalsFor": "GF",
+      "goalsAgainst": "GA",
+      "goalDiff": "GD"
+    },
     "points": "Points",
     "played": "Matches played",
     "won": "Matches won",
@@ -165,7 +175,8 @@
     "goalsFor": "Goals for",
     "goalsAgainst": "Goals against",
     "goalDiff": "Goal difference",
-    "performance": "Performance (%)",
+    "performance": "Performance",
+    "performanceTooltip": "Performance (%)",
     "performanceShort": "Perf."
   },
   "errorBoundary": {

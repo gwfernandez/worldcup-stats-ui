@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import HistoricalStandingsPage from './HistoricalStandingsPage';
 import { useHistoricalStandings } from '../hooks/useHistoricalStandings';
-import { MOCK_HISTORICAL_STANDINGS } from '../mocks/historicalStandings.mock';
+import { HISTORICAL_STANDINGS_FIXTURE } from '@/test/fixtures/historicalStandings.fixture';
 
 vi.mock('../hooks/useHistoricalStandings', () => ({
   useHistoricalStandings: vi.fn(),
@@ -34,7 +34,7 @@ describe('HistoricalStandingsPage', () => {
     renderPage();
 
     expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
-    expect(screen.queryByText('Alemania')).not.toBeInTheDocument();
+    expect(screen.queryByText('Brasil')).not.toBeInTheDocument();
   });
 
   it('muestra un mensaje de error cuando el query falla', () => {
@@ -52,7 +52,7 @@ describe('HistoricalStandingsPage', () => {
 
   it('renderiza la tabla de posiciones cuando los datos están disponibles', () => {
     vi.mocked(useHistoricalStandings).mockReturnValue({
-      standings: MOCK_HISTORICAL_STANDINGS,
+      standings: HISTORICAL_STANDINGS_FIXTURE,
       isLoading: false,
       isError: false,
       error: null,
@@ -60,7 +60,7 @@ describe('HistoricalStandingsPage', () => {
 
     renderPage();
 
-    expect(screen.getAllByText('Alemania').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Brasil').length).toBeGreaterThan(0);
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 });

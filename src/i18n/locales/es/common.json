@@ -157,6 +157,16 @@
     "awayTeam": "Equipo Visitante"
   },
   "standingMetrics": {
+    "abbreviations": {
+      "points": "PTS",
+      "played": "PJ",
+      "won": "PG",
+      "drawn": "PE",
+      "lost": "PP",
+      "goalsFor": "GF",
+      "goalsAgainst": "GC",
+      "goalDiff": "DIF"
+    },
     "points": "Puntos",
     "played": "Partidos jugados",
     "won": "Partidos ganados",
@@ -165,7 +175,8 @@
     "goalsFor": "Goles a favor",
     "goalsAgainst": "Goles en contra",
     "goalDiff": "Diferencia de goles",
-    "performance": "Rendimiento (%)",
+    "performance": "Rendimiento",
+    "performanceTooltip": "Rendimiento (%)",
     "performanceShort": "Rend."
   },
   "errorBoundary": {
