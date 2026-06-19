@@ -1,6 +1,6 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHAMPION_FINALS_RESPONSE_FIXTURE } from '@/test/fixtures/championFinals.fixture';
 import type { Champion } from '@/types/champion.types';
 import { useChampionFinals } from '../hooks/useChampionFinals';
@@ -32,6 +32,11 @@ describe('ChampionshipsModal', () => {
     vi.mocked(useChampionFinals).mockReturnValue(defaultResult);
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
   it('does not render or request data without a selected team', () => {
     const { container } = render(<ChampionshipsModal team={null} onClose={vi.fn()} />);
 
@@ -39,26 +44,147 @@ describe('ChampionshipsModal', () => {
     expect(useChampionFinals).toHaveBeenCalledWith(null);
   });
 
-  it('renders hosts and scores from the API for home and away champions', () => {
+  it('shows only the champion name in the visible header', () => {
     render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
 
     const dialog = screen.getByRole('dialog', { name: 'Títulos de Argentina' });
-    expect(within(dialog).getByText('México')).toBeInTheDocument();
-    expect(within(dialog).getByText('Emiratos Árabes Unidos')).toBeInTheDocument();
-    expect(within(dialog).getByText('3–1')).toBeInTheDocument();
-    expect(within(dialog).getByText('3–3 (4–2 pen.)')).toBeInTheDocument();
-    expect(within(screen.getByRole('table')).getByText('2022').closest('tr')).toHaveTextContent(
-      'Francia',
+    const header = within(dialog).getByRole('button', { name: 'Cerrar' }).parentElement;
+
+    expect(header).toHaveTextContent('Argentina');
+    expect(header).not.toHaveTextContent('Títulos');
+    expect(
+      within(header as HTMLElement).getByRole('img', { name: 'Argentina' }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the final columns in the requested order', () => {
+    render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
+
+    expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual([
+      'Year',
+      'Date',
+      'Matches',
+    ]);
+    expect(screen.getByTestId('champion-finals-scroll')).toHaveClass('overflow-x-auto');
+    expect(screen.getByRole('table')).toHaveClass('min-w-[460px]');
+
+    const [yearHeader, dateHeader, matchesHeader] = screen.getAllByRole('columnheader');
+    expect(yearHeader).toHaveClass('w-16', 'px-1', 'pb-1', 'text-center');
+    expect(dateHeader).toHaveClass('w-12', 'px-1', 'pb-1', 'text-center');
+    expect(matchesHeader).toHaveClass(
+      'whitespace-nowrap',
+      'px-1',
+      'pb-1',
+      'text-center',
+      'text-[10px]',
     );
   });
 
-  it('shows missing hosts and scores without inventing data', () => {
+  it('renders month and day, teams, flags and separated scores', () => {
+    render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
+
+    const finalRow = within(screen.getByRole('table')).getByText('2022').closest('tr');
+    expect(finalRow).toHaveTextContent('12-18');
+    expect(finalRow).not.toHaveTextContent('2022-12-18');
+    expect(finalRow).toHaveTextContent('Francia');
+    expect(finalRow).toHaveTextContent('3 (2)');
+    expect(finalRow).toHaveTextContent('vs');
+    expect(finalRow).toHaveTextContent('3 (4)');
+    expect(finalRow).toHaveTextContent('Argentina');
+    expect(
+      within(finalRow as HTMLElement).getByRole('img', { name: 'Francia' }),
+    ).toBeInTheDocument();
+    expect(
+      within(finalRow as HTMLElement).getByRole('img', { name: 'Argentina' }),
+    ).toBeInTheDocument();
+
+    const homeTeamFlag = within(finalRow as HTMLElement).getByRole('img', { name: 'Francia' });
+    const homeTeamCell = homeTeamFlag.parentElement;
+    expect(homeTeamCell).toHaveClass('justify-end', 'text-right');
+    expect(homeTeamCell?.firstElementChild).toHaveTextContent('Francia');
+    expect(homeTeamCell?.lastElementChild).toBe(homeTeamFlag);
+
+    const matchLayout = within(finalRow as HTMLElement).getByTestId('match-layout');
+    const homeTeam = within(matchLayout).getByTestId('home-team');
+    const score = within(matchLayout).getByTestId('match-score');
+    const awayTeam = within(matchLayout).getByTestId('away-team');
+    expect(matchLayout.children).toHaveLength(3);
+    expect(matchLayout.children[0]).toBe(homeTeam);
+    expect(matchLayout.children[1]).toBe(score);
+    expect(matchLayout.children[2]).toBe(awayTeam);
+    expect(homeTeam).toHaveClass('justify-end', 'text-right');
+    expect(awayTeam).toHaveClass('justify-start', 'text-left');
+    expect(matchLayout).toHaveClass(
+      'w-max',
+      'grid-cols-[120px_96px_120px]',
+      'justify-start',
+      'gap-2',
+    );
+    expect(score).toHaveClass('w-24', 'grid-cols-[1fr_auto_1fr]', 'gap-1', 'tabular-nums');
+    expect(score.children[0]).toHaveTextContent('3 (2)');
+    expect(score.children[1]).toHaveTextContent('vs');
+    expect(score.children[2]).toHaveTextContent('3 (4)');
+  });
+
+  it('rotates multiple host flags with the world cup carousel timing', () => {
+    vi.useFakeTimers();
+    render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
+
+    const finalRow = within(screen.getByRole('table')).getByText('2022').closest('tr');
+    expect(within(finalRow as HTMLElement).getByRole('img', { name: 'Qatar' })).toHaveClass(
+      'opacity-100',
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(1500);
+    });
+    expect(within(finalRow as HTMLElement).getByRole('img', { name: 'Qatar' })).toHaveClass(
+      'opacity-0',
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(
+      within(finalRow as HTMLElement).getByRole('img', { name: 'Emiratos Árabes Unidos' }),
+    ).toHaveClass('opacity-100');
+  });
+
+  it('keeps a single host static and does not start a carousel', () => {
+    vi.useFakeTimers();
+    const setIntervalSpy = vi.spyOn(window, 'setInterval');
+    vi.mocked(useChampionFinals).mockReturnValue({
+      ...defaultResult,
+      finals: [CHAMPION_FINALS_RESPONSE_FIXTURE.data[0]],
+    });
+
+    render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
+
+    const finalRow = within(screen.getByRole('table')).getByText('1978').closest('tr');
+    expect(
+      within(finalRow as HTMLElement).getAllByRole('img', { name: 'Argentina' })[0],
+    ).toHaveClass('opacity-100');
+    expect(setIntervalSpy).not.toHaveBeenCalled();
+  });
+
+  it('cleans the host carousel timers when the modal unmounts', () => {
+    vi.useFakeTimers();
+    const clearIntervalSpy = vi.spyOn(window, 'clearInterval');
+    const { unmount } = render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
+
+    unmount();
+
+    expect(clearIntervalSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows missing date, host and scores without inventing data', () => {
     vi.mocked(useChampionFinals).mockReturnValue({
       ...defaultResult,
       finals: [
         {
           ...CHAMPION_FINALS_RESPONSE_FIXTURE.data[0],
           hostCodes: [],
+          matchDate: null,
           homeTeamScore: null,
           awayTeamScore: null,
         },
@@ -68,10 +194,10 @@ describe('ChampionshipsModal', () => {
     render(<ChampionshipsModal team={champion} onClose={vi.fn()} />);
 
     const dialog = screen.getByRole('dialog', { name: 'Títulos de Argentina' });
-    expect(within(dialog).getAllByText('—')).toHaveLength(2);
-    expect(within(screen.getByRole('table')).getByText('1978').closest('tr')).toHaveTextContent(
-      'Países Bajos',
-    );
+    expect(within(dialog).getAllByText('—')).toHaveLength(4);
+    const finalRow = within(screen.getByRole('table')).getByText('1978').closest('tr');
+    expect(finalRow).toHaveTextContent('Argentina');
+    expect(finalRow).toHaveTextContent('Países Bajos');
   });
 
   it('shows loading, error with retry, and empty states', async () => {

@@ -143,7 +143,7 @@ describe('ChampionsPage', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'Títulos de Argentina' });
     expect(within(dialog).getAllByText('2022')).toHaveLength(2);
-    expect(within(dialog).getByText('Qatar')).toBeInTheDocument();
+    expect(within(dialog).getByRole('img', { name: 'Qatar' })).toBeInTheDocument();
   });
 
   it('shows an empty state when title details are unavailable', async () => {

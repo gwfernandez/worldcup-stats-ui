@@ -147,7 +147,14 @@
     "titleFor": "Títulos de {{team}}",
     "loading": "Cargando finales ganadas...",
     "loadError": "No se pudieron cargar las finales ganadas.",
-    "empty": "No hay finales ganadas disponibles para esta selección."
+    "empty": "No hay finales ganadas disponibles para esta selección.",
+    "year": "Year",
+    "date": "Date",
+    "matches": "Matches",
+    "homeTeam": "Equipo Local",
+    "homeGoals": "Goles Local",
+    "awayGoals": "Goles Visitante",
+    "awayTeam": "Equipo Visitante"
   },
   "standingMetrics": {
     "points": "Puntos",

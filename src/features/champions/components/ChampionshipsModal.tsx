@@ -1,48 +1,80 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Trophy } from 'lucide-react';
 import type { Champion, ChampionFinal } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
 import { useChampionFinals } from '../hooks/useChampionFinals';
 
+const HOST_ROTATION_MS = 1500;
+const HOST_FADE_MS = 300;
+
 export interface ChampionshipsModalProps {
   team: Champion | null;
   onClose: () => void;
 }
 
-interface FinalPresentation {
-  rival: ChampionFinal['homeTeam'];
-  score: string | null;
+interface HostFlagCarouselProps {
+  hosts: ChampionFinal['hostCodes'];
 }
 
-const getFinalPresentation = (final: ChampionFinal, championCode: string): FinalPresentation => {
-  const championIsHome = final.homeTeam.code === championCode;
-  const championScore = championIsHome ? final.homeTeamScore : final.awayTeamScore;
-  const rivalScore = championIsHome ? final.awayTeamScore : final.homeTeamScore;
-  const championPenalties = championIsHome
-    ? final.homeTeamScorePenalties
-    : final.awayTeamScorePenalties;
-  const rivalPenalties = championIsHome
-    ? final.awayTeamScorePenalties
-    : final.homeTeamScorePenalties;
+function HostFlagCarousel({ hosts }: HostFlagCarouselProps) {
+  const [activeHostIndex, setActiveHostIndex] = useState(0);
+  const [isHostVisible, setIsHostVisible] = useState(true);
+  const hasMultipleHosts = hosts.length > 1;
+  const activeHost = hosts[hasMultipleHosts ? activeHostIndex % hosts.length : 0] ?? hosts[0];
 
-  if (championScore === null || rivalScore === null) {
-    return {
-      rival: championIsHome ? final.awayTeam : final.homeTeam,
-      score: null,
+  useEffect(() => {
+    if (!hasMultipleHosts) {
+      return;
+    }
+
+    let fadeTimeoutId: number | undefined;
+    const intervalId = window.setInterval(() => {
+      setIsHostVisible(false);
+
+      fadeTimeoutId = window.setTimeout(() => {
+        setActiveHostIndex((currentIndex) => (currentIndex + 1) % hosts.length);
+        setIsHostVisible(true);
+      }, HOST_FADE_MS);
+    }, HOST_ROTATION_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      if (fadeTimeoutId !== undefined) {
+        window.clearTimeout(fadeTimeoutId);
+      }
     };
+  }, [hasMultipleHosts, hosts.length]);
+
+  if (!activeHost) {
+    return <span className="text-wc-text-muted">—</span>;
   }
 
-  const penalties =
-    championPenalties !== null && rivalPenalties !== null
-      ? ` (${championPenalties}–${rivalPenalties} pen.)`
-      : '';
+  return (
+    /* This wrapper keeps the cell size stable while the flag fades. */
+    <div className="flex h-3 w-4 items-center justify-center">
+      <FlagImage
+        countryCode={activeHost.code}
+        alt={activeHost.name}
+        width={16}
+        height={12}
+        className={`rounded-[2px] shrink-0 transition-opacity duration-300 ease-in-out ${hasMultipleHosts && !isHostVisible ? 'opacity-0' : 'opacity-100'
+          }`}
+      />
+    </div>
+  );
+}
 
-  return {
-    rival: championIsHome ? final.awayTeam : final.homeTeam,
-    score: `${championScore}–${rivalScore}${penalties}`,
-  };
+const formatScore = (score: number | null, penalties: number | null): string => {
+  if (score === null) {
+    return '—';
+  }
+
+  return penalties === null ? String(score) : `${score} (${penalties})`;
 };
+
+const formatMatchDate = (matchDate: string | null): string =>
+  matchDate === null ? '—' : matchDate.slice(5);
 
 export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
   const { t } = useTranslation('common');
@@ -85,7 +117,7 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
               height={15}
               className="rounded-[2px]"
             />
-            {team.team.name} - {t('labels.titles')}
+            {team.team.name}
           </div>
           <button
             type="button"
@@ -152,70 +184,89 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
           )}
 
           {!isLoading && !isError && finals.length > 0 && (
-            <table className="w-full border-collapse text-[11px]">
-              <thead>
-                <tr className="border-b border-wc-border-primary">
-                  <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
-                    {t('labels.year')}
-                  </th>
-                  <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
-                    {t('labels.host')}
-                  </th>
-                  <th className="text-right font-normal text-wc-text-muted pb-2">
-                    {t('labels.final')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {finals.map((final) => {
-                  const { rival, score } = getFinalPresentation(final, team.team.code);
-
-                  return (
+            <div className="overflow-x-auto" data-testid="champion-finals-scroll">
+              <table className="w-full min-w-[460px] border-collapse text-[11px]">
+                <thead>
+                  <tr className="border-b border-wc-border-primary">
+                    <th className="w-16 px-1 pb-1 text-center font-normal text-wc-text-muted">
+                      {t('titlesDialog.year')}
+                    </th>
+                    <th className="w-12 px-1 pb-1 text-center font-normal text-wc-text-muted">
+                      {t('titlesDialog.date')}
+                    </th>
+                    <th className="whitespace-nowrap px-1 pb-1 text-center text-[10px] font-normal text-wc-text-muted">
+                      {t('titlesDialog.matches')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {finals.map((final) => (
                     <tr key={final.year} className="border-t border-wc-surface-secondary">
-                      <td className="py-2 pr-3">
-                        <span className="font-medium text-wc-accent-gold text-[12px]">
-                          {final.year}
-                        </span>
+                      <td className="px-1 py-3">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <HostFlagCarousel hosts={final.hostCodes} />
+                          <span className="text-[12px] font-medium text-wc-accent-gold">
+                            {final.year}
+                          </span>
+                        </div>
                       </td>
-                      <td className="py-2 pr-3">
-                        {final.hostCodes.length > 0 ? (
-                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                            {final.hostCodes.map((host) => (
-                              <div key={host.code} className="flex items-center gap-1.5">
-                                <FlagImage
-                                  countryCode={host.code}
-                                  alt={host.name}
-                                  width={13}
-                                  height={9}
-                                  className="rounded-[1px] shrink-0"
-                                />
-                                <span className="text-wc-text-muted">{host.name}</span>
-                              </div>
-                            ))}
+                      <td className="px-1 py-3 text-center text-wc-text-muted">
+                        {formatMatchDate(final.matchDate)}
+                      </td>
+                      <td className="px-1 py-3">
+                        <div
+                          className="mx-auto grid w-max grid-cols-[120px_96px_120px] items-center justify-start gap-2"
+                          data-testid="match-layout"
+                        >
+                          <div
+                            className="flex items-center justify-end gap-2 text-right"
+                            data-testid="home-team"
+                          >
+                            <span className="whitespace-nowrap text-wc-text-primary">
+                              {final.homeTeam.name}
+                            </span>
+                            <FlagImage
+                              countryCode={final.homeTeam.code}
+                              alt={final.homeTeam.name}
+                              width={16}
+                              height={12}
+                            />
                           </div>
-                        ) : (
-                          <span className="text-wc-text-muted">—</span>
-                        )}
-                      </td>
-                      <td className="py-2 text-right">
-                        <span className="font-medium text-wc-accent-gold">{score ?? '—'}</span>{' '}
-                        <span className="text-wc-text-muted">
-                          {t('labels.versus')}{' '}
-                          <FlagImage
-                            countryCode={rival.code}
-                            alt=""
-                            width={12}
-                            height={8}
-                            className="rounded-[1px] inline-block mx-0.5 align-middle"
-                          />
-                          {rival.name}
-                        </span>
+                          <div
+                            className="grid w-24 grid-cols-[1fr_auto_1fr] items-center gap-1 tabular-nums"
+                            data-testid="match-score"
+                          >
+                            <span className="text-right font-medium text-wc-accent-gold">
+                              {formatScore(final.homeTeamScore, final.homeTeamScorePenalties)}
+                            </span>
+                            <span className="text-center text-wc-text-muted">
+                              {t('labels.versus')}
+                            </span>
+                            <span className="text-left font-medium text-wc-accent-gold">
+                              {formatScore(final.awayTeamScore, final.awayTeamScorePenalties)}
+                            </span>
+                          </div>
+                          <div
+                            className="flex items-center justify-start gap-2 text-left"
+                            data-testid="away-team"
+                          >
+                            <FlagImage
+                              countryCode={final.awayTeam.code}
+                              alt={final.awayTeam.name}
+                              width={16}
+                              height={12}
+                            />
+                            <span className="whitespace-nowrap text-wc-text-primary">
+                              {final.awayTeam.name}
+                            </span>
+                          </div>
+                        </div>
                       </td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
