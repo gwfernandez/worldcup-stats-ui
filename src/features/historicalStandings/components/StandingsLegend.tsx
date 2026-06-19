@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 // ─── Datos de abreviaciones ───────────────────────────────────────────────────
 
 const ABBREVIATIONS = [
-  { abbr: 'PTS', descKey: 'legend.points' },
-  { abbr: 'PJ', descKey: 'legend.played' },
-  { abbr: 'PG', descKey: 'legend.won' },
-  { abbr: 'PE', descKey: 'legend.drawn' },
-  { abbr: 'PP', descKey: 'legend.lost' },
-  { abbr: 'GF', descKey: 'legend.goalsFor' },
-  { abbr: 'GC', descKey: 'legend.goalsAgainst' },
-  { abbr: 'DIF', descKey: 'legend.goalDiff' },
+  { metric: 'points', descKey: 'legend.points' },
+  { metric: 'played', descKey: 'legend.played' },
+  { metric: 'won', descKey: 'legend.won' },
+  { metric: 'drawn', descKey: 'legend.drawn' },
+  { metric: 'lost', descKey: 'legend.lost' },
+  { metric: 'goalsFor', descKey: 'legend.goalsFor' },
+  { metric: 'goalsAgainst', descKey: 'legend.goalsAgainst' },
+  { metric: 'goalDiff', descKey: 'legend.goalDiff' },
 ];
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ const ABBREVIATIONS = [
  * Muestra abreviaciones y sistema de puntuación histórico.
  */
 export function StandingsLegend() {
-  const { t } = useTranslation('historicalStandings');
+  const { t } = useTranslation(['historicalStandings', 'common']);
 
   return (
     <div className="mt-6">
@@ -46,8 +46,10 @@ export function StandingsLegend() {
             </thead>
             <tbody>
               {ABBREVIATIONS.map((item) => (
-                <tr key={item.abbr} className="border-t border-wc-surface-secondary">
-                  <td className="px-3 py-1.5 font-medium text-wc-accent-gold">{item.abbr}</td>
+                <tr key={item.metric} className="border-t border-wc-surface-secondary">
+                  <td className="px-3 py-1.5 font-medium text-wc-accent-gold">
+                    {t(`common:standingMetrics.abbreviations.${item.metric}`)}
+                  </td>
                   <td className="px-3 py-1.5 text-wc-text-muted">{t(item.descKey)}</td>
                 </tr>
               ))}

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { HistoricalStanding } from '@/types/historicalStanding.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
@@ -45,6 +44,8 @@ export interface HistoricalStandingsTableProps {
   standings: HistoricalStanding[];
 }
 
+const CONFEDERATION_OPTIONS = ['AFC', 'CAF', 'CONCACAF', 'CONMEBOL', 'OFC', 'UEFA'];
+
 // ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
@@ -57,21 +58,6 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
   const setFilter = useUIStore((state) => state.setFilter);
   const searchName = filters?.name ?? '';
   const filterConf = filters?.confederation ?? '';
-
-  const confOptions = useMemo(
-    () => [...new Set(standings.map((s) => s.confederation))].sort(),
-    [standings],
-  );
-
-  const filtered = useMemo(
-    () =>
-      standings.filter((s) => {
-        const matchesName = s.teamName.toLowerCase().includes(searchName.toLowerCase());
-        const matchesConf = filterConf === '' || s.confederation === filterConf;
-        return matchesName && matchesConf;
-      }),
-    [standings, searchName, filterConf],
-  );
 
   return (
     <div>
@@ -88,7 +74,7 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
           value={filterConf}
           onChange={(e) => setFilter('historicalStandings', 'confederation', e.target.value)}
           placeholderOption={t('filters.allConfederations')}
-          options={confOptions.map((c) => ({ value: c, label: c }))}
+          options={CONFEDERATION_OPTIONS.map((code) => ({ value: code, label: code }))}
         />
       </div>
 
@@ -101,37 +87,65 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
               <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pr-3">
                 {t('labels.team')}
               </th>
-              <Th label="PTS" tooltip={t('standingMetrics.points')} />
-              <Th label="PJ" tooltip={t('standingMetrics.played')} />
-              <Th label="PG" tooltip={t('standingMetrics.won')} />
-              <Th label="PE" tooltip={t('standingMetrics.drawn')} />
-              <Th label="PP" tooltip={t('standingMetrics.lost')} />
-              <Th label="GF" tooltip={t('standingMetrics.goalsFor')} />
-              <Th label="GC" tooltip={t('standingMetrics.goalsAgainst')} />
-              <Th label="DIF" tooltip={t('standingMetrics.goalDiff')} />
-              <Th label={t('standingMetrics.performanceShort')} tooltip={t('standingMetrics.performance')} className="min-w-[80px]" />
+              <Th
+                label={t('standingMetrics.abbreviations.points')}
+                tooltip={t('standingMetrics.points')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.played')}
+                tooltip={t('standingMetrics.played')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.won')}
+                tooltip={t('standingMetrics.won')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.drawn')}
+                tooltip={t('standingMetrics.drawn')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.lost')}
+                tooltip={t('standingMetrics.lost')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.goalsFor')}
+                tooltip={t('standingMetrics.goalsFor')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.goalsAgainst')}
+                tooltip={t('standingMetrics.goalsAgainst')}
+              />
+              <Th
+                label={t('standingMetrics.abbreviations.goalDiff')}
+                tooltip={t('standingMetrics.goalDiff')}
+              />
+              <th className="text-center text-[10px] font-normal text-wc-text-muted pb-2 px-2 whitespace-nowrap cursor-default min-w-[110px]">
+                <Tooltip content={t('standingMetrics.performanceTooltip')} groupName="th">
+                  <span>{t('standingMetrics.performance')}</span>
+                </Tooltip>
+              </th>
               <th className="text-center text-[10px] font-normal text-wc-text-muted pb-2 min-w-[90px]">
-                Conf.
+                {t('labels.confederation')}
               </th>
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {standings.length === 0 && (
               <tr>
                 <td colSpan={12} className="py-8 text-center text-sm text-wc-text-muted">
                   {t('empty.teams')}
                 </td>
               </tr>
             )}
-            {filtered.map((row) => {
-              const diff = formatDiff(row.goalDiff);
-              const perfPct = calcPerformance(row.points, row.played);
-              const confStyle = CONFEDERATION_STYLES[row.confederation];
-              const confTooltip = CONFEDERATION_TOOLTIP[row.confederation] ?? '';
+            {standings.map((row) => {
+              const diff = formatDiff(row.goalDifference);
+              const perfPct = calcPerformance(row.unifiedPoints, row.matchesPlayed);
+              const confStyle = CONFEDERATION_STYLES[row.confederationCode];
+              const confTooltip = CONFEDERATION_TOOLTIP[row.confederationCode] ?? '';
 
               return (
                 <tr
-                  key={row.teamCode}
+                  key={row.team.code}
                   className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
                 >
                   {/* Posición con borde lateral */}
@@ -141,33 +155,37 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
                       style={{ backgroundColor: confStyle?.bar ?? 'var(--wc-surface-tertiary)' }}
                       aria-hidden="true"
                     />
-                    <span className="text-[11px] text-wc-text-muted">{row.position}</span>
+                    <span className="text-[11px] text-wc-text-muted">{row.unifiedPosition}</span>
                   </td>
 
                   {/* Selección */}
                   <td className="py-2 pr-3">
                     <div className="flex items-center gap-2">
                       <FlagImage
-                        countryCode={row.teamCode}
-                        alt={row.teamName}
+                        countryCode={row.team.code}
+                        alt={row.team.name}
                         width={16}
                         height={11}
                         className="rounded-[1px] shrink-0"
                       />
-                      <span className="text-xs text-wc-text-primary">{row.teamName}</span>
+                      <span className="text-xs text-wc-text-primary">{row.team.name}</span>
                     </div>
                   </td>
 
                   {/* PTS */}
                   <td className="py-2 px-2 text-right">
-                    <span className="text-xs font-medium text-wc-text-primary">{row.points}</span>
+                    <span className="text-xs font-medium text-wc-text-primary">
+                      {row.unifiedPoints}
+                    </span>
                   </td>
 
                   {/* PJ PG PE PP */}
-                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.played}</td>
-                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.won}</td>
-                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.drawn}</td>
-                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.lost}</td>
+                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">
+                    {row.matchesPlayed}
+                  </td>
+                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.wins}</td>
+                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.draws}</td>
+                  <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.losses}</td>
 
                   {/* GF GC */}
                   <td className="py-2 px-2 text-right text-xs text-wc-text-muted">
@@ -182,17 +200,15 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
 
                   {/* Rendimiento */}
                   <td className="py-2 px-2">
-                    <div className="flex items-center justify-end gap-1.5">
+                    <div className="flex items-center justify-center gap-1.5">
                       <div className="w-9 h-[3px] bg-wc-border-primary rounded-full overflow-hidden">
                         <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${perfPct}%`,
-                            backgroundColor: confStyle?.perfBar ?? 'var(--wc-conf-uefa-bar)',
-                          }}
+                          className="h-full rounded-full bg-wc-accent-gold"
+                          style={{ width: `${perfPct}%` }}
+                          data-testid="performance-bar"
                         />
                       </div>
-                      <span className="text-[11px] text-wc-text-muted min-w-[30px] text-right">
+                      <span className="text-[11px] text-wc-text-muted min-w-[30px] text-center">
                         {perfPct}%
                       </span>
                     </div>
@@ -204,7 +220,7 @@ export function HistoricalStandingsTable({ standings }: HistoricalStandingsTable
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
                       >
-                        {row.confederation}
+                        {row.confederationCode}
                       </span>
                     </Tooltip>
                   </td>
