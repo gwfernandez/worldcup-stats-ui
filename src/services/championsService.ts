@@ -1,5 +1,10 @@
 import { api } from '@/services/api';
-import { ChampionListResponseSchema, type ChampionListResponse } from '@/types/champion.types';
+import {
+  ChampionFinalListResponseSchema,
+  ChampionListResponseSchema,
+  type ChampionFinalListResponse,
+  type ChampionListResponse,
+} from '@/types/champion.types';
 import type { SupportedLanguage } from '@/store/ui.store';
 
 export const CHAMPIONS_PAGE = 1;
@@ -15,4 +20,14 @@ export const getChampions = async (
     headers: { 'Accept-Language': language },
   });
   return ChampionListResponseSchema.parse(data);
+};
+
+export const getChampionFinals = async (
+  teamCode: string,
+  language: SupportedLanguage = 'es',
+): Promise<ChampionFinalListResponse> => {
+  const { data } = await api.get(`/api/champions/${teamCode}`, {
+    headers: { 'Accept-Language': language },
+  });
+  return ChampionFinalListResponseSchema.parse(data);
 };

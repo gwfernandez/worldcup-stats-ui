@@ -1,17 +1,84 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Trophy } from 'lucide-react';
-import type { Champion } from '@/types/champion.types';
+import type { Champion, ChampionFinal } from '@/types/champion.types';
 import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-import { MOCK_CHAMPION_TITLE_DETAILS } from '../mocks/championTitleDetails.mock';
+import { useChampionFinals } from '../hooks/useChampionFinals';
+
+const HOST_ROTATION_MS = 1500;
+const HOST_FADE_MS = 300;
 
 export interface ChampionshipsModalProps {
   team: Champion | null;
   onClose: () => void;
 }
 
+interface HostFlagCarouselProps {
+  hosts: ChampionFinal['hostCodes'];
+}
+
+function HostFlagCarousel({ hosts }: HostFlagCarouselProps) {
+  const [activeHostIndex, setActiveHostIndex] = useState(0);
+  const [isHostVisible, setIsHostVisible] = useState(true);
+  const hasMultipleHosts = hosts.length > 1;
+  const activeHost = hosts[hasMultipleHosts ? activeHostIndex % hosts.length : 0] ?? hosts[0];
+
+  useEffect(() => {
+    if (!hasMultipleHosts) {
+      return;
+    }
+
+    let fadeTimeoutId: number | undefined;
+    const intervalId = window.setInterval(() => {
+      setIsHostVisible(false);
+
+      fadeTimeoutId = window.setTimeout(() => {
+        setActiveHostIndex((currentIndex) => (currentIndex + 1) % hosts.length);
+        setIsHostVisible(true);
+      }, HOST_FADE_MS);
+    }, HOST_ROTATION_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      if (fadeTimeoutId !== undefined) {
+        window.clearTimeout(fadeTimeoutId);
+      }
+    };
+  }, [hasMultipleHosts, hosts.length]);
+
+  if (!activeHost) {
+    return <span className="text-wc-text-muted">—</span>;
+  }
+
+  return (
+    /* This wrapper keeps the cell size stable while the flag fades. */
+    <div className="flex h-3 w-4 items-center justify-center">
+      <FlagImage
+        countryCode={activeHost.code}
+        alt={activeHost.name}
+        width={16}
+        height={12}
+        className={`rounded-[2px] shrink-0 transition-opacity duration-300 ease-in-out ${hasMultipleHosts && !isHostVisible ? 'opacity-0' : 'opacity-100'
+          }`}
+      />
+    </div>
+  );
+}
+
+const formatScore = (score: number | null, penalties: number | null): string => {
+  if (score === null) {
+    return '—';
+  }
+
+  return penalties === null ? String(score) : `${score} (${penalties})`;
+};
+
+const formatMatchDate = (matchDate: string | null): string =>
+  matchDate === null ? '—' : matchDate.slice(5);
+
 export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
   const { t } = useTranslation('common');
+  const { finals, isLoading, isError, refetch } = useChampionFinals(team?.team.code ?? null);
 
   useEffect(() => {
     if (!team) return;
@@ -24,10 +91,10 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
 
   if (!team) return null;
 
-  const years = [...team.years].sort((a, b) => a - b);
-  const detailsByYear = new Map(
-    (MOCK_CHAMPION_TITLE_DETAILS[team.team.code] ?? []).map((detail) => [detail.year, detail]),
-  );
+  const years =
+    finals.length > 0
+      ? finals.map((final) => final.year).sort((a, b) => a - b)
+      : [...team.years].sort((a, b) => a - b);
 
   return (
     <div
@@ -50,9 +117,10 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
               height={15}
               className="rounded-[2px]"
             />
-            {team.team.name} - {t('labels.titles')}
+            {team.team.name}
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
             aria-label={t('actions.close')}
@@ -84,78 +152,122 @@ export function ChampionshipsModal({ team, onClose }: ChampionshipsModalProps) {
               { val: years[years.length - 1] ?? '-', lbl: t('labels.lastTitle') },
             ].map(({ val, lbl }) => (
               <div key={lbl} className="text-center flex-1">
-                <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
+                <div className="text-[17px] font-medium text-wc-accent-gold leading-none">
+                  {val}
+                </div>
                 <p className="text-[10px] text-wc-text-muted mt-1">{lbl}</p>
               </div>
             ))}
           </div>
 
-          <table className="w-full border-collapse text-[11px]">
-            <thead>
-              <tr className="border-b border-wc-border-primary">
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
-                  {t('labels.year')}
-                </th>
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
-                  {t('labels.host')}
-                </th>
-                <th className="text-right font-normal text-wc-text-muted pb-2">
-                  {t('labels.final')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {years.map((year) => {
-                const detail = detailsByYear.get(year);
+          {isLoading && (
+            <p role="status" className="py-8 text-center text-sm text-wc-text-muted">
+              {t('titlesDialog.loading')}
+            </p>
+          )}
 
-                return (
-                  <tr key={year} className="border-t border-wc-surface-secondary">
-                    <td className="py-2 pr-3">
-                      <span className="font-medium text-wc-accent-gold text-[12px]">{year}</span>
-                    </td>
-                    <td className="py-2 pr-3">
-                      {detail ? (
-                        <div className="flex items-center gap-1.5">
-                          <FlagImage
-                            countryCode={detail.hostCode}
-                            alt={detail.host}
-                            width={13}
-                            height={9}
-                            className="rounded-[1px] shrink-0"
-                          />
-                          <span className="text-wc-text-muted">{detail.host}</span>
-                        </div>
-                      ) : (
-                        <span className="text-wc-text-muted">—</span>
-                      )}
-                    </td>
-                    <td className="py-2 text-right">
-                      {detail ? (
-                        <>
-                          <span className="font-medium text-wc-accent-gold">
-                            {detail.finalScore}
-                          </span>{' '}
-                          <span className="text-wc-text-muted">
-                            vs{' '}
-                            <FlagImage
-                              countryCode={detail.finalOpponentCode}
-                              alt=""
-                              width={12}
-                              height={8}
-                              className="rounded-[1px] inline-block mx-0.5 align-middle"
-                            />
-                            {detail.finalOpponent}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-wc-text-muted">—</span>
-                      )}
-                    </td>
+          {isError && (
+            <div role="alert" className="py-8 text-center">
+              <p className="text-sm text-red-400">{t('titlesDialog.loadError')}</p>
+              <button
+                type="button"
+                onClick={refetch}
+                className="mt-3 rounded-md border border-wc-border-primary px-3 py-1.5 text-xs text-wc-text-primary hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors"
+              >
+                {t('actions.retry')}
+              </button>
+            </div>
+          )}
+
+          {!isLoading && !isError && finals.length === 0 && (
+            <p className="py-8 text-center text-sm text-wc-text-muted">{t('titlesDialog.empty')}</p>
+          )}
+
+          {!isLoading && !isError && finals.length > 0 && (
+            <div className="overflow-x-auto" data-testid="champion-finals-scroll">
+              <table className="w-full min-w-[460px] border-collapse text-[11px]">
+                <thead>
+                  <tr className="border-b border-wc-border-primary">
+                    <th className="w-16 px-1 pb-1 text-center font-normal text-wc-text-muted">
+                      {t('titlesDialog.year')}
+                    </th>
+                    <th className="w-12 px-1 pb-1 text-center font-normal text-wc-text-muted">
+                      {t('titlesDialog.date')}
+                    </th>
+                    <th className="whitespace-nowrap px-1 pb-1 text-center text-[10px] font-normal text-wc-text-muted">
+                      {t('titlesDialog.matches')}
+                    </th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {finals.map((final) => (
+                    <tr key={final.year} className="border-t border-wc-surface-secondary">
+                      <td className="px-1 py-3">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <HostFlagCarousel hosts={final.hostCodes} />
+                          <span className="text-[12px] font-medium text-wc-accent-gold">
+                            {final.year}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-1 py-3 text-center text-wc-text-muted">
+                        {formatMatchDate(final.matchDate)}
+                      </td>
+                      <td className="px-1 py-3">
+                        <div
+                          className="mx-auto grid w-max grid-cols-[120px_96px_120px] items-center justify-start gap-2"
+                          data-testid="match-layout"
+                        >
+                          <div
+                            className="flex items-center justify-end gap-2 text-right"
+                            data-testid="home-team"
+                          >
+                            <span className="whitespace-nowrap text-wc-text-primary">
+                              {final.homeTeam.name}
+                            </span>
+                            <FlagImage
+                              countryCode={final.homeTeam.code}
+                              alt={final.homeTeam.name}
+                              width={16}
+                              height={12}
+                            />
+                          </div>
+                          <div
+                            className="grid w-24 grid-cols-[1fr_auto_1fr] items-center gap-1 tabular-nums"
+                            data-testid="match-score"
+                          >
+                            <span className="text-right font-medium text-wc-accent-gold">
+                              {formatScore(final.homeTeamScore, final.homeTeamScorePenalties)}
+                            </span>
+                            <span className="text-center text-wc-text-muted">
+                              {t('labels.versus')}
+                            </span>
+                            <span className="text-left font-medium text-wc-accent-gold">
+                              {formatScore(final.awayTeamScore, final.awayTeamScorePenalties)}
+                            </span>
+                          </div>
+                          <div
+                            className="flex items-center justify-start gap-2 text-left"
+                            data-testid="away-team"
+                          >
+                            <FlagImage
+                              countryCode={final.awayTeam.code}
+                              alt={final.awayTeam.name}
+                              width={16}
+                              height={12}
+                            />
+                            <span className="whitespace-nowrap text-wc-text-primary">
+                              {final.awayTeam.name}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

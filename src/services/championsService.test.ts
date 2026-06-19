@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ZodError } from 'zod';
 import { CHAMPIONS_RESPONSE_FIXTURE } from '@/test/fixtures/champions.fixture';
+import { CHAMPION_FINALS_RESPONSE_FIXTURE } from '@/test/fixtures/championFinals.fixture';
 import { api } from '@/services/api';
 
 vi.mock('@/services/api', () => ({
@@ -55,5 +56,29 @@ describe('championsService', () => {
     const { getChampions } = await import('./championsService');
 
     await expect(getChampions()).rejects.toBeInstanceOf(ZodError);
+  });
+
+  it('requests champion finals without pagination parameters', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: CHAMPION_FINALS_RESPONSE_FIXTURE });
+    const { getChampionFinals } = await import('./championsService');
+
+    const result = await getChampionFinals('ARG', 'en');
+
+    expect(api.get).toHaveBeenCalledWith('/api/champions/ARG', {
+      headers: { 'Accept-Language': 'en' },
+    });
+    expect(result).toEqual(CHAMPION_FINALS_RESPONSE_FIXTURE);
+  });
+
+  it('rejects an invalid champion finals response', async () => {
+    vi.mocked(api.get).mockResolvedValue({
+      data: {
+        ...CHAMPION_FINALS_RESPONSE_FIXTURE,
+        data: [{ ...CHAMPION_FINALS_RESPONSE_FIXTURE.data[0], hostCodes: null }],
+      },
+    });
+    const { getChampionFinals } = await import('./championsService');
+
+    await expect(getChampionFinals('ARG')).rejects.toBeInstanceOf(ZodError);
   });
 });

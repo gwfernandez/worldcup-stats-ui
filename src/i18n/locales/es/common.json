@@ -83,6 +83,7 @@
     "date": "Fecha",
     "minute": "Min.",
     "rival": "Rival",
+    "versus": "vs",
     "name": "Nombre",
     "lastName": "Apellido",
     "form": "Forma",
@@ -143,7 +144,17 @@
     "L": "Derrota"
   },
   "titlesDialog": {
-    "titleFor": "Títulos de {{team}}"
+    "titleFor": "Títulos de {{team}}",
+    "loading": "Cargando finales ganadas...",
+    "loadError": "No se pudieron cargar las finales ganadas.",
+    "empty": "No hay finales ganadas disponibles para esta selección.",
+    "year": "Year",
+    "date": "Date",
+    "matches": "Matches",
+    "homeTeam": "Equipo Local",
+    "homeGoals": "Goles Local",
+    "awayGoals": "Goles Visitante",
+    "awayTeam": "Equipo Visitante"
   },
   "standingMetrics": {
     "points": "Puntos",

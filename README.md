@@ -133,8 +133,8 @@ VITE_USE_MOCK=false
 La página `/champions` consume siempre el endpoint real `GET /api/champions` con
 `page=1&size=15`, independientemente de `VITE_USE_MOCK`.
 Los filtros por selección y confederación se aplican localmente sobre esa página de resultados.
-El detalle de sedes y finales del modal continúa enriquecido temporalmente con datos mockeados
-hasta que la API exponga esa información.
+El modal de títulos consulta `GET /api/champions/:teamCode` sin parámetros de paginado y muestra
+los anfitriones, rivales y resultados localizados provistos por el backend.
 
 ### Comandos disponibles
 

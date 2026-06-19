@@ -83,6 +83,7 @@
     "date": "Date",
     "minute": "Min.",
     "rival": "Opponent",
+    "versus": "vs",
     "name": "First name",
     "lastName": "Last name",
     "form": "Form",
@@ -143,7 +144,17 @@
     "L": "Loss"
   },
   "titlesDialog": {
-    "titleFor": "Titles for {{team}}"
+    "titleFor": "Titles for {{team}}",
+    "loading": "Loading won finals...",
+    "loadError": "The won finals could not be loaded.",
+    "empty": "No won finals are available for this team.",
+    "year": "Year",
+    "date": "Date",
+    "matches": "Matches",
+    "homeTeam": "Home Team",
+    "homeGoals": "Home Goals",
+    "awayGoals": "Away Goals",
+    "awayTeam": "Away Team"
   },
   "standingMetrics": {
     "points": "Points",
