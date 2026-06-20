@@ -1,19 +1,35 @@
 import { api } from '@/services/api';
-import { env } from '@/config/env';
-import { HistoricalScorerListSchema, type HistoricalScorerList } from '@/types/historicalScorer.types';
-import { MOCK_HISTORICAL_SCORERS } from '@/features/historicalScorers/mocks/historicalScorers.mock';
+import {
+  HistoricalScorerListResponseSchema,
+  type HistoricalScorerListResponse,
+} from '@/types/historicalScorer.types';
+import type { SupportedLanguage } from '@/store/ui.store';
 
-// ─── Service ──────────────────────────────────────────────────────────────────
+export const HISTORICAL_SCORERS_PAGE_SIZE = 10;
 
-/**
- * Obtiene el listado histórico de goleadores desde la API.
- * Usa mock data si VITE_USE_MOCK=true.
- */
-export const getHistoricalScorers = async (): Promise<HistoricalScorerList> => {
-  if (env.useMock) {
-    return HistoricalScorerListSchema.parse(MOCK_HISTORICAL_SCORERS);
-  }
+export interface HistoricalScorersFilters {
+  name?: string;
+  teamCode?: string;
+  confederationCode?: string;
+}
 
-  const { data } = await api.get('/historical/scorers');
-  return HistoricalScorerListSchema.parse(data);
+export const getHistoricalScorers = async (
+  page = 1,
+  filters: HistoricalScorersFilters = {},
+  language: SupportedLanguage = 'es',
+): Promise<HistoricalScorerListResponse> => {
+  const { data } = await api.get('/api/scorers', {
+    params: {
+      page,
+      size: HISTORICAL_SCORERS_PAGE_SIZE,
+      ...(filters.name ? { name: filters.name } : {}),
+      ...(filters.teamCode ? { teamCode: filters.teamCode } : {}),
+      ...(filters.confederationCode
+        ? { confederationCode: filters.confederationCode }
+        : {}),
+    },
+    headers: { 'Accept-Language': language },
+  });
+
+  return HistoricalScorerListResponseSchema.parse(data);
 };

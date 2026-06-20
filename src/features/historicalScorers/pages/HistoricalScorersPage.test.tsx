@@ -1,13 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import '@testing-library/jest-dom';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import HistoricalScorersPage from './HistoricalScorersPage';
 import { useHistoricalScorers } from '../hooks/useHistoricalScorers';
-import { MOCK_HISTORICAL_SCORERS } from '../mocks/historicalScorers.mock';
+import { useTeams } from '../hooks/useTeams';
+import { HISTORICAL_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/historicalScorers.fixture';
+import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
 
 vi.mock('../hooks/useHistoricalScorers', () => ({
   useHistoricalScorers: vi.fn(),
+}));
+
+vi.mock('../hooks/useTeams', () => ({
+  useTeams: vi.fn(),
 }));
 
 function renderPage() {
@@ -21,11 +26,18 @@ function renderPage() {
 describe('HistoricalScorersPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useTeams).mockReturnValue({
+      teams: TEAMS_RESPONSE_FIXTURE.data,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
   });
 
-  it('muestra el estado de carga mientras el query está pendiente', () => {
+  it('shows loading while either query is pending', () => {
     vi.mocked(useHistoricalScorers).mockReturnValue({
       scorers: [],
+      pagination: HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination,
       isLoading: true,
       isError: false,
       error: null,
@@ -34,12 +46,12 @@ describe('HistoricalScorersPage', () => {
     renderPage();
 
     expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
-    expect(screen.queryByText('Miroslav Klose')).not.toBeInTheDocument();
   });
 
-  it('muestra un mensaje de error cuando el query falla', () => {
+  it('shows an error when the scorers query fails', () => {
     vi.mocked(useHistoricalScorers).mockReturnValue({
       scorers: [],
+      pagination: HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: true,
       error: new Error('API Error'),
@@ -50,9 +62,10 @@ describe('HistoricalScorersPage', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('API Error');
   });
 
-  it('renderiza la tabla de goleadores cuando los datos están disponibles', () => {
+  it('renders scorers and team filters when both queries resolve', () => {
     vi.mocked(useHistoricalScorers).mockReturnValue({
-      scorers: MOCK_HISTORICAL_SCORERS,
+      scorers: HISTORICAL_SCORERS_RESPONSE_FIXTURE.data,
+      pagination: HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination,
       isLoading: false,
       isError: false,
       error: null,
@@ -61,6 +74,7 @@ describe('HistoricalScorersPage', () => {
     renderPage();
 
     expect(screen.getByText('Miroslav Klose')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Unión Soviética' })).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 });

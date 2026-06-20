@@ -97,3 +97,35 @@ export const TeamListSchema = z.array(TeamSchema);
 
 export type Team = z.infer<typeof TeamSchema>;
 export type TeamList = z.infer<typeof TeamListSchema>;
+
+// ─── National teams API ──────────────────────────────────────────────────────
+
+export const NationalTeamSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+  isDissolved: z.boolean(),
+  confederationCode: z.string(),
+  federationName: z.string(),
+  federationCode: z.string(),
+  dissolutionDate: z.string().nullable(),
+});
+
+export const NationalTeamListSchema = z.array(NationalTeamSchema);
+
+export const NationalTeamPaginationSchema = z.object({
+  page: z.number(),
+  size: z.number(),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
+
+export const NationalTeamListResponseSchema = z.object({
+  data: NationalTeamListSchema,
+  pagination: NationalTeamPaginationSchema,
+});
+
+export type NationalTeam = z.infer<typeof NationalTeamSchema>;
+export type NationalTeamList = z.infer<typeof NationalTeamListSchema>;
+export type NationalTeamListResponse = z.infer<typeof NationalTeamListResponseSchema>;

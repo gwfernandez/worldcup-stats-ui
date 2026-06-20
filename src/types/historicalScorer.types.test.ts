@@ -1,44 +1,54 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 import {
-  HistoricalScorerListSchema,
+  HistoricalScorerDetailSchema,
+  HistoricalScorerListResponseSchema,
   HistoricalScorerSchema,
-  ScorerWorldCupDetailSchema,
 } from './historicalScorer.types';
-
-const validWorldCupDetail = {
-  year: 2022,
-  host: 'Qatar',
-  hostCode: 'QA',
-  goals: 7,
-  matches: 7,
-  average: 1,
-  medal: 'gold',
-  performance: 'Campeon',
-};
-
-const validHistoricalScorer = {
-  id: 1,
-  playerName: 'Lionel Messi',
-  teamName: 'Argentina',
-  teamCode: 'AR',
-  confederation: 'CONMEBOL',
-  totalGoals: 13,
-  totalMatches: 26,
-  average: 0.5,
-  worldCups: [validWorldCupDetail],
-};
+import { HISTORICAL_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/historicalScorers.fixture';
+import { MOCK_MESSI_SCORER_DETAIL } from '@/features/historicalScorers/mocks/historicalScorers.mock';
 
 describe('historical scorer schemas', () => {
-  it('parses valid historical scorer payloads', () => {
-    expect(ScorerWorldCupDetailSchema.parse(validWorldCupDetail)).toEqual(validWorldCupDetail);
-    expect(ScorerWorldCupDetailSchema.parse({ ...validWorldCupDetail, medal: null }).medal).toBeNull();
-    expect(HistoricalScorerSchema.parse(validHistoricalScorer)).toEqual(validHistoricalScorer);
-    expect(HistoricalScorerListSchema.parse([validHistoricalScorer])).toEqual([validHistoricalScorer]);
+  it('parses paginated scorer responses', () => {
+    expect(HistoricalScorerListResponseSchema.parse(HISTORICAL_SCORERS_RESPONSE_FIXTURE)).toEqual(
+      HISTORICAL_SCORERS_RESPONSE_FIXTURE,
+    );
   });
 
-  it('throws when historical scorer payloads are invalid', () => {
-    expect(() => ScorerWorldCupDetailSchema.parse({ ...validWorldCupDetail, medal: 'platinum' })).toThrow(ZodError);
-    expect(() => HistoricalScorerSchema.parse({ ...validHistoricalScorer, totalMatches: '26' })).toThrow(ZodError);
+  it('parses an empty response', () => {
+    const response = {
+      data: [],
+      pagination: {
+        page: 1,
+        size: 10,
+        totalElements: 0,
+        totalPages: 0,
+        hasNext: false,
+        hasPrevious: false,
+      },
+    };
+
+    expect(HistoricalScorerListResponseSchema.parse(response)).toEqual(response);
+  });
+
+  it('keeps the temporary Messi detail in a separate schema', () => {
+    expect(HistoricalScorerDetailSchema.parse(MOCK_MESSI_SCORER_DETAIL)).toEqual(
+      MOCK_MESSI_SCORER_DETAIL,
+    );
+  });
+
+  it('throws when scorer payloads are invalid', () => {
+    expect(() =>
+      HistoricalScorerSchema.parse({
+        ...HISTORICAL_SCORERS_RESPONSE_FIXTURE.data[0],
+        goals: '16',
+      }),
+    ).toThrow(ZodError);
+    expect(() =>
+      HistoricalScorerListResponseSchema.parse({
+        ...HISTORICAL_SCORERS_RESPONSE_FIXTURE,
+        pagination: { ...HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination, hasNext: 'false' },
+      }),
+    ).toThrow(ZodError);
   });
 });

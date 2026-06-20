@@ -3,10 +3,12 @@ import { ZodError } from 'zod';
 import {
   PlayerPositionSchema,
   PlayerSchema,
+  NationalTeamListResponseSchema,
   TeamListSchema,
   TeamPerformanceSchema,
   TeamSchema,
 } from './team.types';
+import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
 
 const validPlayer = {
   id: 10,
@@ -49,5 +51,21 @@ describe('team schemas', () => {
     expect(() => TeamSchema.parse({ ...validTeam, players: [{ ...validPlayer, position: 'winger' }] })).toThrow(
       ZodError,
     );
+  });
+
+  it('parses paginated national teams including dissolved teams', () => {
+    expect(NationalTeamListResponseSchema.parse(TEAMS_RESPONSE_FIXTURE)).toEqual(
+      TEAMS_RESPONSE_FIXTURE,
+    );
+    expect(TEAMS_RESPONSE_FIXTURE.data[1].isDissolved).toBe(true);
+  });
+
+  it('throws when national team responses are invalid', () => {
+    expect(() =>
+      NationalTeamListResponseSchema.parse({
+        ...TEAMS_RESPONSE_FIXTURE,
+        data: [{ ...TEAMS_RESPONSE_FIXTURE.data[0], dissolutionDate: 1991 }],
+      }),
+    ).toThrow(ZodError);
   });
 });

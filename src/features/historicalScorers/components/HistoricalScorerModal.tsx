@@ -1,42 +1,39 @@
 import { useEffect } from 'react';
 import { X, Trophy } from 'lucide-react';
-import type { HistoricalScorer } from '@/types/historicalScorer.types';
 import { MEDAL_LABEL } from '@/types/historicalScorer.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { Tooltip, FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-
-// ─── Props ────────────────────────────────────────────────────────────────────
+import { MOCK_MESSI_SCORER_DETAIL } from '../mocks/historicalScorers.mock';
 
 export interface HistoricalScorerModalProps {
-  scorer: HistoricalScorer | null;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
-
 /**
- * Modal de detalle de goleador histórico.
- * Muestra stats globales y tabla con goles agrupados por mundial.
+ * Modal temporal de detalle. Hasta que exista un endpoint específico,
+ * siempre muestra las estadísticas mockeadas de Lionel Messi.
  */
-export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModalProps) {
+export function HistoricalScorerModal({ isOpen, onClose }: HistoricalScorerModalProps) {
   const { t } = useTranslation('common');
+  const scorer = MOCK_MESSI_SCORER_DETAIL;
 
   useEffect(() => {
-    if (!scorer) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    if (!isOpen) return;
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [scorer, onClose]);
+  }, [isOpen, onClose]);
 
-  if (!scorer) return null;
+  if (!isOpen) return null;
 
   const confStyle = CONFEDERATION_STYLES[scorer.confederation];
   const confTooltip = CONFEDERATION_TOOLTIP[scorer.confederation] ?? '';
-  const titles = scorer.worldCups.filter((wc) => wc.medal === 'gold').length;
+  const titles = scorer.worldCups.filter((worldCup) => worldCup.medal === 'gold').length;
   const sorted = [...scorer.worldCups].sort((a, b) => a.year - b.year);
 
   return (
@@ -49,9 +46,8 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
     >
       <div
         className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
           <div className="flex items-center gap-2 text-sm font-medium text-wc-text-primary">
             <FlagImage
@@ -71,7 +67,6 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
         </div>
 
         <div className="px-4 py-4">
-          {/* Stats resumen */}
           <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
             {[
               { val: scorer.totalGoals, lbl: t('labels.totalGoals') },
@@ -101,7 +96,6 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
             ))}
           </div>
 
-          {/* Confederación */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[11px] text-wc-text-muted">{t('labels.confederation')}:</span>
             <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
@@ -113,7 +107,6 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
             </Tooltip>
           </div>
 
-          {/* Tabla por mundial */}
           <table className="w-full border-collapse text-[11px]">
             <thead>
               <tr className="border-b border-wc-border-primary">
@@ -132,39 +125,34 @@ export function HistoricalScorerModal({ scorer, onClose }: HistoricalScorerModal
               </tr>
             </thead>
             <tbody>
-              {sorted.map((wc) => (
-                <tr key={wc.year} className="border-t border-wc-surface-secondary">
-                  {/* Mundial */}
+              {sorted.map((worldCup) => (
+                <tr key={worldCup.year} className="border-t border-wc-surface-secondary">
                   <td className="py-2 pr-3">
                     <div className="flex items-center gap-2">
                       <FlagImage
-                        countryCode={wc.hostCode}
-                        alt={wc.host}
+                        countryCode={worldCup.hostCode}
+                        alt={worldCup.host}
                         width={14}
                         height={10}
                         className="rounded-[1px] shrink-0"
                       />
-                      <span className="font-medium text-wc-accent-gold">{wc.year}</span>
-                      <span className="text-wc-text-muted">{wc.host}</span>
+                      <span className="font-medium text-wc-accent-gold">{worldCup.year}</span>
+                      <span className="text-wc-text-muted">{worldCup.host}</span>
                     </div>
                   </td>
-
-                  {/* Goles */}
                   <td className="py-2 pr-3 text-right font-medium text-wc-accent-gold">
-                    {wc.goals}
+                    {worldCup.goals}
                   </td>
-
-                  {/* Promedio */}
                   <td className="py-2 pr-3 text-right text-wc-text-muted">
-                    {wc.goals > 0 ? wc.average.toFixed(2) : '-'}
+                    {worldCup.goals > 0 ? worldCup.average.toFixed(2) : '-'}
                   </td>
-
-                  {/* Medalla / desempeño */}
                   <td className="py-2 text-right">
-                    {wc.medal ? (
-                      <span className="text-sm">{MEDAL_LABEL[wc.medal]}</span>
+                    {worldCup.medal ? (
+                      <span className="text-sm">{MEDAL_LABEL[worldCup.medal]}</span>
                     ) : (
-                      <span className="text-[10px] text-wc-text-muted">{wc.performance}</span>
+                      <span className="text-[10px] text-wc-text-muted">
+                        {worldCup.performance}
+                      </span>
                     )}
                   </td>
                 </tr>
