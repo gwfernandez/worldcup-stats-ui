@@ -1,5 +1,9 @@
-import { useState, useMemo } from 'react';
-import type { HistoricalScorer } from '@/types/historicalScorer.types';
+import { useMemo, useState, type ChangeEvent } from 'react';
+import type {
+  HistoricalScorer,
+  HistoricalScorerPagination,
+} from '@/types/historicalScorer.types';
+import type { NationalTeam } from '@/types/team.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
 import { HistoricalScorerModal } from './HistoricalScorerModal';
@@ -7,69 +11,55 @@ import { SearchInput, FilterSelect, Tooltip, FlagImage, Pagination } from '@/com
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
-const PAGE_SIZE = 10;
-
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 export interface HistoricalScorersTableProps {
   scorers: HistoricalScorer[];
+  pagination: HistoricalScorerPagination;
+  teams: NationalTeam[];
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
-
-/**
- * Tabla de goleadores históricos con filtros por nombre, selección y confederación.
- * Incluye paginado y modal de detalle por mundial al hacer click en una fila.
- */
-export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps) {
+export function HistoricalScorersTable({
+  scorers,
+  pagination,
+  teams,
+  currentPage,
+  onPageChange,
+}: HistoricalScorersTableProps) {
   const { t } = useTranslation('common');
-  const [selectedScorer, setSelectedScorer] = useState<HistoricalScorer | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const filters = useUIStore((state) => state.filters.historicalScorers);
   const setFilter = useUIStore((state) => state.setFilter);
   const searchName = filters?.name ?? '';
   const filterTeam = filters?.team ?? '';
-  const filterConf = filters?.confederation ?? '';
+  const filterConfederation = filters?.confederation ?? '';
 
-  const maxGoals = useMemo(() => Math.max(...scorers.map((s) => s.totalGoals), 1), [scorers]);
+  const maxGoals = useMemo(
+    () => Math.max(...scorers.map((scorer) => scorer.goals), 1),
+    [scorers],
+  );
 
   const teamOptions = useMemo(
     () =>
-      [
-        ...new Map(
-          scorers.map((s) => [s.teamCode, { code: s.teamCode, name: s.teamName }]),
-        ).values(),
-      ].sort((a, b) => a.name.localeCompare(b.name)),
-    [scorers],
+      [...teams]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((team) => ({ value: team.code, label: team.name })),
+    [teams],
   );
 
-  const confOptions = useMemo(
-    () => [...new Set(scorers.map((s) => s.confederation))].sort(),
-    [scorers],
+  const confederationOptions = useMemo(
+    () => [...new Set(teams.map((team) => team.confederationCode))].sort(),
+    [teams],
   );
-
-  const filtered = useMemo(() => {
-    return scorers.filter((s) => {
-      const matchesName = s.playerName.toLowerCase().includes(searchName.toLowerCase());
-      const matchesTeam = filterTeam === '' || s.teamCode === filterTeam;
-      const matchesConf = filterConf === '' || s.confederation === filterConf;
-      return matchesName && matchesTeam && matchesConf;
-    });
-  }, [scorers, searchName, filterTeam, filterConf]);
 
   const handleFilterChange =
-    (key: string) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setFilter('historicalScorers', key, e.target.value);
-      setCurrentPage(1);
+    (key: string) => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setFilter('historicalScorers', key, event.target.value);
+      onPageChange(1);
     };
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   return (
     <>
-      {/* ── Filtros ───────────────────────────────────────────── */}
       <div className="flex gap-2.5 mb-4">
         <SearchInput
           className="flex-[2]"
@@ -82,18 +72,17 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
           value={filterTeam}
           onChange={handleFilterChange('team')}
           placeholderOption={t('filters.allTeams')}
-          options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
+          options={teamOptions}
         />
         <FilterSelect
           className="flex-1"
-          value={filterConf}
+          value={filterConfederation}
           onChange={handleFilterChange('confederation')}
           placeholderOption={t('filters.allConfederations')}
-          options={confOptions.map((c) => ({ value: c, label: c }))}
+          options={confederationOptions.map((code) => ({ value: code, label: code }))}
         />
       </div>
 
-      {/* ── Tabla ──────────────────────────────────────────────── */}
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-wc-border-primary">
@@ -107,36 +96,32 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
             <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
               {t('labels.goals')}
             </th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              {t('labels.average')}
-            </th>
             <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2">
               {t('labels.confederation')}
             </th>
           </tr>
         </thead>
         <tbody>
-          {paginated.length === 0 && (
+          {scorers.length === 0 && (
             <tr>
-              <td colSpan={6} className="py-8 text-center text-sm text-wc-text-muted">
+              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 {t('empty.scorers')}
               </td>
             </tr>
           )}
-          {paginated.map((scorer, index) => {
-            const rank = (currentPage - 1) * PAGE_SIZE + index + 1;
+          {scorers.map((scorer, index) => {
+            const rank = (currentPage - 1) * pagination.size + index + 1;
             const isTop3 = rank <= 3;
-            const barWidth = Math.round((scorer.totalGoals / maxGoals) * 100);
-            const confStyle = CONFEDERATION_STYLES[scorer.confederation];
-            const confTip = CONFEDERATION_TOOLTIP[scorer.confederation] ?? '';
+            const barWidth = Math.round((scorer.goals / maxGoals) * 100);
+            const confStyle = CONFEDERATION_STYLES[scorer.confederationCode];
+            const confTip = CONFEDERATION_TOOLTIP[scorer.confederationCode] ?? '';
 
             return (
               <tr
-                key={scorer.id}
-                onClick={() => setSelectedScorer(scorer)}
+                key={`${scorer.fullName}-${scorer.team.code}-${scorer.listTeams.join('-')}`}
+                onClick={() => setIsModalOpen(true)}
                 className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
               >
-                {/* Ranking */}
                 <td className="py-2.5 pl-1">
                   <span
                     className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
@@ -144,29 +129,23 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
                     {rank}
                   </span>
                 </td>
-
-                {/* Jugador */}
                 <td className="py-2.5 pr-3">
                   <span className="text-xs text-wc-text-primary group-hover:text-wc-accent-gold transition-colors">
-                    {scorer.playerName}
+                    {scorer.fullName}
                   </span>
                 </td>
-
-                {/* Selección */}
                 <td className="py-2.5 pr-3">
                   <div className="flex items-center gap-1.5">
                     <FlagImage
-                      countryCode={scorer.teamCode}
-                      alt={scorer.teamName}
+                      countryCode={scorer.team.code}
+                      alt={scorer.team.name}
                       width={16}
                       height={11}
                       className="rounded-[1px] shrink-0"
                     />
-                    <span className="text-xs text-wc-text-primary">{scorer.teamName}</span>
+                    <span className="text-xs text-wc-text-primary">{scorer.team.name}</span>
                   </div>
                 </td>
-
-                {/* Goles con barra */}
                 <td className="py-2.5 pr-2">
                   <div className="flex items-center justify-end gap-2">
                     <div className="w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
@@ -176,23 +155,16 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
                       />
                     </div>
                     <span className="text-[13px] font-medium text-wc-accent-gold min-w-[16px] text-right">
-                      {scorer.totalGoals}
+                      {scorer.goals}
                     </span>
                   </div>
                 </td>
-
-                {/* Promedio */}
-                <td className="py-2.5 pr-2 text-right">
-                  <span className="text-xs text-wc-text-muted">{scorer.average.toFixed(2)}</span>
-                </td>
-
-                {/* Confederación */}
                 <td className="py-2.5 text-right">
                   <Tooltip content={confTip} groupName="conf" hideWhenEmpty>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
                     >
-                      {scorer.confederation}
+                      {scorer.confederationCode}
                     </span>
                   </Tooltip>
                 </td>
@@ -202,18 +174,16 @@ export function HistoricalScorersTable({ scorers }: HistoricalScorersTableProps)
         </tbody>
       </table>
 
-      {/* ── Paginado ───────────────────────────────────────────── */}
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={filtered.length}
-        pageSize={PAGE_SIZE}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalElements}
+        pageSize={pagination.size}
         itemsLabel={t('labels.players').toLowerCase()}
-        onPageChange={setCurrentPage}
+        onPageChange={onPageChange}
       />
 
-      {/* Modal */}
-      <HistoricalScorerModal scorer={selectedScorer} onClose={() => setSelectedScorer(null)} />
+      <HistoricalScorerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 }

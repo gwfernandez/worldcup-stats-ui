@@ -2,8 +2,10 @@ import HeroSection from '@/components/shared/HeroSection';
 import { QueryStatus, SEO } from '@/components/shared';
 import { HistoricalScorersTable } from '../components/HistoricalScorersTable';
 import { useHistoricalScorers } from '../hooks/useHistoricalScorers';
+import { useTeams } from '../hooks/useTeams';
 import { Award, Trophy, Users, Volleyball } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 /**
  * Página de Goleadores Históricos.
@@ -12,7 +14,23 @@ import { useTranslation } from 'react-i18next';
  */
 export default function HistoricalScorersPage() {
   const { t } = useTranslation(['historicalScorers', 'championships']);
-  const { scorers, isLoading, isError, error } = useHistoricalScorers();
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    scorers,
+    pagination,
+    isLoading: areScorersLoading,
+    isError: isScorersError,
+    error: scorersError,
+  } = useHistoricalScorers(currentPage);
+  const {
+    teams,
+    isLoading: areTeamsLoading,
+    isError: isTeamsError,
+    error: teamsError,
+  } = useTeams();
+  const isLoading = areScorersLoading || areTeamsLoading;
+  const isError = isScorersError || isTeamsError;
+  const error = scorersError ?? teamsError;
 
   return (
     <>
@@ -36,7 +54,13 @@ export default function HistoricalScorersPage() {
 
       <main className="font-mono max-w-7xl mx-auto px-6 py-6">
         <QueryStatus isLoading={isLoading} isError={isError} error={error}>
-          <HistoricalScorersTable scorers={scorers} />
+          <HistoricalScorersTable
+            scorers={scorers}
+            pagination={pagination}
+            teams={teams}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
         </QueryStatus>
       </main>
     </>
