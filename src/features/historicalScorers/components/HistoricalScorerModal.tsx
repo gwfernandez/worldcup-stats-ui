@@ -1,63 +1,138 @@
-import { useEffect } from 'react';
-import { X, Trophy } from 'lucide-react';
-import { MEDAL_LABEL } from '@/types/historicalScorer.types';
-import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
-import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
-import { Tooltip, FlagImage } from '@/components/shared';
+import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
+import { FlagImage } from '@/components/shared';
+import type { HistoricalScorer, HistoricalScorerGoal } from '@/types/historicalScorer.types';
 import { useTranslation } from 'react-i18next';
-import { MOCK_MESSI_SCORER_DETAIL } from '../mocks/historicalScorers.mock';
+import { useHistoricalScorerDetail } from '../hooks/useHistoricalScorerDetail';
+
+const HOST_ROTATION_MS = 1500;
+const HOST_FADE_MS = 300;
+const MOBILE_MEDIA_QUERY = '(max-width: 639px)';
+
+interface HostFlagCarouselProps {
+  hosts: HistoricalScorerGoal['hosts'];
+}
+
+function HostFlagCarousel({ hosts }: HostFlagCarouselProps) {
+  const [activeHostIndex, setActiveHostIndex] = useState(0);
+  const [isHostVisible, setIsHostVisible] = useState(true);
+  const hasMultipleHosts = hosts.length > 1;
+  const activeHost = hosts[hasMultipleHosts ? activeHostIndex % hosts.length : 0] ?? hosts[0];
+
+  useEffect(() => {
+    if (!hasMultipleHosts) return;
+
+    let fadeTimeoutId: number | undefined;
+    const intervalId = window.setInterval(() => {
+      setIsHostVisible(false);
+      fadeTimeoutId = window.setTimeout(() => {
+        setActiveHostIndex((currentIndex) => (currentIndex + 1) % hosts.length);
+        setIsHostVisible(true);
+      }, HOST_FADE_MS);
+    }, HOST_ROTATION_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      if (fadeTimeoutId !== undefined) {
+        window.clearTimeout(fadeTimeoutId);
+      }
+    };
+  }, [hasMultipleHosts, hosts.length]);
+
+  if (!activeHost) {
+    return <span className="text-wc-text-muted">—</span>;
+  }
+
+  return (
+    <div className="flex h-3 w-4 items-center justify-center">
+      <FlagImage
+        countryCode={activeHost.code}
+        alt={activeHost.name}
+        width={16}
+        height={12}
+        className={`rounded-[2px] shrink-0 transition-opacity duration-300 ease-in-out ${
+          hasMultipleHosts && !isHostVisible ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+    </div>
+  );
+}
+
+const formatMatchDate = (matchDate: string | null): string =>
+  matchDate === null ? '—' : matchDate.slice(5);
+
+const getIsMobileViewport = (): boolean =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia(MOBILE_MEDIA_QUERY).matches;
 
 export interface HistoricalScorerModalProps {
-  isOpen: boolean;
+  selectedScorer: HistoricalScorer | null;
   onClose: () => void;
 }
 
-/**
- * Modal temporal de detalle. Hasta que exista un endpoint específico,
- * siempre muestra las estadísticas mockeadas de Lionel Messi.
- */
-export function HistoricalScorerModal({ isOpen, onClose }: HistoricalScorerModalProps) {
+export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalScorerModalProps) {
   const { t } = useTranslation('common');
-  const scorer = MOCK_MESSI_SCORER_DETAIL;
+  const [isMobileViewport, setIsMobileViewport] = useState(getIsMobileViewport);
+  const { scorer, isLoading, isError, refetch } = useHistoricalScorerDetail(
+    selectedScorer?.playerId ?? null,
+  );
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (typeof window.matchMedia !== 'function') return;
+
+    const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
+    const handleViewportChange = (event: MediaQueryListEvent) => {
+      setIsMobileViewport(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleViewportChange);
+    return () => mediaQuery.removeEventListener('change', handleViewportChange);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedScorer) return;
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [isOpen, onClose]);
+  }, [selectedScorer, onClose]);
 
-  if (!isOpen) return null;
+  if (!selectedScorer) return null;
 
-  const confStyle = CONFEDERATION_STYLES[scorer.confederation];
-  const confTooltip = CONFEDERATION_TOOLTIP[scorer.confederation] ?? '';
-  const titles = scorer.worldCups.filter((worldCup) => worldCup.medal === 'gold').length;
-  const sorted = [...scorer.worldCups].sort((a, b) => a.year - b.year);
+  const playerName = scorer
+    ? `${scorer.firstName} ${scorer.lastName}`.trim()
+    : selectedScorer.fullName;
 
   return (
     <div
-      className="fixed inset-0 bg-black/75 flex items-center justify-center z-50 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-2 sm:px-4 sm:py-0"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={t('dialogs.historicalScorerFor', { player: scorer.playerName })}
+      aria-label={t('dialogs.historicalScorerFor', { player: playerName })}
     >
       <div
-        className="bg-wc-surface-primary border border-wc-border-primary rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+        className="max-h-[calc(100dvh-1rem)] w-[min(360px,calc(100vw-16px))] overflow-y-auto rounded-xl border border-wc-border-primary bg-wc-surface-primary sm:max-h-[85vh] sm:w-full sm:max-w-[490px]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
-          <div className="flex items-center gap-2 text-sm font-medium text-wc-text-primary">
-            <FlagImage
-              countryCode={scorer.teamCode}
-              alt={scorer.teamName}
-              className="rounded-[2px]"
-            />
-            {scorer.playerName} — {scorer.teamName}
+          <div className="flex min-w-0 items-center gap-2 text-sm font-medium text-wc-text-primary">
+            <span className="truncate">{playerName}</span>
+            {scorer?.teams.map((team) => (
+              <FlagImage
+                key={team.code}
+                countryCode={team.code}
+                alt={team.name}
+                width={20}
+                height={15}
+                className="rounded-[2px] shrink-0"
+              />
+            ))}
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-wc-text-muted hover:text-wc-text-primary transition-colors focus:outline-none"
             aria-label={t('actions.close')}
@@ -66,99 +141,165 @@ export function HistoricalScorerModal({ isOpen, onClose }: HistoricalScorerModal
           </button>
         </div>
 
-        <div className="px-4 py-4">
-          <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
-            {[
-              { val: scorer.totalGoals, lbl: t('labels.totalGoals') },
-              { val: scorer.worldCups.length, lbl: t('navigation.worldcups') },
-              { val: scorer.average.toFixed(2), lbl: t('labels.average') },
-              {
-                val:
-                  titles > 0 ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <Trophy
-                        size={16}
-                        className="text-wc-accent-gold opacity-40"
-                        aria-hidden="true"
-                      />
-                      <span className="font-medium text-wc-accent-gold">{titles}</span>
-                    </div>
-                  ) : (
-                    '-'
-                  ),
-                lbl: t('labels.titles'),
-              },
-            ].map(({ val, lbl }) => (
-              <div key={lbl} className="text-center flex-1">
-                <p className="text-[17px] font-medium text-wc-accent-gold leading-none">{val}</p>
-                <p className="text-[10px] text-wc-text-muted mt-1">{lbl}</p>
-              </div>
-            ))}
-          </div>
+        <div className="px-3 py-4 sm:px-4">
+          {isLoading && (
+            <p role="status" className="py-8 text-center text-sm text-wc-text-muted">
+              {t('scorerDetail.loading')}
+            </p>
+          )}
 
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[11px] text-wc-text-muted">{t('labels.confederation')}:</span>
-            <Tooltip content={confTooltip} groupName="conf" hideWhenEmpty>
-              <span
-                className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
+          {isError && (
+            <div role="alert" className="py-8 text-center">
+              <p className="text-sm text-red-400">{t('scorerDetail.loadError')}</p>
+              <button
+                type="button"
+                onClick={refetch}
+                className="mt-3 rounded-md border border-wc-border-primary px-3 py-1.5 text-xs text-wc-text-primary hover:border-wc-accent-gold hover:text-wc-accent-gold transition-colors"
               >
-                {scorer.confederation}
-              </span>
-            </Tooltip>
-          </div>
+                {t('actions.retry')}
+              </button>
+            </div>
+          )}
 
-          <table className="w-full border-collapse text-[11px]">
-            <thead>
-              <tr className="border-b border-wc-border-primary">
-                <th className="text-left font-normal text-wc-text-muted pb-2 pr-3">
-                  {t('labels.worldCup')}
-                </th>
-                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">
-                  {t('labels.goals')}
-                </th>
-                <th className="text-right font-normal text-wc-text-muted pb-2 pr-3">
-                  {t('labels.average')}
-                </th>
-                <th className="text-right font-normal text-wc-text-muted pb-2">
-                  {t('labels.medal')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((worldCup) => (
-                <tr key={worldCup.year} className="border-t border-wc-surface-secondary">
-                  <td className="py-2 pr-3">
-                    <div className="flex items-center gap-2">
-                      <FlagImage
-                        countryCode={worldCup.hostCode}
-                        alt={worldCup.host}
-                        width={14}
-                        height={10}
-                        className="rounded-[1px] shrink-0"
-                      />
-                      <span className="font-medium text-wc-accent-gold">{worldCup.year}</span>
-                      <span className="text-wc-text-muted">{worldCup.host}</span>
-                    </div>
-                  </td>
-                  <td className="py-2 pr-3 text-right font-medium text-wc-accent-gold">
-                    {worldCup.goals}
-                  </td>
-                  <td className="py-2 pr-3 text-right text-wc-text-muted">
-                    {worldCup.goals > 0 ? worldCup.average.toFixed(2) : '-'}
-                  </td>
-                  <td className="py-2 text-right">
-                    {worldCup.medal ? (
-                      <span className="text-sm">{MEDAL_LABEL[worldCup.medal]}</span>
-                    ) : (
-                      <span className="text-[10px] text-wc-text-muted">
-                        {worldCup.performance}
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {!isLoading && !isError && scorer && (
+            <>
+              <div className="flex gap-5 px-4 py-3 bg-wc-surface-secondary border border-wc-border-primary rounded-lg mb-4">
+                {[
+                  { val: scorer.goals.length, lbl: t('labels.totalGoals') },
+                  { val: scorer.championships.length, lbl: t('navigation.worldcups') },
+                  { val: scorer.position ?? '—', lbl: t('labels.position') },
+                ].map(({ val, lbl }) => (
+                  <div key={lbl} className="text-center flex-1">
+                    <p className="text-[17px] font-medium text-wc-accent-gold leading-none">
+                      {val}
+                    </p>
+                    <p className="text-[10px] text-wc-text-muted mt-1">{lbl}</p>
+                  </div>
+                ))}
+              </div>
+
+              {scorer.goals.length === 0 ? (
+                <p className="py-8 text-center text-sm text-wc-text-muted">
+                  {t('scorerDetail.empty')}
+                </p>
+              ) : isMobileViewport ? (
+                <div className="space-y-2.5" data-testid="scorer-goal-cards">
+                  {scorer.goals.map((goal, index) => (
+                    <article
+                      key={`${goal.year}-${goal.matchDate ?? 'unknown'}-${goal.minuteRegular}-${index}`}
+                      className="rounded-lg border border-wc-border-primary bg-wc-surface-secondary px-3 py-2.5"
+                      data-testid="scorer-goal-card"
+                    >
+                      <div className="flex items-center justify-between gap-3 border-b border-wc-border-primary pb-2">
+                        <div className="flex items-center gap-2">
+                          <HostFlagCarousel hosts={goal.hosts} />
+                          <span className="text-xs font-medium text-wc-accent-gold">
+                            {goal.year}
+                          </span>
+                        </div>
+                        <span className="max-w-[55%] truncate text-[10px] text-wc-text-muted">
+                          {goal.stage ?? '—'}
+                        </span>
+                      </div>
+
+                      <div
+                        className="grid grid-cols-3 pt-2 text-center"
+                        data-testid="scorer-goal-card-details"
+                      >
+                        <div>
+                          <p className="text-[9px] text-wc-text-muted">{t('labels.date')}</p>
+                          <p className="mt-0.5 text-[11px] text-wc-text-primary">
+                            {formatMatchDate(goal.matchDate)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] text-wc-text-muted">{t('labels.rival')}</p>
+                          <div className="mt-0.5 flex items-center justify-center gap-1.5">
+                            <FlagImage
+                              countryCode={goal.opponentTeam.code}
+                              alt={goal.opponentTeam.name}
+                              width={16}
+                              height={12}
+                              className="rounded-[2px] shrink-0"
+                            />
+                            <span className="text-[11px] text-wc-text-primary">
+                              {goal.opponentTeam.code}
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-[9px] text-wc-text-muted">{t('labels.minute')}</p>
+                          <p className="mt-0.5 whitespace-nowrap text-[11px] text-wc-text-primary">
+                            {goal.minuteRegular}
+                            {goal.penalty === true ? ' (P)' : ''}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="overflow-x-auto" data-testid="scorer-goals-scroll">
+                  <table className="w-full min-w-[440px] table-fixed border-collapse text-[11px]">
+                    <thead>
+                      <tr className="border-b border-wc-border-primary">
+                        <th className="w-[84px] py-0 pr-1 pb-2 pl-1 text-center font-normal text-wc-text-muted">
+                          {t('labels.worldCup')}
+                        </th>
+                        <th className="w-[52px] py-0 pr-1 pb-2 pl-0 text-center font-normal text-wc-text-muted">
+                          {t('labels.date')}
+                        </th>
+                        <th className="w-[88px] py-0 pr-1 pb-2 pl-1 text-center font-normal text-wc-text-muted">
+                          {t('labels.rival')}
+                        </th>
+                        <th className="w-[58px] py-0 pr-1 pb-2 pl-0 text-center font-normal text-wc-text-muted">
+                          {t('labels.minute')}
+                        </th>
+                        <th className="px-2 pb-2 text-left font-normal text-wc-text-muted">
+                          {t('labels.phase')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {scorer.goals.map((goal, index) => (
+                        <tr
+                          key={`${goal.year}-${goal.matchDate ?? 'unknown'}-${goal.minuteRegular}-${index}`}
+                          className="border-t border-wc-surface-secondary"
+                        >
+                          <td className="py-3 pr-1 pl-1">
+                            <div className="flex items-center justify-center gap-2">
+                              <HostFlagCarousel hosts={goal.hosts} />
+                              <span className="font-medium text-wc-accent-gold">{goal.year}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 pr-1 pl-0 text-center text-wc-text-muted">
+                            {formatMatchDate(goal.matchDate)}
+                          </td>
+                          <td className="py-3 pr-1 pl-1">
+                            <div className="flex items-center justify-center gap-2">
+                              <FlagImage
+                                countryCode={goal.opponentTeam.code}
+                                alt={goal.opponentTeam.name}
+                                width={16}
+                                height={12}
+                                className="rounded-[2px] shrink-0"
+                              />
+                              <span className="text-wc-text-primary">{goal.opponentTeam.code}</span>
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap py-3 pr-1 pl-0 text-center text-wc-text-primary">
+                            {goal.minuteRegular}
+                            {goal.penalty === true ? ' (P)' : ''}
+                          </td>
+                          <td className="px-2 py-3 text-wc-text-muted">{goal.stage ?? '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -143,9 +143,9 @@ pero presenta todas las selecciones en una única tabla sin controles de paginac
 
 La página `/scorers` consume siempre `GET /api/scorers` con paginación de 10 registros y filtros
 remotos por nombre de jugador, selección y confederación. Las opciones de selección se obtienen de
-`GET /api/teams`, incluyendo selecciones disueltas y reuniendo todas las páginas disponibles. El
-modal de detalle conserva temporalmente estadísticas locales fijas de Lionel Messi hasta que exista
-un endpoint de detalle por jugador.
+`GET /api/teams`, incluyendo selecciones disueltas y reuniendo todas las páginas disponibles. Al
+seleccionar una fila, el modal consulta `GET /api/scorers/:playerId` y muestra los datos personales,
+las selecciones, los Mundiales disputados y todos los goles válidos provistos por el backend.
 
 ### Comandos disponibles
 

@@ -156,6 +156,11 @@
     "awayGoals": "Away Goals",
     "awayTeam": "Away Team"
   },
+  "scorerDetail": {
+    "loading": "Loading scorer details...",
+    "loadError": "The scorer details could not be loaded.",
+    "empty": "This player has no valid goals recorded."
+  },
   "standingMetrics": {
     "abbreviations": {
       "points": "PTS",

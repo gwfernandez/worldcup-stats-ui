@@ -6,7 +6,7 @@ import {
   HistoricalScorerSchema,
 } from './historicalScorer.types';
 import { HISTORICAL_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/historicalScorers.fixture';
-import { MOCK_MESSI_SCORER_DETAIL } from '@/features/historicalScorers/mocks/historicalScorers.mock';
+import { HISTORICAL_SCORER_DETAIL_FIXTURE } from '@/test/fixtures/historicalScorerDetail.fixture';
 
 describe('historical scorer schemas', () => {
   it('parses paginated scorer responses', () => {
@@ -31,9 +31,9 @@ describe('historical scorer schemas', () => {
     expect(HistoricalScorerListResponseSchema.parse(response)).toEqual(response);
   });
 
-  it('keeps the temporary Messi detail in a separate schema', () => {
-    expect(HistoricalScorerDetailSchema.parse(MOCK_MESSI_SCORER_DETAIL)).toEqual(
-      MOCK_MESSI_SCORER_DETAIL,
+  it('parses scorer details with nullable goal fields and multiple teams', () => {
+    expect(HistoricalScorerDetailSchema.parse(HISTORICAL_SCORER_DETAIL_FIXTURE)).toEqual(
+      HISTORICAL_SCORER_DETAIL_FIXTURE,
     );
   });
 
@@ -48,6 +48,12 @@ describe('historical scorer schemas', () => {
       HistoricalScorerListResponseSchema.parse({
         ...HISTORICAL_SCORERS_RESPONSE_FIXTURE,
         pagination: { ...HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination, hasNext: 'false' },
+      }),
+    ).toThrow(ZodError);
+    expect(() =>
+      HistoricalScorerDetailSchema.parse({
+        ...HISTORICAL_SCORER_DETAIL_FIXTURE,
+        championships: ['2022'],
       }),
     ).toThrow(ZodError);
   });
