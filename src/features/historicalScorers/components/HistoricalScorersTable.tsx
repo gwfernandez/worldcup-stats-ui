@@ -142,7 +142,7 @@ export function HistoricalScorersTable({
                 </td>
                 <td className="py-2.5 pr-2">
                   <div className="flex items-center justify-end gap-2">
-                    <div className="w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
+                    <div className="hidden md:block w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
                       <div
                         className="h-full bg-wc-accent-gold rounded-full"
                         style={{ width: `${barWidth}%` }}
