@@ -1,8 +1,5 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
-import type {
-  HistoricalScorer,
-  HistoricalScorerPagination,
-} from '@/types/historicalScorer.types';
+import type { HistoricalScorer, HistoricalScorerPagination } from '@/types/historicalScorer.types';
 import type { NationalTeam } from '@/types/team.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
 import { CONFEDERATION_TOOLTIP } from '@/types/team.types';
@@ -27,17 +24,14 @@ export function HistoricalScorersTable({
   onPageChange,
 }: HistoricalScorersTableProps) {
   const { t } = useTranslation('common');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedScorer, setSelectedScorer] = useState<HistoricalScorer | null>(null);
   const filters = useUIStore((state) => state.filters.historicalScorers);
   const setFilter = useUIStore((state) => state.setFilter);
   const searchName = filters?.name ?? '';
   const filterTeam = filters?.team ?? '';
   const filterConfederation = filters?.confederation ?? '';
 
-  const maxGoals = useMemo(
-    () => Math.max(...scorers.map((scorer) => scorer.goals), 1),
-    [scorers],
-  );
+  const maxGoals = useMemo(() => Math.max(...scorers.map((scorer) => scorer.goals), 1), [scorers]);
 
   const teamOptions = useMemo(
     () =>
@@ -118,8 +112,8 @@ export function HistoricalScorersTable({
 
             return (
               <tr
-                key={`${scorer.fullName}-${scorer.team.code}-${scorer.listTeams.join('-')}`}
-                onClick={() => setIsModalOpen(true)}
+                key={scorer.playerId}
+                onClick={() => setSelectedScorer(scorer)}
                 className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
               >
                 <td className="py-2.5 pl-1">
@@ -183,7 +177,12 @@ export function HistoricalScorersTable({
         onPageChange={onPageChange}
       />
 
-      <HistoricalScorerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {selectedScorer && (
+        <HistoricalScorerModal
+          selectedScorer={selectedScorer}
+          onClose={() => setSelectedScorer(null)}
+        />
+      )}
     </>
   );
 }

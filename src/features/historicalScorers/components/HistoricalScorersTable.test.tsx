@@ -1,11 +1,33 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HistoricalScorersTable } from './HistoricalScorersTable';
 import { HISTORICAL_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/historicalScorers.fixture';
+import { HISTORICAL_SCORER_DETAIL_FIXTURE } from '@/test/fixtures/historicalScorerDetail.fixture';
 import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
+import { useHistoricalScorerDetail } from '../hooks/useHistoricalScorerDetail';
+
+vi.mock('../hooks/useHistoricalScorerDetail', () => ({
+  useHistoricalScorerDetail: vi.fn(),
+}));
 
 describe('HistoricalScorersTable', () => {
+  beforeEach(() => {
+    vi.mocked(useHistoricalScorerDetail).mockReturnValue({
+      scorer: {
+        ...HISTORICAL_SCORER_DETAIL_FIXTURE,
+        id: 1,
+        firstName: 'Miroslav',
+        lastName: 'Klose',
+        teams: [{ code: 'GER', name: 'Alemania' }],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+  });
+
   it('renders server data without the average column and includes dissolved teams', () => {
     render(
       <HistoricalScorersTable
@@ -40,7 +62,7 @@ describe('HistoricalScorersTable', () => {
     expect(onPageChange).toHaveBeenCalledWith(1);
   });
 
-  it('opens the fixed Messi modal from any scorer row', async () => {
+  it('opens the selected scorer modal using the row player ID', async () => {
     const user = userEvent.setup();
     render(
       <HistoricalScorersTable
@@ -54,7 +76,9 @@ describe('HistoricalScorersTable', () => {
 
     await user.click(screen.getByText('Miroslav Klose'));
 
-    expect(screen.getByRole('dialog', { name: /Lionel Messi/i })).toBeInTheDocument();
-    expect(screen.getByText(/Lionel Messi — Argentina/)).toBeInTheDocument();
+    expect(useHistoricalScorerDetail).toHaveBeenCalledWith(1);
+    const dialog = screen.getByRole('dialog', { name: /Miroslav Klose/i });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText('Miroslav Klose')).toBeInTheDocument();
   });
 });

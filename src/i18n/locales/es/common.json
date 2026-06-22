@@ -156,6 +156,11 @@
     "awayGoals": "Goles Visitante",
     "awayTeam": "Equipo Visitante"
   },
+  "scorerDetail": {
+    "loading": "Cargando detalle del goleador...",
+    "loadError": "No se pudo cargar el detalle del goleador.",
+    "empty": "Este jugador no tiene goles válidos registrados."
+  },
   "standingMetrics": {
     "abbreviations": {
       "points": "PTS",

@@ -3,6 +3,7 @@ import type { HistoricalScorerListResponse } from '@/types/historicalScorer.type
 export const HISTORICAL_SCORERS_RESPONSE_FIXTURE: HistoricalScorerListResponse = {
   data: [
     {
+      playerId: 1,
       fullName: 'Miroslav Klose',
       team: {
         code: 'GER',
@@ -13,6 +14,7 @@ export const HISTORICAL_SCORERS_RESPONSE_FIXTURE: HistoricalScorerListResponse =
       confederationCode: 'UEFA',
     },
     {
+      playerId: 1524,
       fullName: 'Lionel Messi',
       team: {
         code: 'ARG',

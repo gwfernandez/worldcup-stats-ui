@@ -6,6 +6,7 @@ export const HistoricalScorerTeamSchema = z.object({
 });
 
 export const HistoricalScorerSchema = z.object({
+  playerId: z.number(),
   fullName: z.string(),
   team: HistoricalScorerTeamSchema,
   goals: z.number(),
@@ -34,32 +35,25 @@ export type HistoricalScorerList = z.infer<typeof HistoricalScorerListSchema>;
 export type HistoricalScorerPagination = z.infer<typeof HistoricalScorerPaginationSchema>;
 export type HistoricalScorerListResponse = z.infer<typeof HistoricalScorerListResponseSchema>;
 
-export const ScorerWorldCupDetailSchema = z.object({
+export const HistoricalScorerGoalSchema = z.object({
   year: z.number(),
-  host: z.string(),
-  hostCode: z.string(),
-  goals: z.number(),
-  matches: z.number(),
-  average: z.number(),
-  medal: z.enum(['gold', 'silver', 'bronze']).nullable(),
-  performance: z.string(),
+  hosts: z.array(HistoricalScorerTeamSchema),
+  matchDate: z.string().nullable(),
+  opponentTeam: HistoricalScorerTeamSchema,
+  minuteRegular: z.number(),
+  penalty: z.boolean().nullable(),
+  stage: z.string().nullable(),
 });
 
 export const HistoricalScorerDetailSchema = z.object({
-  playerName: z.string(),
-  teamName: z.string(),
-  teamCode: z.string(),
-  confederation: z.string(),
-  totalGoals: z.number(),
-  totalMatches: z.number(),
-  average: z.number(),
-  worldCups: z.array(ScorerWorldCupDetailSchema),
+  id: z.number(),
+  firstName: z.string(),
+  lastName: z.string(),
+  position: z.string().nullable(),
+  championships: z.array(z.number()),
+  teams: z.array(HistoricalScorerTeamSchema),
+  goals: z.array(HistoricalScorerGoalSchema),
 });
 
+export type HistoricalScorerGoal = z.infer<typeof HistoricalScorerGoalSchema>;
 export type HistoricalScorerDetail = z.infer<typeof HistoricalScorerDetailSchema>;
-
-export const MEDAL_LABEL: Record<string, string> = {
-  gold: '🏆',
-  silver: '🥈',
-  bronze: '🥉',
-};
