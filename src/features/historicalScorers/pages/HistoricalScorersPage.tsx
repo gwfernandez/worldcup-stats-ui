@@ -52,7 +52,7 @@ export default function HistoricalScorersPage() {
         ]}
       />
 
-      <main className="font-mono max-w-7xl mx-auto px-6 py-6">
+      <main className="font-mono max-w-7xl mx-auto px-4 py-6 sm:px-6">
         <QueryStatus isLoading={isLoading} isError={isError} error={error}>
           <HistoricalScorersTable
             scorers={scorers}

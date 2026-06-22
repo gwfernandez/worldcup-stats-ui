@@ -94,9 +94,9 @@ export default function HeroSection({
 
   return (
     <section className="font-mono bg-wc-surface-primary border-b border-wc-border-primary">
-      <div className="max-w-7xl mx-auto px-6 py-10 flex items-center gap-8">
+      <div className="mx-auto flex max-w-7xl items-center gap-8 px-4 py-10 sm:px-6">
         {/* ── Texto ────────────────────────────────────────────────────── */}
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <span className="inline-block bg-wc-success-surface text-wc-success text-xs px-3 py-1 rounded-full border border-wc-success-border mb-3">
             {badge ?? t('championships:hero.badge')}
           </span>
@@ -113,7 +113,7 @@ export default function HeroSection({
           </p>
 
           {/* ── Stats ─────────────────────────────────────────────────── */}
-          <div className="flex gap-6">
+          <div className="grid max-w-sm grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:max-w-none sm:flex-wrap">
             {resolvedStats.map((stat) => (
               <StatItem key={stat.label} {...stat} />
             ))}

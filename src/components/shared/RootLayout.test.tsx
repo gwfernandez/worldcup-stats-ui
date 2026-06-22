@@ -32,9 +32,15 @@ describe('RootLayout', () => {
   });
 
   it('renders child route content via Outlet', () => {
-    renderWithRoute('/', 'Home content');
+    const { container } = renderWithRoute('/', 'Home content');
 
     expect(screen.getByText('Home content')).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass(
+      'min-h-screen',
+      'w-full',
+      'min-w-0',
+      'bg-wc-bg-primary',
+    );
   });
 
   it('renders Outlet content on nested routes', () => {

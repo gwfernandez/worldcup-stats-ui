@@ -23,4 +23,14 @@ describe('Tooltip', () => {
     expect(screen.getByText('Sin tooltip')).toBeInTheDocument();
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
+
+  it('can align tooltip content toward the end of its trigger', () => {
+    render(
+      <Tooltip content="Confederación" align="end">
+        <span>UEFA</span>
+      </Tooltip>,
+    );
+
+    expect(screen.getByText('Confederación')).toHaveClass('right-0');
+  });
 });

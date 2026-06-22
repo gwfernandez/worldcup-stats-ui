@@ -44,6 +44,28 @@ describe('HistoricalScorersTable', () => {
     expect(screen.getByRole('option', { name: 'Unión Soviética' })).toBeInTheDocument();
   });
 
+  it('uses a compact responsive layout without introducing a table scroll container', () => {
+    render(
+      <HistoricalScorersTable
+        scorers={HISTORICAL_SCORERS_RESPONSE_FIXTURE.data}
+        pagination={HISTORICAL_SCORERS_RESPONSE_FIXTURE.pagination}
+        teams={TEAMS_RESPONSE_FIXTURE.data}
+        currentPage={1}
+        onPageChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId('historical-scorers-filters')).toHaveClass(
+      'grid',
+      'grid-cols-1',
+      'min-[320px]:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]',
+      'min-w-0',
+    );
+    expect(screen.getByRole('table')).toHaveClass('w-full', 'table-fixed');
+    expect(screen.getByText('Miroslav Klose')).toHaveClass('truncate');
+    expect(screen.getByText('Alemania')).toHaveClass('truncate');
+  });
+
   it('resets pagination when a filter changes', async () => {
     const user = userEvent.setup();
     const onPageChange = vi.fn();
