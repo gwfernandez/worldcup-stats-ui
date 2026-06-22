@@ -243,7 +243,7 @@ export default function ChampionshipDetailPage() {
           <GroupsTab groups={detail.groups} eliminationPhases={detail.eliminationPhases} />
         )}
         {activeTab === 'scorers' && <ScorersTab scorers={detail.scorers} />}
-        {activeTab === 'teams' && <TeamsTab teams={detail.teams} />}
+        {activeTab === 'teams' && <TeamsTab year={year} />}
         {activeTab === 'stadiums' && <StadiumsTab stadiums={detail.stadiums} />}
         {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
         {activeTab === 'stats' && (

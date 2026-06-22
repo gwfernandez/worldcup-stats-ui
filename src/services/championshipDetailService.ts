@@ -8,7 +8,6 @@ import {
 import { ScorerListSchema, type ScorerList } from '@/types/scorer.types';
 import { StadiumListSchema, type StadiumList } from '@/types/stadium.types';
 import { StandingListSchema, type StandingList } from '@/types/standing.types';
-import { TeamListSchema, type TeamList } from '@/types/team.types';
 import {
   MOCK_ELIMINATION_PHASES,
   MOCK_GROUPS,
@@ -16,7 +15,6 @@ import {
 import { MOCK_SCORERS } from '@/features/championships/mocks/scorers.mock';
 import { MOCK_STADIUMS } from '@/features/championships/mocks/stadiums.mock';
 import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
-import { MOCK_TEAMS } from '@/features/championships/mocks/teams.mock';
 
 export const ChampionshipDetailSchema = z.object({
   year: z.number(),
@@ -34,7 +32,6 @@ export const ChampionshipDetailSchema = z.object({
   groups: GroupListSchema,
   eliminationPhases: EliminationPhaseListSchema,
   scorers: ScorerListSchema,
-  teams: TeamListSchema,
   stadiums: StadiumListSchema,
   standings: StandingListSchema,
 });
@@ -55,7 +52,6 @@ export interface ChampionshipDetail {
   groups: GroupList;
   eliminationPhases: EliminationPhaseList;
   scorers: ScorerList;
-  teams: TeamList;
   stadiums: StadiumList;
   standings: StandingList;
 }
@@ -81,7 +77,6 @@ export const getChampionshipDetail = async (year: number): Promise<ChampionshipD
     groups: MOCK_GROUPS,
     eliminationPhases: MOCK_ELIMINATION_PHASES,
     scorers: MOCK_SCORERS,
-    teams: MOCK_TEAMS,
     stadiums: MOCK_STADIUMS,
     standings: MOCK_STANDINGS,
   };

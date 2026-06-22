@@ -98,6 +98,72 @@ export const TeamListSchema = z.array(TeamSchema);
 export type Team = z.infer<typeof TeamSchema>;
 export type TeamList = z.infer<typeof TeamListSchema>;
 
+// ─── Championship teams API ─────────────────────────────────────────────────
+
+export const ChampionshipTeamStageReachedSchema = z.enum([
+  'champion',
+  'runner_up',
+  'third_place',
+  'fourth_place',
+  'group_stage',
+  'second_group_stage',
+  'round_of_16',
+  'quarterfinal',
+  'quarter_finals',
+  'semi_finals',
+  'final',
+  '',
+]);
+
+export const ChampionshipTeamSchema = z.object({
+  year: z.number(),
+  team: z.object({
+    code: z.string(),
+    name: z.string(),
+  }),
+  confederationCode: z.string(),
+  groupCode: z.string(),
+  stageReached: ChampionshipTeamStageReachedSchema,
+  managers: z.string(),
+});
+
+export const ChampionshipTeamListSchema = z.array(ChampionshipTeamSchema);
+
+export const ChampionshipTeamPaginationSchema = z.object({
+  page: z.number(),
+  size: z.number(),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
+
+export const ChampionshipTeamListResponseSchema = z.object({
+  data: ChampionshipTeamListSchema,
+  pagination: ChampionshipTeamPaginationSchema,
+});
+
+export type ChampionshipTeamStageReached = z.infer<typeof ChampionshipTeamStageReachedSchema>;
+export type ChampionshipTeam = z.infer<typeof ChampionshipTeamSchema>;
+export type ChampionshipTeamList = z.infer<typeof ChampionshipTeamListSchema>;
+export type ChampionshipTeamPagination = z.infer<typeof ChampionshipTeamPaginationSchema>;
+export type ChampionshipTeamListResponse = z.infer<typeof ChampionshipTeamListResponseSchema>;
+
+export const CHAMPIONSHIP_STAGE_STYLES: Record<ChampionshipTeamStageReached, string> = {
+  champion: PERFORMANCE_STYLES.champion,
+  runner_up: PERFORMANCE_STYLES.runner_up,
+  third_place: PERFORMANCE_STYLES.third,
+  fourth_place: PERFORMANCE_STYLES.fourth,
+  group_stage: PERFORMANCE_STYLES.group_stage,
+  second_group_stage: PERFORMANCE_STYLES.group_stage,
+  round_of_16: PERFORMANCE_STYLES.round_of_16,
+  quarterfinal: PERFORMANCE_STYLES.quarters,
+  quarter_finals: PERFORMANCE_STYLES.quarters,
+  semi_finals: PERFORMANCE_STYLES.round_of_16,
+  final: PERFORMANCE_STYLES.runner_up,
+  '': PERFORMANCE_STYLES.group_stage,
+};
+
 // ─── National teams API ──────────────────────────────────────────────────────
 
 export const NationalTeamSchema = z.object({
