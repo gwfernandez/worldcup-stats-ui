@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/mocks/server';
 import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { resetUIStore, useUIStore } from '@/store/ui.store';
 import ChampionshipDetailPage from './ChampionshipDetailPage';
 
 function renderAtPath(path: string) {
@@ -25,14 +26,21 @@ function renderAtPath(path: string) {
     { initialEntries: [path] },
   );
 
-  return render(
+  const renderResult = render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
   );
+
+  return { ...renderResult, router };
 }
 
 describe('ChampionshipDetailPage', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    resetUIStore();
+  });
+
   it('shows 2022 when navigating to /worldcup/2022', async () => {
     renderAtPath('/worldcup/2022');
 
@@ -69,5 +77,52 @@ describe('ChampionshipDetailPage', () => {
 
     expect(await screen.findByText('Uruguay')).toBeInTheDocument();
     expect(requestedPath).toBe('/api/championships/1950/teams');
+  });
+
+  it('resets championship team filters when navigating to a different year', async () => {
+    useUIStore.getState().setSelectedYear(1950);
+    useUIStore.getState().setFilters('championshipTeams', {
+      name: 'Uruguay',
+      confederation: 'CONMEBOL',
+      group: '4',
+    });
+    const { router } = renderAtPath('/worldcup/1950');
+
+    expect(await screen.findByText('1950')).toBeInTheDocument();
+    expect(useUIStore.getState().filters.championshipTeams).toEqual({
+      name: 'Uruguay',
+      confederation: 'CONMEBOL',
+      group: '4',
+    });
+
+    await router.navigate('/worldcup/2022');
+    expect(await screen.findByText('2022')).toBeInTheDocument();
+
+    expect(useUIStore.getState().selectedYear).toBe(2022);
+    expect(useUIStore.getState().filters.championshipTeams).toBeUndefined();
+  });
+
+  it('keeps championship team filters when rendering the same year', async () => {
+    useUIStore.getState().setSelectedYear(1950);
+    useUIStore.getState().setFilter('championshipTeams', 'name', 'Uruguay');
+
+    renderAtPath('/worldcup/1950');
+    expect(await screen.findByText('1950')).toBeInTheDocument();
+
+    expect(useUIStore.getState().filters.championshipTeams).toEqual({
+      name: 'Uruguay',
+    });
+  });
+
+  it('does not modify championship team filters for an invalid year', () => {
+    useUIStore.getState().setSelectedYear(1950);
+    useUIStore.getState().setFilter('championshipTeams', 'group', '4');
+
+    renderAtPath('/worldcup/invalid');
+
+    expect(useUIStore.getState().selectedYear).toBe(1950);
+    expect(useUIStore.getState().filters.championshipTeams).toEqual({
+      group: '4',
+    });
   });
 });
