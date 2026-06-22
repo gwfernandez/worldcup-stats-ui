@@ -33,6 +33,11 @@ describe('Pagination', () => {
     expect(screen.getByText('1–10 de 25 selecciones')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Página anterior' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Página siguiente' })).toBeEnabled();
+    expect(screen.getByTestId('pagination-layout')).toHaveClass(
+      'flex-col',
+      'sm:flex-row',
+      'min-w-0',
+    );
     expect(screen.getByRole('button', { name: 'Página 1' })).toHaveAttribute(
       'aria-current',
       'page',

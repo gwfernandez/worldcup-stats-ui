@@ -4,7 +4,7 @@ import ErrorBoundary from '@/components/shared/ErrorBoundary';
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen bg-wc-bg-primary text-wc-text-primary">
+    <div className="min-h-screen w-full min-w-0 bg-wc-bg-primary text-wc-text-primary">
       <WorldCupsNavbar />
       <ErrorBoundary>
         <Outlet />

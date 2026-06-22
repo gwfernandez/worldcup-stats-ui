@@ -43,7 +43,10 @@ export function Pagination({
   const to = Math.min(currentPage * pageSize, totalItems);
 
   return (
-    <div className="flex items-center justify-between mt-4 pt-3 border-t border-wc-border-primary">
+    <div
+      className="mt-4 flex min-w-0 flex-col gap-2 border-t border-wc-border-primary pt-3 sm:flex-row sm:items-center sm:justify-between"
+      data-testid="pagination-layout"
+    >
       {/* Range info */}
       <span className="text-[11px] text-wc-text-muted">
         {t('pagination.range', {
@@ -55,12 +58,12 @@ export function Pagination({
       </span>
 
       {/* Buttons */}
-      <div className="flex items-center gap-1">
+      <div className="flex min-w-0 items-center justify-center gap-1 sm:justify-end">
         {/* Previous */}
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-wc-border-primary text-wc-text-muted transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted sm:h-7 sm:w-7"
           aria-label={t('pagination.previous')}
         >
           <ChevronLeft size={12} aria-hidden="true" />
@@ -71,7 +74,7 @@ export function Pagination({
           page === '...' ? (
             <span
               key={`ellipsis-${i}`}
-              className="w-7 h-7 flex items-center justify-center text-[11px] text-wc-text-muted"
+              className="flex h-6 w-6 shrink-0 items-center justify-center text-[11px] text-wc-text-muted sm:h-7 sm:w-7"
             >
               …
             </span>
@@ -79,7 +82,7 @@ export function Pagination({
             <button
               key={page}
               onClick={() => onPageChange(page as number)}
-              className={`w-7 h-7 rounded-md border text-[11px] transition-colors focus:outline-none ${
+              className={`h-6 w-6 shrink-0 rounded-md border text-[10px] transition-colors focus:outline-none sm:h-7 sm:w-7 sm:text-[11px] ${
                 currentPage === page
                   ? 'bg-wc-success-surface border-wc-success-border text-wc-accent-gold font-medium'
                   : 'border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold'
@@ -96,7 +99,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex items-center justify-center w-7 h-7 rounded-md border border-wc-border-primary text-wc-text-muted hover:border-wc-accent-gold hover:text-wc-accent-gold disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted transition-colors focus:outline-none"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-wc-border-primary text-wc-text-muted transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-wc-border-primary disabled:hover:text-wc-text-muted sm:h-7 sm:w-7"
           aria-label={t('pagination.next')}
         >
           <ChevronRight size={12} aria-hidden="true" />

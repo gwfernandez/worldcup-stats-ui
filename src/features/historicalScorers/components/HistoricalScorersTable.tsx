@@ -54,22 +54,25 @@ export function HistoricalScorersTable({
 
   return (
     <>
-      <div className="flex gap-2.5 mb-4">
+      <div
+        className="mb-4 grid min-w-0 grid-cols-1 gap-1.5 min-[320px]:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)] sm:gap-2.5"
+        data-testid="historical-scorers-filters"
+      >
         <SearchInput
-          className="flex-[2]"
+          className="min-w-0"
           placeholder={t('search.player')}
           value={searchName}
           onChange={handleFilterChange('name')}
         />
         <FilterSelect
-          className="flex-1"
+          className="min-w-0"
           value={filterTeam}
           onChange={handleFilterChange('team')}
           placeholderOption={t('filters.allTeams')}
           options={teamOptions}
         />
         <FilterSelect
-          className="flex-1"
+          className="min-w-0"
           value={filterConfederation}
           onChange={handleFilterChange('confederation')}
           placeholderOption={t('filters.allConfederations')}
@@ -77,20 +80,29 @@ export function HistoricalScorersTable({
         />
       </div>
 
-      <table className="w-full border-collapse">
+      <table className="w-full table-fixed border-collapse">
+        <colgroup>
+          <col className="w-[7%]" />
+          <col className="w-[31%]" />
+          <col className="w-[27%]" />
+          <col className="w-[12%]" />
+          <col className="w-[23%]" />
+        </colgroup>
         <thead>
           <tr className="border-b border-wc-border-primary">
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 w-8">#</th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+            <th className="w-8 pb-2 text-left text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
+              #
+            </th>
+            <th className="truncate pb-2 pr-1 text-left text-[10px] font-normal text-wc-text-muted sm:pr-3 sm:text-[11px]">
               {t('labels.player')}
             </th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+            <th className="truncate pb-2 pr-1 text-left text-[10px] font-normal text-wc-text-muted sm:pr-3 sm:text-[11px]">
               {t('labels.team')}
             </th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
+            <th className="truncate pb-2 pr-1 text-right text-[10px] font-normal text-wc-text-muted sm:pr-2 sm:text-[11px]">
               {t('labels.goals')}
             </th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2">
+            <th className="truncate pb-2 text-right text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
               {t('labels.confederation')}
             </th>
           </tr>
@@ -116,20 +128,20 @@ export function HistoricalScorersTable({
                 onClick={() => setSelectedScorer(scorer)}
                 className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
               >
-                <td className="py-2.5 pl-1">
+                <td className="overflow-hidden py-2.5 pl-0.5 sm:pl-1">
                   <span
                     className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
                   >
                     {rank}
                   </span>
                 </td>
-                <td className="py-2.5 pr-3">
-                  <span className="text-xs text-wc-text-primary group-hover:text-wc-accent-gold transition-colors">
+                <td className="min-w-0 overflow-hidden py-2.5 pr-1 sm:pr-3">
+                  <span className="block truncate text-[11px] text-wc-text-primary transition-colors group-hover:text-wc-accent-gold sm:text-xs">
                     {scorer.fullName}
                   </span>
                 </td>
-                <td className="py-2.5 pr-3">
-                  <div className="flex items-center gap-1.5">
+                <td className="min-w-0 overflow-hidden py-2.5 pr-1 sm:pr-3">
+                  <div className="flex min-w-0 items-center gap-1 sm:gap-1.5">
                     <FlagImage
                       countryCode={scorer.team.code}
                       alt={scorer.team.name}
@@ -137,26 +149,28 @@ export function HistoricalScorersTable({
                       height={11}
                       className="rounded-[1px] shrink-0"
                     />
-                    <span className="text-xs text-wc-text-primary">{scorer.team.name}</span>
+                    <span className="block min-w-0 truncate text-[11px] text-wc-text-primary sm:text-xs">
+                      {scorer.team.name}
+                    </span>
                   </div>
                 </td>
-                <td className="py-2.5 pr-2">
-                  <div className="flex items-center justify-end gap-2">
+                <td className="overflow-hidden py-2.5 pr-1 sm:pr-2">
+                  <div className="flex items-center justify-end gap-1 sm:gap-2">
                     <div className="hidden md:block w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
                       <div
                         className="h-full bg-wc-accent-gold rounded-full"
                         style={{ width: `${barWidth}%` }}
                       />
                     </div>
-                    <span className="text-[13px] font-medium text-wc-accent-gold min-w-[16px] text-right">
+                    <span className="min-w-[14px] text-right text-xs font-medium text-wc-accent-gold sm:min-w-[16px] sm:text-[13px]">
                       {scorer.goals}
                     </span>
                   </div>
                 </td>
-                <td className="py-2.5 text-right">
-                  <Tooltip content={confTip} groupName="conf" hideWhenEmpty>
+                <td className="overflow-hidden py-2.5 text-right">
+                  <Tooltip content={confTip} groupName="conf" align="end" hideWhenEmpty>
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full border ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
+                      className={`inline-block max-w-full truncate rounded-full border px-1 py-0.5 align-middle text-[9px] sm:px-2 sm:text-[10px] ${confStyle?.pill ?? 'bg-wc-surface-secondary text-wc-text-muted border-wc-border-primary'}`}
                     >
                       {scorer.confederationCode}
                     </span>

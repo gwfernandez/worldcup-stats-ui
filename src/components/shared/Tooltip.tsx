@@ -1,4 +1,5 @@
 export type TooltipGroupName = 'conf' | 'action' | 'th' | 'tooltip';
+export type TooltipAlign = 'start' | 'center' | 'end';
 
 const GROUP_WRAPPER: Record<TooltipGroupName, string> = {
   conf: 'group/conf',
@@ -14,10 +15,23 @@ const GROUP_HOVER: Record<TooltipGroupName, string> = {
   tooltip: 'group-hover/tooltip:opacity-100',
 };
 
+const TOOLTIP_ALIGNMENT: Record<TooltipAlign, string> = {
+  start: 'left-0',
+  center: 'left-1/2 -translate-x-1/2',
+  end: 'right-0',
+};
+
+const ARROW_ALIGNMENT: Record<TooltipAlign, string> = {
+  start: 'left-3',
+  center: 'left-1/2 -translate-x-1/2',
+  end: 'right-3',
+};
+
 export interface TooltipProps {
   content: string;
   children: React.ReactNode;
   groupName?: TooltipGroupName;
+  align?: TooltipAlign;
   className?: string;
   /** When true, only renders children if content is empty (for optional tooltips). */
   hideWhenEmpty?: boolean;
@@ -30,6 +44,7 @@ export function Tooltip({
   content,
   children,
   groupName = 'tooltip',
+  align = 'center',
   className = '',
   hideWhenEmpty = false,
 }: TooltipProps) {
@@ -39,15 +54,19 @@ export function Tooltip({
 
   const wrapperGroup = GROUP_WRAPPER[groupName];
   const hoverGroup = GROUP_HOVER[groupName];
+  const tooltipAlignment = TOOLTIP_ALIGNMENT[align];
+  const arrowAlignment = ARROW_ALIGNMENT[align];
 
   return (
     <div className={`relative inline-flex ${wrapperGroup} cursor-default ${className}`}>
       {children}
       <div
-        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-wc-surface-secondary border border-wc-border-primary rounded-md text-[10px] text-wc-text-primary whitespace-nowrap opacity-0 ${hoverGroup} transition-opacity duration-150 pointer-events-none z-10`}
+        className={`absolute bottom-full mb-1.5 whitespace-nowrap rounded-md border border-wc-border-primary bg-wc-surface-secondary px-2 py-1 text-[10px] text-wc-text-primary opacity-0 transition-opacity duration-150 pointer-events-none z-10 ${tooltipAlignment} ${hoverGroup}`}
       >
         {content}
-        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-wc-border-primary" />
+        <span
+          className={`absolute top-full border-4 border-transparent border-t-wc-border-primary ${arrowAlignment}`}
+        />
       </div>
     </div>
   );
