@@ -154,13 +154,16 @@ export default function ChampionshipDetailPage() {
   const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
   const { detail, isLoading, isError } = useChampionshipDetail(year ?? 0, year !== null);
+  const selectedYear = useUIStore((state) => state.selectedYear);
   const setSelectedYear = useUIStore((state) => state.setSelectedYear);
+  const resetFilters = useUIStore((state) => state.resetFilters);
 
   useEffect(() => {
-    if (year !== null) {
-      setSelectedYear(year);
-    }
-  }, [setSelectedYear, year]);
+    if (year === null || year === selectedYear) return;
+
+    resetFilters('championshipTeams');
+    setSelectedYear(year);
+  }, [resetFilters, selectedYear, setSelectedYear, year]);
 
   if (year === null) {
     return <Navigate to="/" replace />;
