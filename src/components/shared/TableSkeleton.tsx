@@ -4,9 +4,15 @@ export interface TableSkeletonProps {
   cols?: number;
   rows?: number;
   showFilters?: boolean;
+  showPagination?: boolean;
 }
 
-export function TableSkeleton({ cols = 4, rows = 5, showFilters = true }: TableSkeletonProps) {
+export function TableSkeleton({
+  cols = 4,
+  rows = 5,
+  showFilters = true,
+  showPagination = true,
+}: TableSkeletonProps) {
   return (
     <div className="w-full flex flex-col gap-4" data-testid="table-skeleton">
       {/* Filters Placeholder */}
@@ -49,16 +55,18 @@ export function TableSkeleton({ cols = 4, rows = 5, showFilters = true }: TableS
       </div>
 
       {/* Pagination Placeholder */}
-      <div
-        className="flex items-center justify-between border-t border-wc-border-primary pt-4 mt-2"
-        data-testid="table-skeleton-pagination"
-      >
-        <Skeleton className="h-4 w-32" />
-        <div className="flex gap-1.5">
-          <Skeleton className="w-8 h-8 rounded-md" />
-          <Skeleton className="w-8 h-8 rounded-md" />
+      {showPagination && (
+        <div
+          className="flex items-center justify-between border-t border-wc-border-primary pt-4 mt-2"
+          data-testid="table-skeleton-pagination"
+        >
+          <Skeleton className="h-4 w-32" />
+          <div className="flex gap-1.5">
+            <Skeleton className="w-8 h-8 rounded-md" />
+            <Skeleton className="w-8 h-8 rounded-md" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -42,5 +42,8 @@
   "groups": {
     "groupStage": "Group stage",
     "eliminationStage": "Knockout stage"
+  },
+  "teams": {
+    "loadError": "The participating teams could not be loaded."
   }
 }

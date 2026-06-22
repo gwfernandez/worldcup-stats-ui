@@ -1,84 +1,104 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { CHAMPIONSHIP_TEAMS_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { resetUIStore } from '@/store/ui.store';
+import { useChampionshipTeams } from '../../hooks/useChampionshipTeams';
 import { TeamsTab } from './TeamsTab';
-import type { Team } from '@/types/team.types';
 
-const createTeam = (id: number, overrides: Partial<Team> = {}): Team => ({
-  id,
-  name: `Selección ${id}`,
-  teamCode: `T${id}`,
-  confederation: id % 2 === 0 ? 'UEFA' : 'CONMEBOL',
-  group: id % 2 === 0 ? 'Grupo B' : 'Grupo A',
-  coach: `DT ${id}`,
-  performance: 'group_stage',
-  players: [
-    {
-      id: id * 10,
-      number: 10,
-      firstName: `Jugador ${id}`,
-      lastName: 'Prueba',
-      position: 'forward',
-    },
-  ],
-  ...overrides,
-});
+vi.mock('../../hooks/useChampionshipTeams', () => ({
+  useChampionshipTeams: vi.fn(),
+}));
 
-const TEAMS: Team[] = [
-  createTeam(1, { name: 'Argentina', teamCode: 'AR', coach: 'Lionel Scaloni' }),
-  ...Array.from({ length: 11 }, (_, index) => createTeam(index + 2)),
-];
+const defaultHookResult = {
+  teams: CHAMPIONSHIP_TEAMS_FIXTURE,
+  isLoading: false,
+  isError: false,
+  error: null,
+};
 
 describe('TeamsTab', () => {
-  it('renderiza equipos y filtra por nombre', async () => {
-    const user = userEvent.setup();
-
-    render(<TeamsTab teams={TEAMS} />);
-
-    expect(screen.getByText('Argentina')).toBeInTheDocument();
-
-    await user.type(screen.getByPlaceholderText('Buscar selección...'), 'Argentina');
-
-    expect(screen.getByText('Argentina')).toBeInTheDocument();
-    expect(screen.queryByText('Selección 2')).not.toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    resetUIStore();
+    vi.mocked(useChampionshipTeams).mockReturnValue(defaultHookResult);
   });
 
-  it('filtra por confederación y grupo', async () => {
-    const user = userEvent.setup();
+  it('loads the supplied year and renders every participant without pagination', () => {
+    render(<TeamsTab year={1950} />);
 
-    render(<TeamsTab teams={TEAMS} />);
-
-    await user.selectOptions(screen.getByDisplayValue('Todas las confederaciones'), 'UEFA');
-    await user.selectOptions(screen.getByDisplayValue('Todos los grupos'), 'Grupo B');
-
-    expect(screen.getByText('Selección 2')).toBeInTheDocument();
-    expect(screen.queryByText('Argentina')).not.toBeInTheDocument();
+    expect(useChampionshipTeams).toHaveBeenCalledWith(1950);
+    expect(screen.getByText('Uruguay')).toBeInTheDocument();
+    expect(screen.getByText('Brasil')).toBeInTheDocument();
+    expect(screen.getByText('Inglaterra')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Página siguiente' })).not.toBeInTheDocument();
   });
 
-  it('cambia los datos visibles al paginar', async () => {
+  it('filters locally by name, confederation and group', async () => {
     const user = userEvent.setup();
+    render(<TeamsTab year={1950} />);
 
-    render(<TeamsTab teams={TEAMS} />);
+    await user.selectOptions(screen.getByDisplayValue('Todas las confederaciones'), 'CONMEBOL');
+    await user.selectOptions(screen.getByDisplayValue('Todos los grupos'), '1');
+    await user.type(screen.getByPlaceholderText('Buscar selección...'), 'Brasil');
 
-    expect(screen.getByText('Argentina')).toBeInTheDocument();
-    expect(screen.queryByText('Selección 12')).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Página siguiente' }));
-
-    expect(screen.getByText('Selección 12')).toBeInTheDocument();
-    expect(screen.queryByText('Argentina')).not.toBeInTheDocument();
+    expect(screen.getByText('Brasil')).toBeInTheDocument();
+    expect(screen.queryByText('Uruguay')).not.toBeInTheDocument();
+    expect(screen.queryByText('Inglaterra')).not.toBeInTheDocument();
+    expect(vi.mocked(useChampionshipTeams).mock.calls.every(([year]) => year === 1950)).toBe(true);
   });
 
-  it('abre el modal de jugadores al hacer click en la acción de una selección', async () => {
+  it('shows backend performance and a fallback for missing managers', () => {
+    render(<TeamsTab year={1950} />);
+
+    expect(screen.getByText('🏆 Campeón')).toBeInTheDocument();
+    expect(screen.getByText('🥈 Subcampeón')).toBeInTheDocument();
+    expect(screen.getByText('Cuartos de final')).toBeInTheDocument();
+
+    const englandRow = screen.getByText('Inglaterra').closest('tr');
+    expect(englandRow).not.toBeNull();
+    expect(within(englandRow as HTMLTableRowElement).getByText('—')).toBeInTheDocument();
+  });
+
+  it('shows loading, error and empty states', () => {
+    vi.mocked(useChampionshipTeams).mockReturnValue({
+      ...defaultHookResult,
+      teams: [],
+      isLoading: true,
+    });
+    const { rerender } = render(<TeamsTab year={1950} />);
+    expect(screen.getByTestId('table-skeleton')).toBeInTheDocument();
+    expect(screen.queryByTestId('table-skeleton-pagination')).not.toBeInTheDocument();
+
+    vi.mocked(useChampionshipTeams).mockReturnValue({
+      ...defaultHookResult,
+      teams: [],
+      isLoading: false,
+      isError: true,
+      error: new Error('API Error'),
+    });
+    rerender(<TeamsTab year={1950} />);
+    expect(
+      screen.getByText('No se pudieron cargar las selecciones participantes.'),
+    ).toBeInTheDocument();
+
+    vi.mocked(useChampionshipTeams).mockReturnValue({
+      ...defaultHookResult,
+      teams: [],
+    });
+    rerender(<TeamsTab year={1950} />);
+    expect(screen.getByText('No se encontraron selecciones con esos filtros')).toBeInTheDocument();
+  });
+
+  it('opens the temporary Argentina squad from any team action', async () => {
     const user = userEvent.setup();
+    render(<TeamsTab year={1950} />);
 
-    render(<TeamsTab teams={TEAMS} />);
-
-    await user.click(screen.getByRole('button', { name: 'Ver jugadores de Argentina' }));
+    await user.click(screen.getByRole('button', { name: 'Ver jugadores de Uruguay' }));
 
     const dialog = screen.getByRole('dialog', { name: 'Plantel de Argentina' });
     expect(dialog).toBeInTheDocument();
-    expect(within(dialog).getByText(/Lionel Scaloni/)).toBeInTheDocument();
-    expect(within(dialog).getByText('Jugador 1')).toBeInTheDocument();
+    expect(within(dialog).getByText('Argentina - Plantel')).toBeInTheDocument();
+    expect(within(dialog).getByText('Omar')).toBeInTheDocument();
   });
 });

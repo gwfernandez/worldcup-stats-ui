@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 import {
+  ChampionshipTeamListResponseSchema,
   PlayerPositionSchema,
   PlayerSchema,
   NationalTeamListResponseSchema,
@@ -8,6 +9,7 @@ import {
   TeamPerformanceSchema,
   TeamSchema,
 } from './team.types';
+import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
 import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
 
 const validPlayer = {
@@ -48,9 +50,9 @@ describe('team schemas', () => {
 
   it('throws when player and team payloads are invalid', () => {
     expect(() => PlayerSchema.parse({ ...validPlayer, number: '10' })).toThrow(ZodError);
-    expect(() => TeamSchema.parse({ ...validTeam, players: [{ ...validPlayer, position: 'winger' }] })).toThrow(
-      ZodError,
-    );
+    expect(() =>
+      TeamSchema.parse({ ...validTeam, players: [{ ...validPlayer, position: 'winger' }] }),
+    ).toThrow(ZodError);
   });
 
   it('parses paginated national teams including dissolved teams', () => {
@@ -58,6 +60,13 @@ describe('team schemas', () => {
       TEAMS_RESPONSE_FIXTURE,
     );
     expect(TEAMS_RESPONSE_FIXTURE.data[1].isDissolved).toBe(true);
+  });
+
+  it('parses championship teams with pagination and backend stage values', () => {
+    expect(ChampionshipTeamListResponseSchema.parse(CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE)).toEqual(
+      CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE,
+    );
+    expect(CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE.data[2].stageReached).toBe('quarterfinal');
   });
 
   it('throws when national team responses are invalid', () => {

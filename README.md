@@ -147,6 +147,12 @@ remotos por nombre de jugador, selección y confederación. Las opciones de sele
 seleccionar una fila, el modal consulta `GET /api/scorers/:playerId` y muestra los datos personales,
 las selecciones, los Mundiales disputados y todos los goles válidos provistos por el backend.
 
+La solapa Selecciones de `/worldcup/:year` consume siempre
+`GET /api/championships/:year/teams`, reúne automáticamente todas las páginas disponibles y muestra
+la lista completa sin paginación visual. Los filtros por nombre, confederación y grupo se aplican
+localmente. El modal de plantel conserva temporalmente un mock aislado de Argentina hasta integrar
+el endpoint específico de planteles.
+
 ### Comandos disponibles
 
 ```bash

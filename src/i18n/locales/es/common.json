@@ -126,10 +126,17 @@
     "champion": "🏆 Campeón",
     "runner_up": "🥈 Subcampeón",
     "third": "🥉 3er Puesto",
+    "third_place": "🥉 3er Puesto",
     "fourth": "4to Puesto",
+    "fourth_place": "4to Puesto",
     "quarters": "Cuartos",
+    "quarterfinal": "Cuartos de final",
+    "quarter_finals": "Cuartos de final",
+    "semi_finals": "Semifinales",
+    "final": "Final",
     "round_of_16": "Octavos",
     "group_stage": "Fase de grupos",
+    "second_group_stage": "Segunda fase de grupos",
     "host": "🏠 Anfitrión"
   },
   "positions": {

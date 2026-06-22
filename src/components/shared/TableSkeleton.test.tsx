@@ -41,4 +41,9 @@ describe('TableSkeleton', () => {
     render(<TableSkeleton />);
     expect(screen.getByTestId('table-skeleton-pagination')).toBeInTheDocument();
   });
+
+  it('hides the pagination placeholder when showPagination=false', () => {
+    render(<TableSkeleton showPagination={false} />);
+    expect(screen.queryByTestId('table-skeleton-pagination')).not.toBeInTheDocument();
+  });
 });

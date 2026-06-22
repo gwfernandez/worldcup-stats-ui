@@ -42,5 +42,8 @@
   "groups": {
     "groupStage": "Fase de grupos",
     "eliminationStage": "Fase eliminatoria"
+  },
+  "teams": {
+    "loadError": "No se pudieron cargar las selecciones participantes."
   }
 }
