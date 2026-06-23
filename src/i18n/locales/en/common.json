@@ -168,6 +168,10 @@
     "loadError": "The scorer details could not be loaded.",
     "empty": "This player has no valid goals recorded."
   },
+  "squadDialog": {
+    "loading": "Loading squad...",
+    "loadError": "The squad could not be loaded."
+  },
   "standingMetrics": {
     "abbreviations": {
       "points": "PTS",

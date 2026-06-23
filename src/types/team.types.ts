@@ -6,6 +6,16 @@ export const PlayerPositionSchema = z.enum(['goalkeeper', 'defender', 'midfielde
 
 export type PlayerPosition = z.infer<typeof PlayerPositionSchema>;
 
+const PlayerPositionApiSchema = z
+  .union([PlayerPositionSchema, z.enum(['GK', 'DF', 'MF', 'FW'])])
+  .transform((position) => {
+    if (position === 'GK') return 'goalkeeper';
+    if (position === 'DF') return 'defender';
+    if (position === 'MF') return 'midfielder';
+    if (position === 'FW') return 'forward';
+    return position;
+  });
+
 export const POSITION_LABEL: Record<PlayerPosition, string> = {
   goalkeeper: 'Arquero',
   defender: 'Defensor',
@@ -143,11 +153,39 @@ export const ChampionshipTeamListResponseSchema = z.object({
   pagination: ChampionshipTeamPaginationSchema,
 });
 
+export const ChampionshipSquadPlayerSchema = z.object({
+  playerId: z.number(),
+  firstName: z.string(),
+  lastName: z.string(),
+  position: PlayerPositionApiSchema.nullable(),
+  shirtNumber: z.number().nullable(),
+});
+
+export const ChampionshipSquadPlayerListSchema = z.array(ChampionshipSquadPlayerSchema);
+
+export const ChampionshipSquadPaginationSchema = z.object({
+  page: z.number(),
+  size: z.number(),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
+
+export const ChampionshipSquadResponseSchema = z.object({
+  data: ChampionshipSquadPlayerListSchema,
+  pagination: ChampionshipSquadPaginationSchema,
+});
+
 export type ChampionshipTeamStageReached = z.infer<typeof ChampionshipTeamStageReachedSchema>;
 export type ChampionshipTeam = z.infer<typeof ChampionshipTeamSchema>;
 export type ChampionshipTeamList = z.infer<typeof ChampionshipTeamListSchema>;
 export type ChampionshipTeamPagination = z.infer<typeof ChampionshipTeamPaginationSchema>;
 export type ChampionshipTeamListResponse = z.infer<typeof ChampionshipTeamListResponseSchema>;
+export type ChampionshipSquadPlayer = z.infer<typeof ChampionshipSquadPlayerSchema>;
+export type ChampionshipSquadPlayerList = z.infer<typeof ChampionshipSquadPlayerListSchema>;
+export type ChampionshipSquadPagination = z.infer<typeof ChampionshipSquadPaginationSchema>;
+export type ChampionshipSquadResponse = z.infer<typeof ChampionshipSquadResponseSchema>;
 
 export const CHAMPIONSHIP_STAGE_STYLES: Record<ChampionshipTeamStageReached, string> = {
   champion: PERFORMANCE_STYLES.champion,
