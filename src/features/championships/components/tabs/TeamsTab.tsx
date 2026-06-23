@@ -8,7 +8,6 @@ import {
 import { FilterSelect, FlagImage, SearchInput, TableSkeleton, Tooltip } from '@/components/shared';
 import { PlayersModal } from '../shared/PlayersModal';
 import { useChampionshipTeams } from '../../hooks/useChampionshipTeams';
-import { ARGENTINA_SQUAD_MOCK } from '../../mocks/argentinaSquad.mock';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
@@ -23,7 +22,7 @@ export interface TeamsTabProps {
  */
 export function TeamsTab({ year }: TeamsTabProps) {
   const { t } = useTranslation(['common', 'championships']);
-  const [isSquadOpen, setIsSquadOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<ChampionshipTeam | null>(null);
   const filters = useUIStore((state) => state.filters.championshipTeams);
   const setFilter = useUIStore((state) => state.setFilter);
   const { teams, isLoading, isError } = useChampionshipTeams(year);
@@ -142,17 +141,14 @@ export function TeamsTab({ year }: TeamsTabProps) {
               <TeamRow
                 key={`${team.year}-${team.team.code}`}
                 team={team}
-                onViewSquad={() => setIsSquadOpen(true)}
+                onViewSquad={() => setSelectedTeam(team)}
               />
             ))}
           </tbody>
         </table>
       </div>
 
-      <PlayersModal
-        team={isSquadOpen ? ARGENTINA_SQUAD_MOCK : null}
-        onClose={() => setIsSquadOpen(false)}
-      />
+      <PlayersModal year={year} team={selectedTeam} onClose={() => setSelectedTeam(null)} />
     </>
   );
 }

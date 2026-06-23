@@ -168,6 +168,10 @@
     "loadError": "No se pudo cargar el detalle del goleador.",
     "empty": "Este jugador no tiene goles válidos registrados."
   },
+  "squadDialog": {
+    "loading": "Cargando plantel...",
+    "loadError": "No se pudo cargar el plantel."
+  },
   "standingMetrics": {
     "abbreviations": {
       "points": "PTS",

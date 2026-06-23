@@ -2,12 +2,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CHAMPIONSHIP_TEAMS_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { CHAMPIONSHIP_SQUAD_FIXTURE } from '@/test/fixtures/championshipSquad.fixture';
 import { resetUIStore } from '@/store/ui.store';
 import { useChampionshipTeams } from '../../hooks/useChampionshipTeams';
+import { useChampionshipSquad } from '../../hooks/useChampionshipSquad';
 import { TeamsTab } from './TeamsTab';
 
 vi.mock('../../hooks/useChampionshipTeams', () => ({
   useChampionshipTeams: vi.fn(),
+}));
+
+vi.mock('../../hooks/useChampionshipSquad', () => ({
+  useChampionshipSquad: vi.fn(),
 }));
 
 const defaultHookResult = {
@@ -22,6 +28,13 @@ describe('TeamsTab', () => {
     vi.clearAllMocks();
     resetUIStore();
     vi.mocked(useChampionshipTeams).mockReturnValue(defaultHookResult);
+    vi.mocked(useChampionshipSquad).mockReturnValue({
+      players: CHAMPIONSHIP_SQUAD_FIXTURE,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
   });
 
   it('loads the supplied year and renders every participant without pagination', () => {
@@ -90,15 +103,19 @@ describe('TeamsTab', () => {
     expect(screen.getByText('No se encontraron selecciones con esos filtros')).toBeInTheDocument();
   });
 
-  it('opens the temporary Argentina squad from any team action', async () => {
+  it('opens the selected team squad with row metadata', async () => {
     const user = userEvent.setup();
     render(<TeamsTab year={1950} />);
 
     await user.click(screen.getByRole('button', { name: 'Ver jugadores de Uruguay' }));
 
-    const dialog = screen.getByRole('dialog', { name: 'Plantel de Argentina' });
+    const dialog = screen.getByRole('dialog', { name: 'Plantel de Uruguay' });
     expect(dialog).toBeInTheDocument();
-    expect(within(dialog).getByText('Argentina - Plantel')).toBeInTheDocument();
-    expect(within(dialog).getByText('Omar')).toBeInTheDocument();
+    expect(useChampionshipSquad).toHaveBeenLastCalledWith(1950, 'URY');
+    expect(within(dialog).getByText('Uruguay - Plantel')).toBeInTheDocument();
+    expect(within(dialog).getByText('Juan López Fontana')).toBeInTheDocument();
+    expect(within(dialog).queryByText('Grupo 4')).not.toBeInTheDocument();
+    expect(within(dialog).getByText('Alcides')).toBeInTheDocument();
+    expect(within(dialog).queryByText('Argentina - Plantel')).not.toBeInTheDocument();
   });
 });

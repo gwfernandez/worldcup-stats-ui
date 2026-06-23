@@ -6,12 +6,16 @@ import { HISTORICAL_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/historicalS
 import { HISTORICAL_SCORER_DETAIL_FIXTURE } from '@/test/fixtures/historicalScorerDetail.fixture';
 import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
 import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { CHAMPIONSHIP_SQUAD_RESPONSE_FIXTURE } from '@/test/fixtures/championshipSquad.fixture';
 import { MOCK_CHAMPIONSHIPS_RESPONSE } from '@/features/championships/mocks/championship.mock';
 
 export const handlers = [
   http.get('*/api/championships', () => HttpResponse.json(MOCK_CHAMPIONSHIPS_RESPONSE)),
   http.get('*/api/championships/:year/teams', () =>
     HttpResponse.json(CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE),
+  ),
+  http.get('*/api/championships/:year/squads/:teamCode', () =>
+    HttpResponse.json(CHAMPIONSHIP_SQUAD_RESPONSE_FIXTURE),
   ),
   http.get('*/api/champions', () => HttpResponse.json(CHAMPIONS_RESPONSE_FIXTURE)),
   http.get('*/api/champions/:teamCode', () => HttpResponse.json(CHAMPION_FINALS_RESPONSE_FIXTURE)),
