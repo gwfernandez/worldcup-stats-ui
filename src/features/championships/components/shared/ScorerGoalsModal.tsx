@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { FlagImage } from '@/components/shared';
-import type { Scorer } from '@/types/scorer.types';
+import type { PlayerGoal, Scorer } from '@/types/scorer.types';
 import { useTranslation } from 'react-i18next';
 import { usePlayerGoals } from '../../hooks/usePlayerGoals';
 
@@ -9,6 +9,44 @@ const MOBILE_MEDIA_QUERY = '(max-width: 639px)';
 
 const formatMatchDate = (matchDate: string | null): string =>
   matchDate === null ? '—' : matchDate.slice(5);
+
+const formatGoalMinute = (goal: PlayerGoal): string =>
+  `${goal.minuteRegular}'${goal.penalty === true ? ' (P)' : ''}`;
+
+interface PlayerGoalMatchGroup {
+  key: string;
+  matchDate: PlayerGoal['matchDate'];
+  opponentTeam: PlayerGoal['opponentTeam'];
+  stage: PlayerGoal['stage'];
+  goals: PlayerGoal[];
+}
+
+const getGoalMatchKey = (goal: PlayerGoal): string =>
+  JSON.stringify([goal.matchDate, goal.opponentTeam.code, goal.stage]);
+
+const groupGoalsByMatch = (goals: PlayerGoal[]): PlayerGoalMatchGroup[] => {
+  const groups = new Map<string, PlayerGoalMatchGroup>();
+
+  goals.forEach((goal) => {
+    const key = getGoalMatchKey(goal);
+    const existingGroup = groups.get(key);
+
+    if (existingGroup) {
+      existingGroup.goals.push(goal);
+      return;
+    }
+
+    groups.set(key, {
+      key,
+      matchDate: goal.matchDate,
+      opponentTeam: goal.opponentTeam,
+      stage: goal.stage,
+      goals: [goal],
+    });
+  });
+
+  return Array.from(groups.values());
+};
 
 const getIsMobileViewport = (): boolean =>
   typeof window !== 'undefined' &&
@@ -25,6 +63,7 @@ export function ScorerGoalsModal({ selectedScorer, year, onClose }: ScorerGoalsM
   const { t } = useTranslation('common');
   const [isMobileViewport, setIsMobileViewport] = useState(getIsMobileViewport);
   const { goals, isLoading, isError, refetch } = usePlayerGoals(selectedScorer?.playerId ?? null, year);
+  const mobileGoalGroups = useMemo(() => groupGoalsByMatch(goals), [goals]);
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;
@@ -129,49 +168,58 @@ export function ScorerGoalsModal({ selectedScorer, year, onClose }: ScorerGoalsM
                 </p>
               ) : isMobileViewport ? (
                 <div className="space-y-2.5" data-testid="player-goal-cards">
-                  {goals.map((goal, index) => (
+                  {mobileGoalGroups.map((goalGroup) => (
                     <article
-                      key={`${goal.year}-${goal.matchDate ?? 'unknown'}-${goal.minuteRegular}-${index}`}
+                      key={goalGroup.key}
                       className="rounded-lg border border-wc-border-primary bg-wc-surface-secondary px-3 py-2.5"
                       data-testid="player-goal-card"
                     >
                       <div className="border-b border-wc-border-primary pb-2">
                         <span className="block truncate text-[10px] text-wc-text-muted">
-                          {goal.stage ?? '—'}
+                          {goalGroup.stage ?? '—'}
                         </span>
                       </div>
 
                       <div
-                        className="grid grid-cols-3 pt-2 text-center"
+                        className="grid grid-cols-[64px_minmax(0,1fr)_72px] pt-2 text-center"
                         data-testid="player-goal-card-details"
                       >
                         <div>
                           <p className="text-[9px] text-wc-text-muted">{t('labels.date')}</p>
                           <p className="mt-0.5 text-[11px] text-wc-text-primary">
-                            {formatMatchDate(goal.matchDate)}
+                            {formatMatchDate(goalGroup.matchDate)}
                           </p>
                         </div>
                         <div>
                           <p className="text-[9px] text-wc-text-muted">{t('labels.rival')}</p>
                           <div className="mt-0.5 flex items-center justify-center gap-1.5">
                             <FlagImage
-                              countryCode={goal.opponentTeam.code}
-                              alt={goal.opponentTeam.name}
+                              countryCode={goalGroup.opponentTeam.code}
+                              alt={goalGroup.opponentTeam.name}
                               width={16}
                               height={12}
                               className="rounded-[2px] shrink-0"
                             />
                             <span className="text-[11px] text-wc-text-primary">
-                              {goal.opponentTeam.code}
+                              {goalGroup.opponentTeam.name}
                             </span>
                           </div>
                         </div>
                         <div>
-                          <p className="text-[9px] text-wc-text-muted">{t('labels.minute')}</p>
-                          <p className="mt-0.5 whitespace-nowrap text-[11px] text-wc-text-primary">
-                            {goal.minuteRegular}
-                            {goal.penalty === true ? ' (P)' : ''}
+                          <p className="text-[9px] text-wc-text-muted">
+                            {t('labels.minuteFull')}
                           </p>
+                          <div className="mt-1" data-testid="player-goal-subrows">
+                            {goalGroup.goals.map((goal, goalIndex) => (
+                              <div
+                                key={`${goal.minuteRegular}-${goal.penalty === true ? 'penalty' : 'regular'}-${goalIndex}`}
+                                className="py-1 text-[10px] leading-none text-wc-accent-gold first:pt-0 last:pb-0"
+                                data-testid="player-goal-subrow"
+                              >
+                                {formatGoalMinute(goal)}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </article>
@@ -189,7 +237,7 @@ export function ScorerGoalsModal({ selectedScorer, year, onClose }: ScorerGoalsM
                           {t('labels.rival')}
                         </th>
                         <th className="w-[58px] py-0 pr-1 pb-2 pl-0 text-center font-normal text-wc-text-muted">
-                          {t('labels.minute')}
+                          {t('labels.minuteFull')}
                         </th>
                         <th className="px-2 pb-2 text-left font-normal text-wc-text-muted">
                           {t('labels.phase')}
@@ -217,9 +265,8 @@ export function ScorerGoalsModal({ selectedScorer, year, onClose }: ScorerGoalsM
                               <span className="text-wc-text-primary">{goal.opponentTeam.code}</span>
                             </div>
                           </td>
-                          <td className="whitespace-nowrap py-3 pr-1 pl-0 text-center text-wc-text-primary">
-                            {goal.minuteRegular}
-                            {goal.penalty === true ? ' (P)' : ''}
+                          <td className="whitespace-nowrap py-3 pr-1 pl-0 text-center text-wc-accent-gold">
+                            {formatGoalMinute(goal)}
                           </td>
                           <td className="px-2 py-3 text-wc-text-muted">{goal.stage ?? '—'}</td>
                         </tr>
