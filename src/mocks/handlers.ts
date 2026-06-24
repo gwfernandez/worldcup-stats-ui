@@ -8,6 +8,7 @@ import { TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/teams.fixture';
 import { CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipScorers.fixture';
 import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
 import { CHAMPIONSHIP_SQUAD_RESPONSE_FIXTURE } from '@/test/fixtures/championshipSquad.fixture';
+import { PLAYER_GOALS_RESPONSE_FIXTURE } from '@/test/fixtures/playerGoals.fixture';
 import { MOCK_CHAMPIONSHIPS_RESPONSE } from '@/features/championships/mocks/championship.mock';
 
 export const handlers = [
@@ -26,5 +27,8 @@ export const handlers = [
   http.get('*/api/standings', () => HttpResponse.json(HISTORICAL_STANDINGS_RESPONSE_FIXTURE)),
   http.get('*/api/scorers', () => HttpResponse.json(HISTORICAL_SCORERS_RESPONSE_FIXTURE)),
   http.get('*/api/scorers/:playerId', () => HttpResponse.json(HISTORICAL_SCORER_DETAIL_FIXTURE)),
+  http.get('*/api/players/:playerId/goals', () =>
+    HttpResponse.json(PLAYER_GOALS_RESPONSE_FIXTURE),
+  ),
   http.get('*/api/teams', () => HttpResponse.json(TEAMS_RESPONSE_FIXTURE)),
 ];

@@ -1,9 +1,18 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
+import { Volleyball } from 'lucide-react';
 import type { Scorer } from '@/types/scorer.types';
-import { FilterSelect, FlagImage, Pagination, QueryStatus, SearchInput } from '@/components/shared';
+import {
+  FilterSelect,
+  FlagImage,
+  Pagination,
+  QueryStatus,
+  SearchInput,
+  Tooltip,
+} from '@/components/shared';
 import { TableSkeleton } from '@/components/shared/TableSkeleton';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
+import { ScorerGoalsModal } from '../shared/ScorerGoalsModal';
 import { useChampionshipScorers } from '../../hooks/useChampionshipScorers';
 import { useChampionshipTeams } from '../../hooks/useChampionshipTeams';
 
@@ -18,6 +27,7 @@ export interface ScorersTabProps {
 export function ScorersTab({ year }: ScorersTabProps) {
   const { t } = useTranslation('common');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
   const filters = useUIStore((state) => state.filters.championshipScorers);
   const setFilter = useUIStore((state) => state.setFilter);
   const searchName = filters?.name ?? '';
@@ -60,7 +70,7 @@ export function ScorersTab({ year }: ScorersTabProps) {
       isLoading={isLoading}
       isError={isError}
       error={error}
-      skeleton={<TableSkeleton cols={4} rows={8} />}
+      skeleton={<TableSkeleton cols={5} rows={8} />}
     >
       <div className="mb-4 grid min-w-0 grid-cols-1 gap-1.5 min-[320px]:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] sm:gap-2.5">
         <SearchInput
@@ -80,10 +90,11 @@ export function ScorersTab({ year }: ScorersTabProps) {
 
       <table className="w-full table-fixed border-collapse">
         <colgroup>
-          <col className="w-[8%]" />
-          <col className="w-[38%]" />
+          <col className="w-[7%]" />
           <col className="w-[34%]" />
-          <col className="w-[20%]" />
+          <col className="w-[30%]" />
+          <col className="w-[18%]" />
+          <col className="w-[11%]" />
         </colgroup>
         <thead>
           <tr className="border-b border-wc-border-primary">
@@ -99,12 +110,15 @@ export function ScorersTab({ year }: ScorersTabProps) {
             <th className="truncate pb-2 pr-1 text-right text-[10px] font-normal text-wc-text-muted sm:pr-2 sm:text-[11px]">
               {t('labels.goals')}
             </th>
+            <th className="truncate pb-2 text-right text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
+              {t('labels.actions')}
+            </th>
           </tr>
         </thead>
         <tbody>
           {scorers.length === 0 && (
             <tr>
-              <td colSpan={4} className="py-8 text-center text-sm text-wc-text-muted">
+              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 {t('empty.scorers')}
               </td>
             </tr>
@@ -158,6 +172,22 @@ export function ScorersTab({ year }: ScorersTabProps) {
                     </span>
                   </div>
                 </td>
+                <td className="overflow-visible py-2.5 text-right">
+                  <Tooltip
+                    content={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    groupName="action"
+                    align="end"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setSelectedScorer(scorer)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-wc-border-primary text-wc-text-muted transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none"
+                      aria-label={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    >
+                      <Volleyball size={13} aria-hidden="true" />
+                    </button>
+                  </Tooltip>
+                </td>
               </tr>
             );
           })}
@@ -171,6 +201,12 @@ export function ScorersTab({ year }: ScorersTabProps) {
         pageSize={pagination.size}
         itemsLabel={t('labels.players').toLowerCase()}
         onPageChange={setCurrentPage}
+      />
+
+      <ScorerGoalsModal
+        selectedScorer={selectedScorer}
+        year={year}
+        onClose={() => setSelectedScorer(null)}
       />
     </QueryStatus>
   );

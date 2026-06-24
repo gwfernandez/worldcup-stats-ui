@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
 import { CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipScorers.fixture';
 import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { PLAYER_GOALS_RESPONSE_FIXTURE } from '@/test/fixtures/playerGoals.fixture';
 import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { ScorersTab } from './ScorersTab';
 
@@ -15,6 +16,8 @@ describe('ScorersTab', () => {
     expect(await screen.findByText('Ademir')).toBeInTheDocument();
     expect(screen.getAllByText('Brasil').length).toBeGreaterThan(0);
     expect(screen.getByText('8')).toBeInTheDocument();
+    expect(screen.getByText('Acciones')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Detalle de goles de Ademir' })).toBeInTheDocument();
     expect(screen.queryByText('Promedio')).not.toBeInTheDocument();
     expect(screen.queryByDisplayValue('Todas las fases')).not.toBeInTheDocument();
   });
@@ -109,6 +112,28 @@ describe('ScorersTab', () => {
     expect(await screen.findByText('Alcides Ghiggia')).toBeInTheDocument();
     expect(screen.queryByText('Ademir')).not.toBeInTheDocument();
     expect(requestedPages).toContain('2');
+  });
+
+  it('abre el modal de goles y consulta el jugador con el año de la ruta', async () => {
+    const user = userEvent.setup();
+    const requestedGoalUrls: URL[] = [];
+    server.use(
+      http.get('*/api/players/:playerId/goals', ({ request }) => {
+        requestedGoalUrls.push(new URL(request.url));
+        return HttpResponse.json(PLAYER_GOALS_RESPONSE_FIXTURE);
+      }),
+    );
+
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
+
+    await user.click(await screen.findByRole('button', { name: 'Detalle de goles de Ademir' }));
+
+    expect(await screen.findByRole('dialog', { name: 'Detalle de goles de Ademir' })).toBeInTheDocument();
+    await waitFor(() => expect(requestedGoalUrls).toHaveLength(1));
+    const requestedUrl = requestedGoalUrls[0] as URL;
+    expect(requestedUrl.pathname).toBe('/api/players/101/goals');
+    expect(requestedUrl.searchParams.get('year')).toBe('1950');
+    expect(requestedUrl.searchParams.get('size')).toBe('100');
   });
 
   it('muestra estado vacío cuando no hay goleadores', async () => {
