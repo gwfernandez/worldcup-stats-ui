@@ -1,85 +1,162 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
+import { server } from '@/mocks/server';
+import { CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipScorers.fixture';
+import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
+import { PLAYER_GOALS_RESPONSE_FIXTURE } from '@/test/fixtures/playerGoals.fixture';
+import { createQueryClientWrapper } from '@/test/queryClientWrapper';
 import { ScorersTab } from './ScorersTab';
-import type { Scorer } from '@/types/scorer.types';
-
-const createScorer = (id: number, overrides: Partial<Scorer> = {}): Scorer => ({
-  id,
-  playerName: `Goleador ${id}`,
-  teamName: id % 2 === 0 ? 'Italia' : 'Brasil',
-  teamCode: id % 2 === 0 ? 'IT' : 'BR',
-  totalGoals: 12 - id,
-  matchesPlayed: 5,
-  average: 1.2,
-  goals: [
-    {
-      id: id * 10,
-      date: '10 Jun',
-      minute: 20 + id,
-      rivalTeam: 'Uruguay',
-      rivalTeamCode: 'UY',
-      phase: id % 2 === 0 ? 'Final' : 'Grupo 1',
-    },
-  ],
-  ...overrides,
-});
-
-const SCORERS: Scorer[] = [
-  createScorer(1, { playerName: 'Pelé', teamName: 'Brasil', teamCode: 'BR' }),
-  ...Array.from({ length: 11 }, (_, index) => createScorer(index + 2)),
-];
 
 describe('ScorersTab', () => {
-  it('renderiza goleadores y filtra por nombre', async () => {
-    const user = userEvent.setup();
+  it('renderiza goleadores sin promedio ni filtro de fase', async () => {
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
 
-    render(<ScorersTab scorers={SCORERS} />);
-
-    expect(screen.getByText('Pelé')).toBeInTheDocument();
-
-    await user.type(screen.getByPlaceholderText('Buscar jugador...'), 'Pelé');
-
-    expect(screen.getByText('Pelé')).toBeInTheDocument();
-    expect(screen.queryByText('Goleador 2')).not.toBeInTheDocument();
+    expect(await screen.findByText('Ademir')).toBeInTheDocument();
+    expect(screen.getAllByText('Brasil').length).toBeGreaterThan(0);
+    expect(screen.getByText('8')).toBeInTheDocument();
+    expect(screen.getByText('Acciones')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Detalle de goles de Ademir' })).toBeInTheDocument();
+    expect(screen.queryByText('Promedio')).not.toBeInTheDocument();
+    expect(screen.queryByDisplayValue('Todas las fases')).not.toBeInTheDocument();
   });
 
-  it('filtra por selección y fase', async () => {
+  it('filtra por nombre usando el endpoint de goleadores del año', async () => {
     const user = userEvent.setup();
+    const requestedUrls: URL[] = [];
+    server.use(
+      http.get('*/api/championships/:year/scorers', ({ request }) => {
+        requestedUrls.push(new URL(request.url));
+        return HttpResponse.json(CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE);
+      }),
+    );
 
-    render(<ScorersTab scorers={SCORERS} />);
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
 
-    await user.selectOptions(screen.getByDisplayValue('Todas las selecciones'), 'IT');
-    await user.selectOptions(screen.getByDisplayValue('Todas las fases'), 'Final');
+    await screen.findByText('Ademir');
+    await user.type(screen.getByPlaceholderText('Buscar jugador...'), 'ademir');
 
-    expect(screen.getByText('Goleador 2')).toBeInTheDocument();
-    expect(screen.queryByText('Pelé')).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(requestedUrls.some((url) => url.searchParams.get('name') === 'ademir')).toBe(true),
+    );
+    expect(requestedUrls.at(-1)?.pathname).toBe('/api/championships/1950/scorers');
   });
 
-  it('cambia los datos visibles al paginar', async () => {
+  it('filtra por selección usando las opciones del endpoint de equipos del año', async () => {
     const user = userEvent.setup();
+    const requestedScorersUrls: URL[] = [];
+    const requestedTeamsUrls: URL[] = [];
+    server.use(
+      http.get('*/api/championships/:year/scorers', ({ request }) => {
+        requestedScorersUrls.push(new URL(request.url));
+        return HttpResponse.json(CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE);
+      }),
+      http.get('*/api/championships/:year/teams', ({ request }) => {
+        requestedTeamsUrls.push(new URL(request.url));
+        return HttpResponse.json(CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE);
+      }),
+    );
 
-    render(<ScorersTab scorers={SCORERS} />);
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
 
-    expect(screen.getByText('Pelé')).toBeInTheDocument();
-    expect(screen.queryByText('Goleador 12')).not.toBeInTheDocument();
+    await screen.findByText('Ademir');
+    await user.selectOptions(screen.getByDisplayValue('Todas las selecciones'), 'BRA');
+
+    await waitFor(() =>
+      expect(requestedScorersUrls.at(-1)?.searchParams.get('teamCode')).toBe('BRA'),
+    );
+    expect(requestedTeamsUrls[0]?.pathname).toBe('/api/championships/1950/teams');
+  });
+
+  it('cambia la página visible usando paginación remota', async () => {
+    const user = userEvent.setup();
+    const requestedPages: string[] = [];
+    server.use(
+      http.get('*/api/championships/:year/scorers', ({ request }) => {
+        const url = new URL(request.url);
+        const page = url.searchParams.get('page') ?? '1';
+        requestedPages.push(page);
+
+        return HttpResponse.json({
+          data:
+            page === '2'
+              ? [
+                  {
+                    playerId: 104,
+                    fullName: 'Alcides Ghiggia',
+                    team: { code: 'URY', name: 'Uruguay' },
+                    goals: 3,
+                  },
+                ]
+              : CHAMPIONSHIP_SCORERS_RESPONSE_FIXTURE.data,
+          pagination: {
+            page: Number(page),
+            size: 10,
+            totalElements: 11,
+            totalPages: 2,
+            hasNext: page === '1',
+            hasPrevious: page === '2',
+          },
+        });
+      }),
+    );
+
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
+
+    expect(await screen.findByText('Ademir')).toBeInTheDocument();
+    expect(screen.queryByText('Alcides Ghiggia')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Página siguiente' }));
 
-    expect(screen.getByText('Goleador 12')).toBeInTheDocument();
-    expect(screen.queryByText('Pelé')).not.toBeInTheDocument();
+    expect(await screen.findByText('Alcides Ghiggia')).toBeInTheDocument();
+    expect(screen.queryByText('Ademir')).not.toBeInTheDocument();
+    expect(requestedPages).toContain('2');
   });
 
-  it('abre el modal de detalle al hacer click en una fila', async () => {
+  it('abre el modal de goles y consulta el jugador con el año de la ruta', async () => {
     const user = userEvent.setup();
+    const requestedGoalUrls: URL[] = [];
+    server.use(
+      http.get('*/api/players/:playerId/goals', ({ request }) => {
+        requestedGoalUrls.push(new URL(request.url));
+        return HttpResponse.json(PLAYER_GOALS_RESPONSE_FIXTURE);
+      }),
+    );
 
-    render(<ScorersTab scorers={SCORERS} />);
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
 
-    await user.click(screen.getByText('Pelé'));
+    await user.click(await screen.findByRole('button', { name: 'Detalle de goles de Ademir' }));
 
-    const dialog = screen.getByRole('dialog', { name: 'Detalle de goles de Pelé' });
-    expect(dialog).toBeInTheDocument();
-    expect(within(dialog).getByText(/Pelé/)).toBeInTheDocument();
-    expect(within(dialog).getByText('Uruguay')).toBeInTheDocument();
+    expect(await screen.findByRole('dialog', { name: 'Detalle de goles de Ademir' })).toBeInTheDocument();
+    await waitFor(() => expect(requestedGoalUrls).toHaveLength(1));
+    const requestedUrl = requestedGoalUrls[0] as URL;
+    expect(requestedUrl.pathname).toBe('/api/players/101/goals');
+    expect(requestedUrl.searchParams.get('year')).toBe('1950');
+    expect(requestedUrl.searchParams.get('size')).toBe('100');
+  });
+
+  it('muestra estado vacío cuando no hay goleadores', async () => {
+    server.use(
+      http.get('*/api/championships/:year/scorers', () =>
+        HttpResponse.json({
+          data: [],
+          pagination: {
+            page: 1,
+            size: 10,
+            totalElements: 0,
+            totalPages: 0,
+            hasNext: false,
+            hasPrevious: false,
+          },
+        }),
+      ),
+    );
+
+    render(<ScorersTab year={1950} />, { wrapper: createQueryClientWrapper() });
+
+    expect(
+      await screen.findByText('No se encontraron goleadores con esos filtros'),
+    ).toBeInTheDocument();
   });
 });

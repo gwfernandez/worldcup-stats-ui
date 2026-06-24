@@ -1,168 +1,192 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState, type ChangeEvent } from 'react';
+import { Volleyball } from 'lucide-react';
 import type { Scorer } from '@/types/scorer.types';
-import { ScorerModal } from '../shared/ScorerModal';
-import { Pagination } from '@/components/shared/Pagination';
-import { SearchInput, FilterSelect, FlagImage } from '@/components/shared';
+import {
+  FilterSelect,
+  FlagImage,
+  Pagination,
+  QueryStatus,
+  SearchInput,
+  Tooltip,
+} from '@/components/shared';
+import { TableSkeleton } from '@/components/shared/TableSkeleton';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
-
-const PAGE_SIZE = 10;
+import { ScorerGoalsModal } from '../shared/ScorerGoalsModal';
+import { useChampionshipScorers } from '../../hooks/useChampionshipScorers';
+import { useChampionshipTeams } from '../../hooks/useChampionshipTeams';
 
 export interface ScorersTabProps {
-  scorers: Scorer[];
+  year: number;
 }
 
 /**
  * Solapa de goleadores.
- * Incluye filtros por nombre, selección y fase, tabla paginada y modal de detalle.
+ * Incluye filtros remotos por nombre y selección, tabla paginada y datos de la API.
  */
-export function ScorersTab({ scorers }: ScorersTabProps) {
+export function ScorersTab({ year }: ScorersTabProps) {
   const { t } = useTranslation('common');
-  const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedScorer, setSelectedScorer] = useState<Scorer | null>(null);
   const filters = useUIStore((state) => state.filters.championshipScorers);
   const setFilter = useUIStore((state) => state.setFilter);
   const searchName = filters?.name ?? '';
   const filterTeam = filters?.team ?? '';
-  const filterPhase = filters?.phase ?? '';
+  const {
+    scorers,
+    pagination,
+    isLoading: areScorersLoading,
+    isError: isScorersError,
+    error: scorersError,
+  } = useChampionshipScorers(year, currentPage);
+  const {
+    teams,
+    isLoading: areTeamsLoading,
+    isError: isTeamsError,
+    error: teamsError,
+  } = useChampionshipTeams(year);
+  const isLoading = areScorersLoading || areTeamsLoading;
+  const isError = isScorersError || isTeamsError;
+  const error = scorersError ?? teamsError;
 
-  const teamOptions = useMemo(() => {
-    const teams = [
-      ...new Map(scorers.map((s) => [s.teamCode, { code: s.teamCode, name: s.teamName }])).values(),
-    ];
-    return teams.sort((a, b) => a.name.localeCompare(b.name));
-  }, [scorers]);
+  const teamOptions = useMemo(
+    () =>
+      teams
+        .map((team) => ({ value: team.team.code, label: team.team.name }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [teams],
+  );
 
-  const phaseOptions = useMemo(() => {
-    const phases = new Set(scorers.flatMap((s) => s.goals.map((g) => g.phase)));
-    return [...phases].sort();
-  }, [scorers]);
-
-  const maxGoals = useMemo(() => Math.max(...scorers.map((s) => s.totalGoals), 1), [scorers]);
-
-  const filtered = useMemo(() => {
-    return scorers.filter((s) => {
-      const matchesName = s.playerName.toLowerCase().includes(searchName.toLowerCase());
-      const matchesTeam = filterTeam === '' || s.teamCode === filterTeam;
-      const matchesPhase = filterPhase === '' || s.goals.some((g) => g.phase === filterPhase);
-      return matchesName && matchesTeam && matchesPhase;
-    });
-  }, [scorers, searchName, filterTeam, filterPhase]);
+  const maxGoals = useMemo(() => Math.max(...scorers.map((scorer) => scorer.goals), 1), [scorers]);
 
   const handleFilterChange =
-    (key: string) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setFilter('championshipScorers', key, e.target.value);
+    (key: string) => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setFilter('championshipScorers', key, event.target.value);
       setCurrentPage(1);
     };
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const globalRankOf = (scorer: Scorer) => filtered.indexOf(scorer) + 1;
-
   return (
-    <>
-      <div className="flex gap-2.5 mb-4">
+    <QueryStatus
+      isLoading={isLoading}
+      isError={isError}
+      error={error}
+      skeleton={<TableSkeleton cols={5} rows={8} />}
+    >
+      <div className="mb-4 grid min-w-0 grid-cols-1 gap-1.5 min-[320px]:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] sm:gap-2.5">
         <SearchInput
-          className="flex-[2]"
+          className="min-w-0"
           placeholder={t('search.player')}
           value={searchName}
           onChange={handleFilterChange('name')}
         />
         <FilterSelect
-          className="flex-1"
+          className="min-w-0"
           value={filterTeam}
           onChange={handleFilterChange('team')}
           placeholderOption={t('filters.allTeams')}
-          options={teamOptions.map((t) => ({ value: t.code, label: t.name }))}
-        />
-        <FilterSelect
-          className="flex-1"
-          value={filterPhase}
-          onChange={handleFilterChange('phase')}
-          placeholderOption={t('filters.allStages')}
-          options={phaseOptions.map((p) => ({ value: p, label: p }))}
+          options={teamOptions}
         />
       </div>
 
-      <table className="w-full border-collapse">
+      <table className="w-full table-fixed border-collapse">
+        <colgroup>
+          <col className="w-[7%]" />
+          <col className="w-[34%]" />
+          <col className="w-[30%]" />
+          <col className="w-[18%]" />
+          <col className="w-[11%]" />
+        </colgroup>
         <thead>
           <tr className="border-b border-wc-border-primary">
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2 pl-2 w-8">
+            <th className="w-8 pb-2 text-left text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
               #
             </th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+            <th className="truncate pb-2 pr-1 text-left text-[10px] font-normal text-wc-text-muted sm:pr-3 sm:text-[11px]">
               {t('labels.player')}
             </th>
-            <th className="text-left text-[11px] font-normal text-wc-text-muted pb-2">
+            <th className="truncate pb-2 pr-1 text-left text-[10px] font-normal text-wc-text-muted sm:pr-3 sm:text-[11px]">
               {t('labels.team')}
             </th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
+            <th className="truncate pb-2 pr-1 text-right text-[10px] font-normal text-wc-text-muted sm:pr-2 sm:text-[11px]">
               {t('labels.goals')}
             </th>
-            <th className="text-right text-[11px] font-normal text-wc-text-muted pb-2 pr-2">
-              {t('labels.average')}
+            <th className="truncate pb-2 text-right text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
+              {t('labels.actions')}
             </th>
           </tr>
         </thead>
         <tbody>
-          {paginated.length === 0 && (
+          {scorers.length === 0 && (
             <tr>
               <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
                 {t('empty.scorers')}
               </td>
             </tr>
           )}
-          {paginated.map((scorer) => {
-            const rank = globalRankOf(scorer);
+          {scorers.map((scorer: Scorer, index) => {
+            const rank = (currentPage - 1) * pagination.size + index + 1;
             const isTop3 = rank <= 3;
-            const barWidth = Math.round((scorer.totalGoals / maxGoals) * 100);
+            const barWidth = Math.round((scorer.goals / maxGoals) * 100);
 
             return (
               <tr
-                key={scorer.id}
-                onClick={() => setSelectedScorer(scorer)}
-                className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
+                key={scorer.playerId}
+                className="border-t border-wc-surface-secondary transition-colors duration-150 group"
               >
-                <td className="py-2.5 pl-2">
+                <td className="overflow-hidden py-2.5 pl-0.5 sm:pl-1">
                   <span
                     className={`text-[11px] ${isTop3 ? 'text-wc-accent-gold font-medium' : 'text-wc-text-muted'}`}
                   >
                     {rank}
                   </span>
                 </td>
-                <td className="py-2.5 pr-3">
-                  <span className="text-xs text-wc-text-primary group-hover:text-wc-accent-gold transition-colors">
-                    {scorer.playerName}
+                <td className="min-w-0 overflow-hidden py-2.5 pr-1 sm:pr-3">
+                  <span className="block truncate text-[11px] text-wc-text-primary sm:text-xs">
+                    {scorer.fullName}
                   </span>
                 </td>
-                <td className="py-2.5 pr-3">
-                  <div className="flex items-center gap-1.5">
+                <td className="min-w-0 overflow-hidden py-2.5 pr-1 sm:pr-3">
+                  <div className="flex min-w-0 items-center gap-1 sm:gap-1.5">
                     <FlagImage
-                      countryCode={scorer.teamCode}
-                      alt={scorer.teamName}
+                      countryCode={scorer.team.code}
+                      alt={scorer.team.name}
                       width={16}
                       height={11}
                       className="rounded-[1px] shrink-0"
                     />
-                    <span className="text-xs text-wc-text-primary">{scorer.teamName}</span>
+                    <span className="block min-w-0 truncate text-[11px] text-wc-text-primary sm:text-xs">
+                      {scorer.team.name}
+                    </span>
                   </div>
                 </td>
-                <td className="py-2.5 pr-2">
-                  <div className="flex items-center justify-end gap-2">
-                    <div className="w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
+                <td className="overflow-hidden py-2.5 pr-1 sm:pr-2">
+                  <div className="flex items-center justify-end gap-1 sm:gap-2">
+                    <div className="hidden md:block w-16 h-1 bg-wc-border-primary rounded-full overflow-hidden">
                       <div
                         className="h-full bg-wc-accent-gold rounded-full"
                         style={{ width: `${barWidth}%` }}
                       />
                     </div>
-                    <span className="text-[13px] font-medium text-wc-accent-gold min-w-[16px] text-right">
-                      {scorer.totalGoals}
+                    <span className="min-w-[14px] text-right text-xs font-medium text-wc-accent-gold sm:min-w-[16px] sm:text-[13px]">
+                      {scorer.goals}
                     </span>
                   </div>
                 </td>
-                <td className="py-2.5 pr-2 text-right">
-                  <span className="text-xs text-wc-text-muted">{scorer.average.toFixed(2)}</span>
+                <td className="overflow-visible py-2.5 text-right">
+                  <Tooltip
+                    content={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    groupName="action"
+                    align="end"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setSelectedScorer(scorer)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-wc-border-primary text-wc-text-muted transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none"
+                      aria-label={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    >
+                      <Volleyball size={13} aria-hidden="true" />
+                    </button>
+                  </Tooltip>
                 </td>
               </tr>
             );
@@ -172,14 +196,18 @@ export function ScorersTab({ scorers }: ScorersTabProps) {
 
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={filtered.length}
-        pageSize={PAGE_SIZE}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalElements}
+        pageSize={pagination.size}
         itemsLabel={t('labels.players').toLowerCase()}
         onPageChange={setCurrentPage}
       />
 
-      <ScorerModal scorer={selectedScorer} onClose={() => setSelectedScorer(null)} />
-    </>
+      <ScorerGoalsModal
+        selectedScorer={selectedScorer}
+        year={year}
+        onClose={() => setSelectedScorer(null)}
+      />
+    </QueryStatus>
   );
 }

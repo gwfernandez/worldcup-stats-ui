@@ -82,6 +82,7 @@
     "phases": "Stages",
     "date": "Date",
     "minute": "Min.",
+    "minuteFull": "Minute",
     "rival": "Opponent",
     "versus": "vs",
     "name": "First name",

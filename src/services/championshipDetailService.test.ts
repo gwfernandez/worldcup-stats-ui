@@ -9,7 +9,6 @@ describe('championshipDetailService', () => {
     expect(result.country).toBe('Mexico');
     expect(result.groups.length).toBeGreaterThan(0);
     expect(result.eliminationPhases.length).toBeGreaterThan(0);
-    expect(result.scorers.length).toBeGreaterThan(0);
     expect(result.stadiums.length).toBeGreaterThan(0);
     expect(result.standings.length).toBeGreaterThan(0);
   });

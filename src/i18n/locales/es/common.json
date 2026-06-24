@@ -82,6 +82,7 @@
     "phases": "Fases",
     "date": "Fecha",
     "minute": "Min.",
+    "minuteFull": "Minuto",
     "rival": "Rival",
     "versus": "vs",
     "name": "Nombre",

@@ -162,6 +162,7 @@ export default function ChampionshipDetailPage() {
     if (year === null || year === selectedYear) return;
 
     resetFilters('championshipTeams');
+    resetFilters('championshipScorers');
     setSelectedYear(year);
   }, [resetFilters, selectedYear, setSelectedYear, year]);
 
@@ -245,7 +246,7 @@ export default function ChampionshipDetailPage() {
         {activeTab === 'groups' && (
           <GroupsTab groups={detail.groups} eliminationPhases={detail.eliminationPhases} />
         )}
-        {activeTab === 'scorers' && <ScorersTab scorers={detail.scorers} />}
+        {activeTab === 'scorers' && <ScorersTab key={year} year={year} />}
         {activeTab === 'teams' && <TeamsTab year={year} />}
         {activeTab === 'stadiums' && <StadiumsTab stadiums={detail.stadiums} />}
         {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
