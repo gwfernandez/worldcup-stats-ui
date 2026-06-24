@@ -19,6 +19,16 @@ const defaultResult = {
   error: null,
   refetch: vi.fn(),
 };
+const goalsWithGroupedMatch = [
+  PLAYER_GOALS_RESPONSE_FIXTURE.data[0],
+  {
+    ...PLAYER_GOALS_RESPONSE_FIXTURE.data[0],
+    minuteRegular: 75,
+    penalty: true,
+  },
+  PLAYER_GOALS_RESPONSE_FIXTURE.data[1],
+  PLAYER_GOALS_RESPONSE_FIXTURE.data[2],
+];
 
 interface MatchMediaController {
   setMatches: (matches: boolean) => void;
@@ -71,6 +81,11 @@ describe('ScorerGoalsModal', () => {
   });
 
   it('requests the selected player and renders title, summary team flag and goal table', () => {
+    vi.mocked(usePlayerGoals).mockReturnValue({
+      ...defaultResult,
+      goals: goalsWithGroupedMatch,
+    });
+
     render(<ScorerGoalsModal selectedScorer={selectedScorer} year={1950} onClose={vi.fn()} />);
 
     expect(usePlayerGoals).toHaveBeenCalledWith(101, 1950);
@@ -92,29 +107,32 @@ describe('ScorerGoalsModal', () => {
       'Minuto',
       'Fase',
     ]);
-    expect(screen.getAllByRole('row')).toHaveLength(defaultResult.goals.length + 1);
+    const [dateHeader, opponentHeader, minuteHeader, phaseHeader] = screen.getAllByRole('columnheader');
+    expect(dateHeader).toHaveClass('w-[52px]');
+    expect(opponentHeader).toHaveClass('w-[132px]', 'text-left');
+    expect(minuteHeader).toHaveClass('w-[58px]');
+    expect(phaseHeader).toHaveClass('w-[114px]');
+    expect(screen.getAllByRole('row')).toHaveLength(3 + 1);
     expect(screen.getByText('06-24')).toBeInTheDocument();
-    expect(screen.getByText('MEX')).toBeInTheDocument();
     const firstGoalRow = screen.getByText('06-24').closest('tr');
     expect(firstGoalRow).not.toBeNull();
+    expect(firstGoalRow).toHaveTextContent('México');
+    expect(firstGoalRow).not.toHaveTextContent('MEX');
+    expect(
+      within(firstGoalRow as HTMLElement).getByRole('img', { name: 'México' }).parentElement,
+    ).toHaveClass('justify-start');
     expect(within(firstGoalRow as HTMLElement).queryByRole('img', { name: 'Brasil' })).not.toBeInTheDocument();
     expect(within(firstGoalRow as HTMLElement).getByRole('img', { name: 'México' })).toBeInTheDocument();
+    expect(within(firstGoalRow as HTMLElement).getByTestId('player-goal-table-subrows')).toBeInTheDocument();
+    expect(within(firstGoalRow as HTMLElement).getAllByTestId('player-goal-table-subrow')).toHaveLength(2);
+    expect(firstGoalRow).toHaveTextContent("30'");
+    expect(firstGoalRow).toHaveTextContent("75' (P)");
     expect(screen.getByText("80' (P)")).toBeInTheDocument();
     expect(screen.getAllByText('—').length).toBeGreaterThan(0);
   });
 
   it('renders goal cards on mobile and switches back to the table when viewport changes', () => {
     const media = mockMatchMedia(true);
-    const goalsWithGroupedMatch = [
-      PLAYER_GOALS_RESPONSE_FIXTURE.data[0],
-      {
-        ...PLAYER_GOALS_RESPONSE_FIXTURE.data[0],
-        minuteRegular: 75,
-        penalty: true,
-      },
-      PLAYER_GOALS_RESPONSE_FIXTURE.data[1],
-      PLAYER_GOALS_RESPONSE_FIXTURE.data[2],
-    ];
     vi.mocked(usePlayerGoals).mockReturnValue({
       ...defaultResult,
       goals: goalsWithGroupedMatch,
@@ -148,7 +166,7 @@ describe('ScorerGoalsModal', () => {
     });
 
     expect(screen.getByRole('table')).toBeInTheDocument();
-    expect(screen.getAllByRole('row')).toHaveLength(goalsWithGroupedMatch.length + 1);
+    expect(screen.getAllByRole('row')).toHaveLength(3 + 1);
     expect(screen.queryByTestId('player-goal-cards')).not.toBeInTheDocument();
   });
 
