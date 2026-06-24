@@ -38,12 +38,10 @@ describe('useUIStore', () => {
   it('reemplaza y limpia filtros de un scope', () => {
     useUIStore.getState().setFilters('championshipScorers', {
       team: 'BR',
-      phase: 'Final',
     });
 
     expect(useUIStore.getState().filters.championshipScorers).toEqual({
       team: 'BR',
-      phase: 'Final',
     });
 
     useUIStore.getState().resetFilters('championshipScorers');

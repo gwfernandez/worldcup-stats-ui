@@ -9,7 +9,6 @@ export { default as HeroDetailSection } from './components/shared/HeroDetailSect
 export { MatchModal } from './components/shared/MatchModal';
 export { MatchRow } from './components/shared/MatchRow';
 export { PlayersModal } from './components/shared/PlayersModal';
-export { ScorerModal } from './components/shared/ScorerModal';
 export { StadiumMatchesModal } from './components/shared/StadiumMatchesModal';
 export { GroupsTab } from './components/tabs/GroupsTab';
 export { GroupsTabSkeleton } from './components/tabs/GroupsTabSkeleton';
@@ -21,4 +20,5 @@ export {
   championshipDetailQueryKey,
   useChampionshipDetail,
 } from './hooks/useChampionshipDetail';
+export { useChampionshipScorers } from './hooks/useChampionshipScorers';
 export { CHAMPIONSHIPS_QUERY_KEY, useChampionships } from './hooks/useChampionships';

@@ -86,6 +86,10 @@ describe('ChampionshipDetailPage', () => {
       confederation: 'CONMEBOL',
       group: '4',
     });
+    useUIStore.getState().setFilters('championshipScorers', {
+      name: 'Ademir',
+      team: 'BRA',
+    });
     const { router } = renderAtPath('/worldcup/1950');
 
     expect(await screen.findByText('1950')).toBeInTheDocument();
@@ -100,6 +104,7 @@ describe('ChampionshipDetailPage', () => {
 
     expect(useUIStore.getState().selectedYear).toBe(2022);
     expect(useUIStore.getState().filters.championshipTeams).toBeUndefined();
+    expect(useUIStore.getState().filters.championshipScorers).toBeUndefined();
   });
 
   it('keeps championship team filters when rendering the same year', async () => {
