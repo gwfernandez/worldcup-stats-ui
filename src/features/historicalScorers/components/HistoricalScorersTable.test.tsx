@@ -41,6 +41,7 @@ describe('HistoricalScorersTable', () => {
 
     expect(screen.getByText('Miroslav Klose')).toBeInTheDocument();
     expect(screen.queryByRole('columnheader', { name: 'Promedio' })).not.toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Acciones' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Unión Soviética' })).toBeInTheDocument();
   });
 
@@ -84,7 +85,7 @@ describe('HistoricalScorersTable', () => {
     expect(onPageChange).toHaveBeenCalledWith(1);
   });
 
-  it('opens the selected scorer modal using the row player ID', async () => {
+  it('opens the selected scorer modal using the actions button player ID', async () => {
     const user = userEvent.setup();
     render(
       <HistoricalScorersTable
@@ -96,7 +97,10 @@ describe('HistoricalScorersTable', () => {
       />,
     );
 
-    await user.click(screen.getByText('Miroslav Klose'));
+    expect(screen.getAllByRole('button', { name: /Detalle de goles de/i })).toHaveLength(
+      HISTORICAL_SCORERS_RESPONSE_FIXTURE.data.length,
+    );
+    await user.click(screen.getByRole('button', { name: 'Detalle de goles de Miroslav Klose' }));
 
     expect(useHistoricalScorerDetail).toHaveBeenCalledWith(1);
     const dialog = screen.getByRole('dialog', { name: /Miroslav Klose/i });

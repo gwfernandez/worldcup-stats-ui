@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { FlagImage } from '@/components/shared';
 import type { HistoricalScorer, HistoricalScorerGoal } from '@/types/historicalScorer.types';
@@ -61,6 +61,77 @@ function HostFlagCarousel({ hosts }: HostFlagCarouselProps) {
 const formatMatchDate = (matchDate: string | null): string =>
   matchDate === null ? '—' : matchDate.slice(5);
 
+const formatGoalMinute = (goal: HistoricalScorerGoal): string =>
+  `${goal.minuteRegular}'${goal.penalty === true ? ' (P)' : ''}`;
+
+interface HistoricalScorerGoalMatchGroup {
+  key: string;
+  year: HistoricalScorerGoal['year'];
+  hosts: HistoricalScorerGoal['hosts'];
+  matchDate: HistoricalScorerGoal['matchDate'];
+  opponentTeam: HistoricalScorerGoal['opponentTeam'];
+  stage: HistoricalScorerGoal['stage'];
+  goals: HistoricalScorerGoal[];
+}
+
+interface HistoricalScorerGoalYearGroup {
+  year: HistoricalScorerGoal['year'];
+  hosts: HistoricalScorerGoal['hosts'];
+  matches: HistoricalScorerGoalMatchGroup[];
+}
+
+const getGoalMatchKey = (goal: HistoricalScorerGoal): string =>
+  JSON.stringify([goal.year, goal.matchDate, goal.opponentTeam.code, goal.stage]);
+
+const groupGoalsByMatch = (goals: HistoricalScorerGoal[]): HistoricalScorerGoalMatchGroup[] => {
+  const groups = new Map<string, HistoricalScorerGoalMatchGroup>();
+
+  goals.forEach((goal) => {
+    const key = getGoalMatchKey(goal);
+    const existingGroup = groups.get(key);
+
+    if (existingGroup) {
+      existingGroup.goals.push(goal);
+      return;
+    }
+
+    groups.set(key, {
+      key,
+      year: goal.year,
+      hosts: goal.hosts,
+      matchDate: goal.matchDate,
+      opponentTeam: goal.opponentTeam,
+      stage: goal.stage,
+      goals: [goal],
+    });
+  });
+
+  return Array.from(groups.values());
+};
+
+const groupGoalMatchesByYear = (
+  goalGroups: HistoricalScorerGoalMatchGroup[],
+): HistoricalScorerGoalYearGroup[] => {
+  const yearGroups = new Map<HistoricalScorerGoal['year'], HistoricalScorerGoalYearGroup>();
+
+  goalGroups.forEach((goalGroup) => {
+    const existingYearGroup = yearGroups.get(goalGroup.year);
+
+    if (existingYearGroup) {
+      existingYearGroup.matches.push(goalGroup);
+      return;
+    }
+
+    yearGroups.set(goalGroup.year, {
+      year: goalGroup.year,
+      hosts: goalGroup.hosts,
+      matches: [goalGroup],
+    });
+  });
+
+  return Array.from(yearGroups.values());
+};
+
 const getIsMobileViewport = (): boolean =>
   typeof window !== 'undefined' &&
   typeof window.matchMedia === 'function' &&
@@ -77,6 +148,8 @@ export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalSco
   const { scorer, isLoading, isError, refetch } = useHistoricalScorerDetail(
     selectedScorer?.playerId ?? null,
   );
+  const goalGroups = useMemo(() => groupGoalsByMatch(scorer?.goals ?? []), [scorer?.goals]);
+  const goalYearGroups = useMemo(() => groupGoalMatchesByYear(goalGroups), [goalGroups]);
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;
@@ -114,7 +187,7 @@ export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalSco
       aria-label={t('dialogs.historicalScorerFor', { player: playerName })}
     >
       <div
-        className="max-h-[calc(100dvh-1rem)] w-[min(360px,calc(100vw-16px))] overflow-y-auto rounded-xl border border-wc-border-primary bg-wc-surface-primary sm:max-h-[85vh] sm:w-full sm:max-w-[490px]"
+        className="max-h-[calc(100dvh-1rem)] w-[min(360px,calc(100vw-16px))] overflow-y-auto rounded-xl border border-wc-border-primary bg-wc-surface-primary sm:max-h-[85vh] sm:w-full sm:max-w-[560px]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-wc-border-primary">
@@ -184,55 +257,64 @@ export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalSco
                 </p>
               ) : isMobileViewport ? (
                 <div className="space-y-2.5" data-testid="scorer-goal-cards">
-                  {scorer.goals.map((goal, index) => (
+                  {goalGroups.map((goalGroup) => (
                     <article
-                      key={`${goal.year}-${goal.matchDate ?? 'unknown'}-${goal.minuteRegular}-${index}`}
+                      key={goalGroup.key}
                       className="rounded-lg border border-wc-border-primary bg-wc-surface-secondary px-3 py-2.5"
                       data-testid="scorer-goal-card"
                     >
                       <div className="flex items-center justify-between gap-3 border-b border-wc-border-primary pb-2">
                         <div className="flex items-center gap-2">
-                          <HostFlagCarousel hosts={goal.hosts} />
+                          <HostFlagCarousel hosts={goalGroup.hosts} />
                           <span className="text-xs font-medium text-wc-accent-gold">
-                            {goal.year}
+                            {goalGroup.year}
                           </span>
                         </div>
                         <span className="max-w-[55%] truncate text-[10px] text-wc-text-muted">
-                          {goal.stage ?? '—'}
+                          {goalGroup.stage ?? '—'}
                         </span>
                       </div>
 
                       <div
-                        className="grid grid-cols-3 pt-2 text-center"
+                        className="grid grid-cols-[64px_minmax(0,1fr)_72px] pt-2 text-center"
                         data-testid="scorer-goal-card-details"
                       >
                         <div>
                           <p className="text-[9px] text-wc-text-muted">{t('labels.date')}</p>
                           <p className="mt-0.5 text-[11px] text-wc-text-primary">
-                            {formatMatchDate(goal.matchDate)}
+                            {formatMatchDate(goalGroup.matchDate)}
                           </p>
                         </div>
                         <div>
                           <p className="text-[9px] text-wc-text-muted">{t('labels.rival')}</p>
                           <div className="mt-0.5 flex items-center justify-center gap-1.5">
                             <FlagImage
-                              countryCode={goal.opponentTeam.code}
-                              alt={goal.opponentTeam.name}
+                              countryCode={goalGroup.opponentTeam.code}
+                              alt={goalGroup.opponentTeam.name}
                               width={16}
                               height={12}
                               className="rounded-[2px] shrink-0"
                             />
                             <span className="text-[11px] text-wc-text-primary">
-                              {goal.opponentTeam.code}
+                              {goalGroup.opponentTeam.name}
                             </span>
                           </div>
                         </div>
                         <div>
-                          <p className="text-[9px] text-wc-text-muted">{t('labels.minute')}</p>
-                          <p className="mt-0.5 whitespace-nowrap text-[11px] text-wc-text-primary">
-                            {goal.minuteRegular}
-                            {goal.penalty === true ? ' (P)' : ''}
+                          <p className="text-[9px] text-wc-text-muted">
+                            {t('labels.minuteFull')}
                           </p>
+                          <div className="mt-1" data-testid="historical-goal-subrows">
+                            {goalGroup.goals.map((goal, goalIndex) => (
+                              <div
+                                key={`${goal.minuteRegular}-${goal.penalty === true ? 'penalty' : 'regular'}-${goalIndex}`}
+                                className="py-1 text-[10px] leading-none text-wc-accent-gold first:pt-0 last:pb-0"
+                                data-testid="historical-goal-subrow"
+                              >
+                                {formatGoalMinute(goal)}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </article>
@@ -240,7 +322,7 @@ export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalSco
                 </div>
               ) : (
                 <div className="overflow-x-auto" data-testid="scorer-goals-scroll">
-                  <table className="w-full min-w-[440px] table-fixed border-collapse text-[11px]">
+                  <table className="w-full min-w-[520px] table-fixed border-collapse text-[11px]">
                     <thead>
                       <tr className="border-b border-wc-border-primary">
                         <th className="w-[84px] py-0 pr-1 pb-2 pl-1 text-center font-normal text-wc-text-muted">
@@ -249,51 +331,78 @@ export function HistoricalScorerModal({ selectedScorer, onClose }: HistoricalSco
                         <th className="w-[52px] py-0 pr-1 pb-2 pl-0 text-center font-normal text-wc-text-muted">
                           {t('labels.date')}
                         </th>
-                        <th className="w-[88px] py-0 pr-1 pb-2 pl-1 text-center font-normal text-wc-text-muted">
+                        <th className="w-[152px] py-0 pr-1 pb-2 pl-1 text-left font-normal text-wc-text-muted">
                           {t('labels.rival')}
                         </th>
                         <th className="w-[58px] py-0 pr-1 pb-2 pl-0 text-center font-normal text-wc-text-muted">
-                          {t('labels.minute')}
+                          {t('labels.minuteFull')}
                         </th>
-                        <th className="px-2 pb-2 text-left font-normal text-wc-text-muted">
+                        <th className="w-[104px] px-2 pb-2 text-left font-normal text-wc-text-muted">
                           {t('labels.phase')}
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {scorer.goals.map((goal, index) => (
-                        <tr
-                          key={`${goal.year}-${goal.matchDate ?? 'unknown'}-${goal.minuteRegular}-${index}`}
-                          className="border-t border-wc-surface-secondary"
-                        >
-                          <td className="py-3 pr-1 pl-1">
-                            <div className="flex items-center justify-center gap-2">
-                              <HostFlagCarousel hosts={goal.hosts} />
-                              <span className="font-medium text-wc-accent-gold">{goal.year}</span>
-                            </div>
-                          </td>
-                          <td className="py-3 pr-1 pl-0 text-center text-wc-text-muted">
-                            {formatMatchDate(goal.matchDate)}
-                          </td>
-                          <td className="py-3 pr-1 pl-1">
-                            <div className="flex items-center justify-center gap-2">
-                              <FlagImage
-                                countryCode={goal.opponentTeam.code}
-                                alt={goal.opponentTeam.name}
-                                width={16}
-                                height={12}
-                                className="rounded-[2px] shrink-0"
-                              />
-                              <span className="text-wc-text-primary">{goal.opponentTeam.code}</span>
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-3 pr-1 pl-0 text-center text-wc-text-primary">
-                            {goal.minuteRegular}
-                            {goal.penalty === true ? ' (P)' : ''}
-                          </td>
-                          <td className="px-2 py-3 text-wc-text-muted">{goal.stage ?? '—'}</td>
-                        </tr>
-                      ))}
+                      {goalYearGroups.map((yearGroup) =>
+                        yearGroup.matches.map((goalGroup, matchIndex) => (
+                          <tr
+                            key={goalGroup.key}
+                            className={
+                              matchIndex === 0
+                                ? 'border-t border-wc-border-primary'
+                                : 'border-t border-wc-surface-secondary'
+                            }
+                          >
+                            {matchIndex === 0 && (
+                              <td
+                                className="py-3 pr-1 pl-1 align-middle"
+                                rowSpan={yearGroup.matches.length}
+                                data-testid="historical-goal-year-cell"
+                              >
+                                <div className="flex items-center justify-center gap-2">
+                                  <HostFlagCarousel hosts={yearGroup.hosts} />
+                                  <span className="font-medium text-wc-accent-gold">
+                                    {yearGroup.year}
+                                  </span>
+                                </div>
+                              </td>
+                            )}
+                            <td className="py-3 pr-1 pl-0 text-center text-wc-text-muted">
+                              {formatMatchDate(goalGroup.matchDate)}
+                            </td>
+                            <td className="py-3 pr-1 pl-1">
+                              <div className="flex items-center justify-start gap-2">
+                                <FlagImage
+                                  countryCode={goalGroup.opponentTeam.code}
+                                  alt={goalGroup.opponentTeam.name}
+                                  width={16}
+                                  height={12}
+                                  className="rounded-[2px] shrink-0"
+                                />
+                                <span className="text-wc-text-primary">
+                                  {goalGroup.opponentTeam.name}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap py-3 pr-1 pl-0 text-center text-wc-accent-gold">
+                              <div data-testid="historical-goal-table-subrows">
+                                {goalGroup.goals.map((goal, goalIndex) => (
+                                  <div
+                                    key={`${goal.minuteRegular}-${goal.penalty === true ? 'penalty' : 'regular'}-${goalIndex}`}
+                                    className="py-1 leading-none first:pt-0 last:pb-0"
+                                    data-testid="historical-goal-table-subrow"
+                                  >
+                                    {formatGoalMinute(goal)}
+                                  </div>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 text-wc-text-muted">
+                              {goalGroup.stage ?? '—'}
+                            </td>
+                          </tr>
+                        )),
+                      )}
                     </tbody>
                   </table>
                 </div>

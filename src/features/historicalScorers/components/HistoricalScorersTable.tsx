@@ -1,4 +1,5 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
+import { Volleyball } from 'lucide-react';
 import type { HistoricalScorer, HistoricalScorerPagination } from '@/types/historicalScorer.types';
 import type { NationalTeam } from '@/types/team.types';
 import { CONFEDERATION_STYLES } from '@/types/historicalStanding.types';
@@ -83,10 +84,11 @@ export function HistoricalScorersTable({
       <table className="w-full table-fixed border-collapse">
         <colgroup>
           <col className="w-[7%]" />
-          <col className="w-[31%]" />
-          <col className="w-[27%]" />
+          <col className="w-[29%]" />
+          <col className="w-[25%]" />
           <col className="w-[12%]" />
-          <col className="w-[23%]" />
+          <col className="w-[18%]" />
+          <col className="w-[9%]" />
         </colgroup>
         <thead>
           <tr className="border-b border-wc-border-primary">
@@ -105,12 +107,15 @@ export function HistoricalScorersTable({
             <th className="truncate pb-2 text-right text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
               {t('labels.confederation')}
             </th>
+            <th className="truncate pb-2 text-right text-[10px] font-normal text-wc-text-muted sm:text-[11px]">
+              {t('labels.actions')}
+            </th>
           </tr>
         </thead>
         <tbody>
           {scorers.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-8 text-center text-sm text-wc-text-muted">
+              <td colSpan={6} className="py-8 text-center text-sm text-wc-text-muted">
                 {t('empty.scorers')}
               </td>
             </tr>
@@ -125,8 +130,7 @@ export function HistoricalScorersTable({
             return (
               <tr
                 key={scorer.playerId}
-                onClick={() => setSelectedScorer(scorer)}
-                className="border-t border-wc-surface-secondary cursor-pointer hover:bg-wc-surface-primary transition-colors duration-150 group"
+                className="border-t border-wc-surface-secondary transition-colors duration-150 group"
               >
                 <td className="overflow-hidden py-2.5 pl-0.5 sm:pl-1">
                   <span
@@ -174,6 +178,22 @@ export function HistoricalScorersTable({
                     >
                       {scorer.confederationCode}
                     </span>
+                  </Tooltip>
+                </td>
+                <td className="overflow-visible py-2.5 text-right">
+                  <Tooltip
+                    content={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    groupName="action"
+                    align="end"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setSelectedScorer(scorer)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-wc-border-primary text-wc-text-muted transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none"
+                      aria-label={t('dialogs.goalsFor', { player: scorer.fullName })}
+                    >
+                      <Volleyball size={13} aria-hidden="true" />
+                    </button>
                   </Tooltip>
                 </td>
               </tr>
