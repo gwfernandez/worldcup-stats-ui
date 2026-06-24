@@ -18,6 +18,27 @@ const defaultResult = {
   error: null,
   refetch: vi.fn(),
 };
+const historicalGoalsWithGroupedMatch = [
+  HISTORICAL_SCORER_DETAIL_FIXTURE.goals[0],
+  {
+    ...HISTORICAL_SCORER_DETAIL_FIXTURE.goals[0],
+    minuteRegular: 75,
+    penalty: true,
+  },
+  {
+    ...HISTORICAL_SCORER_DETAIL_FIXTURE.goals[0],
+    matchDate: '2022-12-13',
+    opponentTeam: { code: 'CRO', name: 'Croacia' },
+    minuteRegular: 34,
+    penalty: false,
+    stage: 'semifinal',
+  },
+  HISTORICAL_SCORER_DETAIL_FIXTURE.goals[1],
+];
+const historicalScorerWithGroupedMatch = {
+  ...HISTORICAL_SCORER_DETAIL_FIXTURE,
+  goals: historicalGoalsWithGroupedMatch,
+};
 
 interface MatchMediaController {
   setMatches: (matches: boolean) => void;
@@ -80,7 +101,7 @@ describe('HistoricalScorerModal', () => {
     expect(dialog.firstElementChild).toHaveClass(
       'w-[min(360px,calc(100vw-16px))]',
       'sm:w-full',
-      'sm:max-w-[490px]',
+      'sm:max-w-[560px]',
     );
     expect(dialog.firstElementChild).toHaveClass('max-h-[calc(100dvh-1rem)]', 'sm:max-h-[85vh]');
     expect(header).toHaveTextContent('Lionel Messi');
@@ -97,63 +118,102 @@ describe('HistoricalScorerModal', () => {
   });
 
   it('renders the requested goal columns and values', () => {
+    vi.mocked(useHistoricalScorerDetail).mockReturnValue({
+      ...defaultResult,
+      scorer: historicalScorerWithGroupedMatch,
+    });
+
     render(<HistoricalScorerModal selectedScorer={selectedScorer} onClose={vi.fn()} />);
 
     expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual([
       'Mundial',
       'Fecha',
       'Rival',
-      'Min.',
+      'Minuto',
       'Fase',
     ]);
-    const [worldCupHeader, dateHeader, opponentHeader, minuteHeader] =
+    const [worldCupHeader, dateHeader, opponentHeader, minuteHeader, phaseHeader] =
       screen.getAllByRole('columnheader');
     expect(worldCupHeader).toHaveClass('w-[84px]', 'pr-1', 'pl-1', 'text-center');
     expect(dateHeader).toHaveClass('w-[52px]', 'pr-1', 'pl-0', 'text-center');
-    expect(opponentHeader).toHaveClass('w-[88px]', 'pr-1', 'pl-1', 'text-center');
+    expect(opponentHeader).toHaveClass('w-[152px]', 'pr-1', 'pl-1', 'text-left');
     expect(minuteHeader).toHaveClass('w-[58px]', 'pr-1', 'pl-0', 'text-center');
-    expect(screen.getByRole('table')).toHaveClass('min-w-[440px]', 'table-fixed');
+    expect(phaseHeader).toHaveClass('w-[104px]');
+    expect(screen.getByRole('table')).toHaveClass('min-w-[520px]', 'table-fixed');
+    expect(screen.getAllByRole('row')).toHaveLength(3 + 1);
 
-    const goalRow = screen.getByText('2022').closest('tr');
+    const yearCells = screen.getAllByTestId('historical-goal-year-cell');
+    expect(yearCells).toHaveLength(2);
+    expect(yearCells[0]).toHaveAttribute('rowspan', '2');
+    expect(yearCells[0]).toHaveClass('align-middle');
+    expect(yearCells[0]).toHaveTextContent('2022');
+    expect(yearCells[1]).toHaveAttribute('rowspan', '1');
+    expect(yearCells[1]).toHaveTextContent('2006');
+
+    const goalRow = screen.getByText('12-18').closest('tr');
     const [worldCupCell, dateCell, opponentCell, minuteCell] = within(
       goalRow as HTMLElement,
     ).getAllByRole('cell');
+    expect(goalRow).toHaveClass('border-wc-border-primary');
     expect(worldCupCell.firstElementChild).toHaveClass('justify-center');
+    expect(worldCupCell).toHaveAttribute('rowspan', '2');
     expect(dateCell).toHaveClass('text-center');
-    expect(opponentCell.firstElementChild).toHaveClass('justify-center');
+    expect(opponentCell.firstElementChild).toHaveClass('justify-start');
     expect(minuteCell).toHaveClass('text-center');
     expect(goalRow).toHaveTextContent('12-18');
-    expect(goalRow).toHaveTextContent('FRA');
-    expect(goalRow).toHaveTextContent('23 (P)');
+    expect(goalRow).toHaveTextContent('Francia');
+    expect(goalRow).not.toHaveTextContent('FRA');
+    expect(within(goalRow as HTMLElement).getByTestId('historical-goal-table-subrows')).toBeInTheDocument();
+    expect(within(goalRow as HTMLElement).getAllByTestId('historical-goal-table-subrow')).toHaveLength(2);
+    expect(goalRow).toHaveTextContent("23' (P)");
+    expect(goalRow).toHaveTextContent("75' (P)");
     expect(goalRow).toHaveTextContent('final');
     expect(
       within(goalRow as HTMLElement).getByRole('img', { name: 'Francia' }),
     ).toBeInTheDocument();
+
+    const secondMatchRow = screen.getByText('12-13').closest('tr');
+    expect(secondMatchRow).not.toBeNull();
+    expect(secondMatchRow).toHaveClass('border-wc-surface-secondary');
+    expect(within(secondMatchRow as HTMLElement).getAllByRole('cell')).toHaveLength(4);
+    expect(secondMatchRow).toHaveTextContent('Croacia');
+    expect(secondMatchRow).toHaveTextContent("34'");
+    expect(secondMatchRow).toHaveTextContent('semifinal');
   });
 
   it('renders goal cards on mobile and switches back to the table when the viewport changes', () => {
     const media = mockMatchMedia(true);
+    vi.mocked(useHistoricalScorerDetail).mockReturnValue({
+      ...defaultResult,
+      scorer: historicalScorerWithGroupedMatch,
+    });
+
     render(<HistoricalScorerModal selectedScorer={selectedScorer} onClose={vi.fn()} />);
 
     expect(screen.getByTestId('scorer-goal-cards')).toBeInTheDocument();
-    expect(screen.getAllByTestId('scorer-goal-card')).toHaveLength(2);
+    expect(screen.getAllByTestId('scorer-goal-card')).toHaveLength(3);
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
 
     const firstCard = screen.getAllByTestId('scorer-goal-card')[0];
     const cardDetails = within(firstCard).getByTestId('scorer-goal-card-details');
-    expect(cardDetails).toHaveClass('grid-cols-3');
+    expect(cardDetails).toHaveClass('grid-cols-[64px_minmax(0,1fr)_72px]');
     expect(cardDetails).not.toHaveClass('grid-cols-[max-content_max-content_max-content]');
     expect(firstCard).toHaveTextContent('2022');
     expect(firstCard).toHaveTextContent('final');
     expect(firstCard).toHaveTextContent('12-18');
-    expect(firstCard).toHaveTextContent('FRA');
-    expect(firstCard).toHaveTextContent('23 (P)');
+    expect(firstCard).toHaveTextContent('Francia');
+    expect(firstCard).not.toHaveTextContent('FRA');
+    expect(within(firstCard).getByTestId('historical-goal-subrows')).toBeInTheDocument();
+    expect(within(firstCard).getAllByTestId('historical-goal-subrow')).toHaveLength(2);
+    expect(firstCard).toHaveTextContent("23' (P)");
+    expect(firstCard).toHaveTextContent("75' (P)");
 
     act(() => {
       media.setMatches(false);
     });
 
     expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getAllByRole('row')).toHaveLength(3 + 1);
     expect(screen.queryByTestId('scorer-goal-cards')).not.toBeInTheDocument();
   });
 
@@ -199,7 +259,7 @@ describe('HistoricalScorerModal', () => {
 
     const goalCard = screen.getByTestId('scorer-goal-card');
     expect(goalCard).toHaveTextContent('—');
-    expect(goalCard).toHaveTextContent('88');
+    expect(goalCard).toHaveTextContent("88'");
     expect(goalCard).not.toHaveTextContent('(P)');
     expect(screen.getAllByText('—')).toHaveLength(4);
   });
