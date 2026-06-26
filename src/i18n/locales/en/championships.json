@@ -45,5 +45,8 @@
   },
   "teams": {
     "loadError": "The participating teams could not be loaded."
+  },
+  "stadiums": {
+    "loadError": "The stadiums could not be loaded."
   }
 }

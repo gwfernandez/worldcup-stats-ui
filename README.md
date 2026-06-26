@@ -153,6 +153,12 @@ la lista completa sin paginación visual. Los filtros por nombre, confederación
 localmente. El modal de plantel consulta `GET /api/championships/:year/squads/:teamCode` para
 listar los jugadores de la selección elegida.
 
+La solapa Estadios de `/worldcup/:year` consume siempre
+`GET /api/championships/:year/stadiums`, reúne automáticamente todas las páginas disponibles con
+`size=100` y muestra la lista completa sin paginación visual. El filtro por nombre se aplica
+localmente sobre los estadios recuperados. El modal de partidos conserva un fixture temporal
+compartido para todos los estadios hasta integrar el endpoint específico de partidos por estadio.
+
 ### Comandos disponibles
 
 ```bash

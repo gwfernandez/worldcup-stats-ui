@@ -1,18 +1,31 @@
 import { z } from 'zod';
-import { MatchSchema } from '@/types/championship.types';
+import { PaginationInfoSchema } from '@/types/championship.types';
 
-// ─── Stadium ──────────────────────────────────────────────────────────────────
+// ─── Championship stadiums API ────────────────────────────────────────────────
 
-export const StadiumSchema = z.object({
+export const ChampionshipStadiumSchema = z.object({
   id: z.number(),
   name: z.string(),
-  city: z.string(),
-  capacity: z.number().nullable(),
-  mapsUrl: z.string().url().nullable(),
-  matches: z.array(MatchSchema),
+  cityName: z.string(),
+  country: z
+    .object({
+      code: z.string(),
+      name: z.string(),
+    })
+    .nullable(),
+  capacity: z.number(),
+  matchesPlayed: z.number(),
 });
 
-export const StadiumListSchema = z.array(StadiumSchema);
+export const ChampionshipStadiumListSchema = z.array(ChampionshipStadiumSchema);
 
-export type Stadium = z.infer<typeof StadiumSchema>;
-export type StadiumList = z.infer<typeof StadiumListSchema>;
+export const ChampionshipStadiumListResponseSchema = z.object({
+  data: ChampionshipStadiumListSchema,
+  pagination: PaginationInfoSchema,
+});
+
+export type ChampionshipStadium = z.infer<typeof ChampionshipStadiumSchema>;
+export type ChampionshipStadiumList = z.infer<typeof ChampionshipStadiumListSchema>;
+export type ChampionshipStadiumListResponse = z.infer<
+  typeof ChampionshipStadiumListResponseSchema
+>;
