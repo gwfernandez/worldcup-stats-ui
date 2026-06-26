@@ -1,65 +1,86 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StadiumsTab } from './StadiumsTab';
-import { MOCK_STADIUMS } from '../../mocks/stadiums.mock';
-import type { Stadium } from '@/types/stadium.types';
+import { CHAMPIONSHIP_STADIUMS_FIXTURE } from '@/test/fixtures/championshipStadiums.fixture';
+import { useChampionshipStadiums } from '../../hooks/useChampionshipStadiums';
+
+vi.mock('../../hooks/useChampionshipStadiums', () => ({
+  useChampionshipStadiums: vi.fn(),
+}));
 
 describe('StadiumsTab', () => {
+  beforeEach(() => {
+    vi.mocked(useChampionshipStadiums).mockReturnValue({
+      stadiums: CHAMPIONSHIP_STADIUMS_FIXTURE,
+      isLoading: false,
+      isError: false,
+      error: null,
+    });
+  });
+
   it('renderiza estadios y filtra por nombre', async () => {
     const user = userEvent.setup();
 
-    render(<StadiumsTab stadiums={MOCK_STADIUMS} />);
+    render(<StadiumsTab year={1930} />);
 
-    expect(screen.getByText('Estadio Azteca')).toBeInTheDocument();
+    expect(screen.getByText('Estadio Centenario')).toBeInTheDocument();
 
-    await user.type(screen.getByPlaceholderText('Buscar estadio...'), 'Jalisco');
+    await user.type(screen.getByPlaceholderText('Buscar estadio...'), 'Maracana');
 
-    expect(screen.getByText('Estadio Jalisco')).toBeInTheDocument();
-    expect(screen.queryByText('Estadio Azteca')).not.toBeInTheDocument();
+    expect(screen.getByText('Maracana')).toBeInTheDocument();
+    expect(screen.queryByText('Estadio Centenario')).not.toBeInTheDocument();
   });
 
   it('muestra estado vacío cuando el filtro no coincide', async () => {
     const user = userEvent.setup();
 
-    render(<StadiumsTab stadiums={MOCK_STADIUMS} />);
+    render(<StadiumsTab year={1930} />);
 
     await user.type(screen.getByPlaceholderText('Buscar estadio...'), 'Sin coincidencias');
 
     expect(screen.getByText('No se encontraron estadios con esos filtros')).toBeInTheDocument();
   });
 
-  it('renderiza guion y evita navegar cuando un estadio no tiene capacidad ni mapa', async () => {
-    const user = userEvent.setup();
-    const stadiumWithoutMap: Stadium = {
-      id: 99,
-      name: 'Estadio sin datos',
-      city: 'Ciudad prueba',
-      capacity: null,
-      mapsUrl: null,
-      matches: [],
-    };
+  it('renderiza guion cuando un estadio no tiene pais asociado', () => {
+    render(<StadiumsTab year={1930} />);
 
-    render(<StadiumsTab stadiums={[stadiumWithoutMap]} />);
+    const row = screen.getByText('Estadio sin pais').closest('tr');
 
-    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(row).not.toBeNull();
+    expect(within(row as HTMLTableRowElement).getByText('—')).toBeInTheDocument();
+  });
 
-    const mapLink = screen.getByRole('link', { name: 'Ver Estadio sin datos en el mapa' });
-    expect(mapLink).toHaveAttribute('href', '#');
+  it('muestra estado de carga y error desde el hook', () => {
+    vi.mocked(useChampionshipStadiums).mockReturnValueOnce({
+      stadiums: [],
+      isLoading: true,
+      isError: false,
+      error: null,
+    });
+    const { rerender } = render(<StadiumsTab year={1930} />);
+    expect(screen.getByTestId('table-skeleton')).toBeInTheDocument();
 
-    await user.click(mapLink);
+    vi.mocked(useChampionshipStadiums).mockReturnValueOnce({
+      stadiums: [],
+      isLoading: false,
+      isError: true,
+      error: new Error('API Error'),
+    });
+    rerender(<StadiumsTab year={1930} />);
+    expect(screen.getByText('No se pudieron cargar los estadios.')).toBeInTheDocument();
   });
 
   it('abre partidos de un estadio y luego el detalle de partido', async () => {
     const user = userEvent.setup();
 
-    render(<StadiumsTab stadiums={MOCK_STADIUMS} />);
+    render(<StadiumsTab year={1930} />);
 
-    await user.click(screen.getByRole('button', { name: 'Ver partidos en Estadio Azteca' }));
+    await user.click(screen.getByRole('button', { name: 'Ver partidos en Estadio Centenario' }));
 
-    const stadiumDialog = screen.getByRole('dialog', { name: 'Partidos en Estadio Azteca' });
+    const stadiumDialog = screen.getByRole('dialog', { name: 'Partidos en Estadio Centenario' });
     expect(stadiumDialog).toBeInTheDocument();
-    expect(within(stadiumDialog).getByText(/Ciudad de México/)).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText(/Montevideo/)).toBeInTheDocument();
 
     await user.click(within(stadiumDialog).getByRole('button', { name: /Brasil.*Italia/i }));
 
@@ -67,9 +88,9 @@ describe('StadiumsTab', () => {
       name: 'Detalle del partido Brasil vs Italia',
     });
     expect(matchDialog).toBeInTheDocument();
-    expect(within(matchDialog).getByText('Pelé')).toBeInTheDocument();
+    expect(within(matchDialog).getByText('Pele')).toBeInTheDocument();
     expect(
-      screen.queryByRole('dialog', { name: 'Partidos en Estadio Azteca' }),
+      screen.queryByRole('dialog', { name: 'Partidos en Estadio Centenario' }),
     ).not.toBeInTheDocument();
   });
 });

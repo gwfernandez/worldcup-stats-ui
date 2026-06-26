@@ -1,42 +1,56 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
-import { StadiumListSchema, StadiumSchema } from './stadium.types';
-
-const validMatch = {
-  id: 1,
-  date: '2022-12-18',
-  homeTeam: 'Argentina',
-  homeTeamCode: 'AR',
-  awayTeam: 'France',
-  awayTeamCode: 'FR',
-  homeScore: 3,
-  awayScore: 3,
-  stadium: 'Lusail Stadium',
-  attendance: 88966,
-  phase: 'Final',
-  goals: [],
-};
+import {
+  ChampionshipStadiumListResponseSchema,
+  ChampionshipStadiumListSchema,
+  ChampionshipStadiumSchema,
+} from './stadium.types';
 
 const validStadium = {
   id: 1,
   name: 'Lusail Stadium',
-  city: 'Lusail',
+  cityName: 'Lusail',
+  country: { code: 'QAT', name: 'Qatar' },
   capacity: 88966,
-  mapsUrl: 'https://maps.example.com/lusail',
-  matches: [validMatch],
+  matchesPlayed: 10,
 };
 
 describe('stadium schemas', () => {
   it('parses valid stadium payloads', () => {
-    expect(StadiumSchema.parse(validStadium)).toEqual(validStadium);
-    expect(StadiumSchema.parse({ ...validStadium, capacity: null, mapsUrl: null }).mapsUrl).toBeNull();
-    expect(StadiumListSchema.parse([validStadium])).toEqual([validStadium]);
+    expect(ChampionshipStadiumSchema.parse(validStadium)).toEqual(validStadium);
+    expect(ChampionshipStadiumSchema.parse({ ...validStadium, country: null }).country).toBeNull();
+    expect(ChampionshipStadiumListSchema.parse([validStadium])).toEqual([validStadium]);
+    expect(
+      ChampionshipStadiumListResponseSchema.parse({
+        data: [validStadium],
+        pagination: {
+          page: 1,
+          size: 100,
+          totalElements: 1,
+          totalPages: 1,
+          hasNext: false,
+          hasPrevious: false,
+        },
+      }).data,
+    ).toEqual([validStadium]);
   });
 
   it('throws when stadium payloads are invalid', () => {
-    expect(() => StadiumSchema.parse({ ...validStadium, mapsUrl: 'not-a-url' })).toThrow(ZodError);
-    expect(() => StadiumSchema.parse({ ...validStadium, matches: [{ ...validMatch, homeScore: '3' }] })).toThrow(
+    expect(() => ChampionshipStadiumSchema.parse({ ...validStadium, cityName: null })).toThrow(
       ZodError,
     );
+    expect(() =>
+      ChampionshipStadiumListResponseSchema.parse({
+        data: [{ ...validStadium, matchesPlayed: '10' }],
+        pagination: {
+          page: 1,
+          size: 100,
+          totalElements: 1,
+          totalPages: 1,
+          hasNext: false,
+          hasPrevious: false,
+        },
+      }),
+    ).toThrow(ZodError);
   });
 });
