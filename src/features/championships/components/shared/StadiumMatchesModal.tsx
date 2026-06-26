@@ -1,27 +1,56 @@
 import { useEffect } from 'react';
 import { Building, X, MapPin, Users, AlertCircle } from 'lucide-react';
-import type { ChampionshipStadium } from '@/types/stadium.types';
-import { MatchRow } from './MatchRow';
-import type { Match } from '@/types/championship.types';
+import type { ChampionshipStadium, ChampionshipStadiumMatch } from '@/types/stadium.types';
+import { FlagImage } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-import { MOCK_STADIUM_MATCHES } from '../../mocks/stadiumMatches.mock';
+import { useChampionshipStadiumMatches } from '../../hooks/useChampionshipStadiumMatches';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface StadiumMatchesModalProps {
+  year: number;
   stadium: ChampionshipStadium | null;
   onClose: () => void;
-  onMatchSelect: (match: Match) => void;
 }
+
+const formatScore = (
+  score: number | null,
+  penalties: number | null,
+): string => {
+  if (score === null) return '—';
+  return penalties === null ? String(score) : `${score} (${penalties})`;
+};
+
+const formatMatchScore = (match: ChampionshipStadiumMatch): string => {
+  if (match.homeTeamScore === null || match.awayTeamScore === null) return 'vs';
+
+  return `${formatScore(match.homeTeamScore, match.homeTeamScorePenalties)} – ${formatScore(
+    match.awayTeamScore,
+    match.awayTeamScorePenalties,
+  )}`;
+};
+
+const getMatchKey = (match: ChampionshipStadiumMatch, index: number): string =>
+  [
+    match.matchDate ?? 'no-date',
+    match.matchTime ?? 'no-time',
+    match.homeTeam.code,
+    match.awayTeam.code,
+    index,
+  ].join('-');
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
 /**
  * Modal con los partidos jugados en un estadio.
- * Reutiliza MatchRow para consistencia visual con el resto de la app.
+ * El encabezado usa los datos de la fila seleccionada y el listado viene del endpoint.
  */
-export function StadiumMatchesModal({ stadium, onClose, onMatchSelect }: StadiumMatchesModalProps) {
+export function StadiumMatchesModal({ year, stadium, onClose }: StadiumMatchesModalProps) {
   const { t } = useTranslation('common');
+  const { matches, isLoading, isError, refetch } = useChampionshipStadiumMatches(
+    year,
+    stadium?.id ?? null,
+  );
 
   useEffect(() => {
     if (!stadium) return;
@@ -33,15 +62,6 @@ export function StadiumMatchesModal({ stadium, onClose, onMatchSelect }: Stadium
   }, [stadium, onClose]);
 
   if (!stadium) return null;
-
-  const matches = MOCK_STADIUM_MATCHES.map((match) => ({
-    ...match,
-    stadium: stadium.name,
-    attendance: stadium.capacity,
-  }));
-  const sorted = [...matches].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-  );
 
   return (
     <div
@@ -100,9 +120,71 @@ export function StadiumMatchesModal({ stadium, onClose, onMatchSelect }: Stadium
 
           {/* Lista de partidos */}
           <div className="bg-wc-surface-secondary border border-wc-border-primary rounded-lg overflow-hidden">
-            {sorted.map((match) => (
-              <MatchRow key={match.id} match={match} onSelect={onMatchSelect} showWinner />
-            ))}
+            {isLoading && (
+              <p className="py-6 text-center text-sm text-wc-text-muted" role="status">
+                {t('stadiumMatchesDialog.loading')}
+              </p>
+            )}
+
+            {isError && !isLoading && (
+              <div className="py-6 text-center">
+                <p className="mb-3 text-sm text-wc-danger-text">
+                  {t('stadiumMatchesDialog.loadError')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => refetch()}
+                  className="rounded-md border border-wc-border-primary px-3 py-1.5 text-xs text-wc-text-primary transition-colors hover:border-wc-accent-gold hover:text-wc-accent-gold focus:outline-none"
+                >
+                  {t('actions.retry')}
+                </button>
+              </div>
+            )}
+
+            {!isLoading && !isError && matches.length === 0 && (
+              <p className="py-6 text-center text-sm text-wc-text-muted">
+                {t('stadiumMatchesDialog.empty')}
+              </p>
+            )}
+
+            {!isLoading &&
+              !isError &&
+              matches.map((match, index) => (
+                <div
+                  key={getMatchKey(match, index)}
+                  className="w-full flex items-center gap-2 px-3 py-[5px] border-t border-wc-surface-secondary first:border-t-0 text-left"
+                >
+                  <span className="text-[10px] text-wc-text-muted min-w-[72px] shrink-0">
+                    {match.matchDate ?? '—'}
+                  </span>
+
+                  <div className="flex items-center gap-1.5 flex-1 text-xs overflow-hidden text-wc-text-primary">
+                    <FlagImage
+                      countryCode={match.homeTeam.code}
+                      alt={match.homeTeam.name}
+                      width={14}
+                      height={10}
+                      className="rounded-[1px] shrink-0"
+                    />
+                    <span className="truncate">{match.homeTeam.name}</span>
+                  </div>
+
+                  <span className="text-[12px] font-medium text-wc-accent-gold min-w-[58px] text-center shrink-0">
+                    {formatMatchScore(match)}
+                  </span>
+
+                  <div className="flex items-center justify-end gap-1.5 flex-1 text-xs overflow-hidden text-wc-text-primary">
+                    <span className="truncate text-right">{match.awayTeam.name}</span>
+                    <FlagImage
+                      countryCode={match.awayTeam.code}
+                      alt={match.awayTeam.name}
+                      width={14}
+                      height={10}
+                      className="rounded-[1px] shrink-0"
+                    />
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>

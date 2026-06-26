@@ -3,20 +3,36 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StadiumsTab } from './StadiumsTab';
 import { CHAMPIONSHIP_STADIUMS_FIXTURE } from '@/test/fixtures/championshipStadiums.fixture';
+import { CHAMPIONSHIP_STADIUM_MATCHES_FIXTURE } from '@/test/fixtures/championshipStadiumMatches.fixture';
+import { useChampionshipStadiumMatches } from '../../hooks/useChampionshipStadiumMatches';
 import { useChampionshipStadiums } from '../../hooks/useChampionshipStadiums';
 
 vi.mock('../../hooks/useChampionshipStadiums', () => ({
   useChampionshipStadiums: vi.fn(),
 }));
 
+vi.mock('../../hooks/useChampionshipStadiumMatches', () => ({
+  useChampionshipStadiumMatches: vi.fn(),
+}));
+
+const stadiumMatchesDefaultResult = {
+  matches: CHAMPIONSHIP_STADIUM_MATCHES_FIXTURE,
+  isLoading: false,
+  isError: false,
+  error: null,
+  refetch: vi.fn(),
+};
+
 describe('StadiumsTab', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.mocked(useChampionshipStadiums).mockReturnValue({
       stadiums: CHAMPIONSHIP_STADIUMS_FIXTURE,
       isLoading: false,
       isError: false,
       error: null,
     });
+    vi.mocked(useChampionshipStadiumMatches).mockReturnValue(stadiumMatchesDefaultResult);
   });
 
   it('renderiza estadios y filtra por nombre', async () => {
@@ -71,7 +87,7 @@ describe('StadiumsTab', () => {
     expect(screen.getByText('No se pudieron cargar los estadios.')).toBeInTheDocument();
   });
 
-  it('abre partidos de un estadio y luego el detalle de partido', async () => {
+  it('abre partidos de un estadio con encabezado de la fila y datos del endpoint', async () => {
     const user = userEvent.setup();
 
     render(<StadiumsTab year={1930} />);
@@ -80,17 +96,51 @@ describe('StadiumsTab', () => {
 
     const stadiumDialog = screen.getByRole('dialog', { name: 'Partidos en Estadio Centenario' });
     expect(stadiumDialog).toBeInTheDocument();
+    expect(useChampionshipStadiumMatches).toHaveBeenLastCalledWith(1930, 1);
     expect(within(stadiumDialog).getByText(/Montevideo/)).toBeInTheDocument();
-
-    await user.click(within(stadiumDialog).getByRole('button', { name: /Brasil.*Italia/i }));
-
-    const matchDialog = screen.getByRole('dialog', {
-      name: 'Detalle del partido Brasil vs Italia',
-    });
-    expect(matchDialog).toBeInTheDocument();
-    expect(within(matchDialog).getByText('Pele')).toBeInTheDocument();
     expect(
-      screen.queryByRole('dialog', { name: 'Partidos en Estadio Centenario' }),
+      within(stadiumDialog).getByText(CHAMPIONSHIP_STADIUMS_FIXTURE[0].capacity.toLocaleString()),
+    ).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText('10')).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText('1930-07-13')).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText('Francia')).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText('4 – 1')).toBeInTheDocument();
+    expect(within(stadiumDialog).getByText('Mexico')).toBeInTheDocument();
+    expect(
+      within(stadiumDialog).queryByRole('button', { name: /Francia.*Mexico/i }),
     ).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: /Detalle del partido/i })).not.toBeInTheDocument();
+  });
+
+  it('muestra estados de carga, error y vacío para partidos del estadio', async () => {
+    const user = userEvent.setup();
+    const refetch = vi.fn();
+    vi.mocked(useChampionshipStadiumMatches).mockReturnValue({
+      ...stadiumMatchesDefaultResult,
+      matches: [],
+      isLoading: true,
+    });
+
+    const { rerender } = render(<StadiumsTab year={1930} />);
+    await user.click(screen.getByRole('button', { name: 'Ver partidos en Estadio Centenario' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Cargando partidos del estadio...');
+
+    vi.mocked(useChampionshipStadiumMatches).mockReturnValue({
+      ...stadiumMatchesDefaultResult,
+      matches: [],
+      isError: true,
+      refetch,
+    });
+    rerender(<StadiumsTab year={1930} />);
+    expect(screen.getByText('No se pudieron cargar los partidos del estadio.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Reintentar' }));
+    expect(refetch).toHaveBeenCalledTimes(1);
+
+    vi.mocked(useChampionshipStadiumMatches).mockReturnValue({
+      ...stadiumMatchesDefaultResult,
+      matches: [],
+    });
+    rerender(<StadiumsTab year={1930} />);
+    expect(screen.getByText('No hay partidos disponibles para este estadio.')).toBeInTheDocument();
   });
 });

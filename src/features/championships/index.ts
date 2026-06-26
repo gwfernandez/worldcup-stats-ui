@@ -22,6 +22,7 @@ export {
   useChampionshipDetail,
 } from './hooks/useChampionshipDetail';
 export { useChampionshipScorers } from './hooks/useChampionshipScorers';
+export { useChampionshipStadiumMatches } from './hooks/useChampionshipStadiumMatches';
 export { useChampionshipStadiums } from './hooks/useChampionshipStadiums';
 export { usePlayerGoals } from './hooks/usePlayerGoals';
 export { CHAMPIONSHIPS_QUERY_KEY, useChampionships } from './hooks/useChampionships';

@@ -156,8 +156,9 @@ listar los jugadores de la selección elegida.
 La solapa Estadios de `/worldcup/:year` consume siempre
 `GET /api/championships/:year/stadiums`, reúne automáticamente todas las páginas disponibles con
 `size=100` y muestra la lista completa sin paginación visual. El filtro por nombre se aplica
-localmente sobre los estadios recuperados. El modal de partidos conserva un fixture temporal
-compartido para todos los estadios hasta integrar el endpoint específico de partidos por estadio.
+localmente sobre los estadios recuperados. El modal de partidos consulta
+`GET /api/championships/:year/stadiums/:stadiumId`, reúne todas las páginas disponibles y mantiene
+la información principal del encabezado desde la fila de estadio seleccionada.
 
 ### Comandos disponibles
 

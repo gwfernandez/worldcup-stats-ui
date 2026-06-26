@@ -174,6 +174,11 @@
     "loading": "Loading squad...",
     "loadError": "The squad could not be loaded."
   },
+  "stadiumMatchesDialog": {
+    "loading": "Loading stadium matches...",
+    "loadError": "The stadium matches could not be loaded.",
+    "empty": "No matches are available for this stadium."
+  },
   "standingMetrics": {
     "abbreviations": {
       "points": "PTS",
