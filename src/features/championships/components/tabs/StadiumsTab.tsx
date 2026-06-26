@@ -1,8 +1,6 @@
 import { useState, useMemo } from 'react';
 import { MapPin, Clock } from 'lucide-react';
 import type { ChampionshipStadium } from '@/types/stadium.types';
-import type { Match } from '@/types/championship.types';
-import { MatchModal } from '../shared/MatchModal';
 import { StadiumMatchesModal } from '../shared/StadiumMatchesModal';
 import { SearchInput, TableSkeleton } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
@@ -21,12 +19,10 @@ export interface StadiumsTabProps {
  * Solapa de estadios.
  * Filtro por nombre, tabla con capacidad y conteo de partidos,
  * pais y partidos (modal).
- * Al hacer click en un partido del modal se abre el MatchModal de detalle.
  */
 export function StadiumsTab({ year }: StadiumsTabProps) {
   const { t } = useTranslation(['common', 'championships']);
   const [selectedStadium, setSelectedStadium] = useState<ChampionshipStadium | null>(null);
-  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const { stadiums, isLoading, isError } = useChampionshipStadiums(year);
   const searchName = useUIStore((state) => state.filters.championshipStadiums?.name ?? '');
   const setFilter = useUIStore((state) => state.setFilter);
@@ -35,11 +31,6 @@ export function StadiumsTab({ year }: StadiumsTabProps) {
     () => stadiums.filter((s) => s.name.toLowerCase().includes(searchName.toLowerCase())),
     [stadiums, searchName],
   );
-
-  const handleMatchSelect = (match: Match) => {
-    setSelectedStadium(null); // cierra modal de estadio
-    setSelectedMatch(match); // abre modal de partido
-  };
 
   if (isLoading) {
     return <TableSkeleton cols={6} rows={8} showPagination={false} />;
@@ -161,13 +152,10 @@ export function StadiumsTab({ year }: StadiumsTabProps) {
 
       {/* Modal partidos del estadio */}
       <StadiumMatchesModal
+        year={year}
         stadium={selectedStadium}
         onClose={() => setSelectedStadium(null)}
-        onMatchSelect={handleMatchSelect}
       />
-
-      {/* Modal detalle de partido */}
-      <MatchModal match={selectedMatch} onClose={() => setSelectedMatch(null)} />
     </>
   );
 }
