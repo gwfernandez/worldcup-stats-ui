@@ -6,5 +6,6 @@ export { Pagination, type PaginationProps } from './Pagination';
 export { QueryStatus, type QueryStatusProps } from './QueryStatus';
 export { ErrorBoundary, type ErrorBoundaryProps } from './ErrorBoundary';
 export { TableSkeleton, type TableSkeletonProps } from './TableSkeleton';
+export { StandingsLegend, type StandingsLegendProps } from './StandingsLegend';
 export { SEO, type SEOProps } from './SEO';
 export { RouteLoadingState } from './RouteLoadingState';

@@ -7,6 +7,7 @@ import { StadiumsTab } from '../components/tabs/StadiumsTab';
 import { StandingsTab } from '../components/tabs/StandingsTab';
 import { TeamsTab } from '../components/tabs/TeamsTab';
 import { useChampionshipDetail } from '../hooks/useChampionshipDetail';
+import { useChampionships } from '../hooks/useChampionships';
 import HeroDetailSection from '../components/shared/HeroDetailSection';
 import { SEO, TableSkeleton } from '@/components/shared';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -20,14 +21,13 @@ import {
   Clock,
   Layers,
   List,
-  BarChart2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/store/ui.store';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
-type TabId = 'groups' | 'teams' | 'scorers' | 'stadiums' | 'standings' | 'stats';
+type TabId = 'groups' | 'teams' | 'scorers' | 'stadiums' | 'standings';
 
 interface Tab {
   id: TabId;
@@ -60,11 +60,6 @@ const TABS: Array<Omit<Tab, 'label'> & { labelKey: string }> = [
     id: 'standings',
     labelKey: 'tabs.standings',
     icon: <List size={13} />,
-  },
-  {
-    id: 'stats',
-    labelKey: 'tabs.stats',
-    icon: <BarChart2 size={13} />,
   },
 ];
 
@@ -154,6 +149,9 @@ export default function ChampionshipDetailPage() {
   const year = parseYearParam(yearParam);
   const [activeTab, setActiveTab] = useState<TabId>('groups');
   const { detail, isLoading, isError } = useChampionshipDetail(year ?? 0, year !== null);
+  const { championships } = useChampionships();
+  const currentChampionship = championships.find((championship) => championship.year === year);
+  const hostCodes = currentChampionship?.hosts.map((host) => host.code) ?? [];
   const selectedYear = useUIStore((state) => state.selectedYear);
   const setSelectedYear = useUIStore((state) => state.setSelectedYear);
   const resetFilters = useUIStore((state) => state.resetFilters);
@@ -250,10 +248,7 @@ export default function ChampionshipDetailPage() {
         {activeTab === 'scorers' && <ScorersTab key={year} year={year} />}
         {activeTab === 'teams' && <TeamsTab year={year} />}
         {activeTab === 'stadiums' && <StadiumsTab year={year} />}
-        {activeTab === 'standings' && <StandingsTab standings={detail.standings} />}
-        {activeTab === 'stats' && (
-          <p className="text-sm text-wc-text-muted">{t('championships:detail.comingSoon')}</p>
-        )}
+        {activeTab === 'standings' && <StandingsTab year={year} hostCodes={hostCodes} />}
       </main>
     </>
   );

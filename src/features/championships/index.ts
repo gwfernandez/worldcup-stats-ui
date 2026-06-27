@@ -17,11 +17,12 @@ export { ScorersTab } from './components/tabs/ScorersTab';
 export { StadiumsTab } from './components/tabs/StadiumsTab';
 export { StandingsTab } from './components/tabs/StandingsTab';
 export { TeamsTab } from './components/tabs/TeamsTab';
-export {
-  championshipDetailQueryKey,
-  useChampionshipDetail,
-} from './hooks/useChampionshipDetail';
+export { championshipDetailQueryKey, useChampionshipDetail } from './hooks/useChampionshipDetail';
 export { useChampionshipScorers } from './hooks/useChampionshipScorers';
+export {
+  championshipStandingsQueryKey,
+  useChampionshipStandings,
+} from './hooks/useChampionshipStandings';
 export { useChampionshipStadiumMatches } from './hooks/useChampionshipStadiumMatches';
 export { useChampionshipStadiums } from './hooks/useChampionshipStadiums';
 export { usePlayerGoals } from './hooks/usePlayerGoals';

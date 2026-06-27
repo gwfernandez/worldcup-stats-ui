@@ -28,16 +28,14 @@
   "detail": {
     "loading": "Cargando mundial...",
     "error": "No se pudo cargar el detalle del mundial.",
-    "description": "La Copa Mundial de la FIFA de {{year}} se celebró desde el 31 de mayo hasta el 21 de junio.",
-    "comingSoon": "Solapa Estadísticas - próximamente"
+    "description": "La Copa Mundial de la FIFA de {{year}} se celebró desde el 31 de mayo hasta el 21 de junio."
   },
   "tabs": {
     "groups": "Grupos y fixture",
     "teams": "Selecciones",
     "scorers": "Goleadores",
     "stadiums": "Estadios",
-    "standings": "Posiciones",
-    "stats": "Estadísticas"
+    "standings": "Posiciones"
   },
   "groups": {
     "groupStage": "Fase de grupos",
@@ -48,5 +46,8 @@
   },
   "stadiums": {
     "loadError": "No se pudieron cargar los estadios."
+  },
+  "standings": {
+    "loadError": "No se pudieron cargar las posiciones."
   }
 }

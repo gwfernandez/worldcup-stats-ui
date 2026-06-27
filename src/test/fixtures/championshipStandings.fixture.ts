@@ -1,0 +1,61 @@
+import type { StandingListResponse } from '@/types/standing.types';
+
+export const CHAMPIONSHIP_STANDINGS_RESPONSE_FIXTURE: StandingListResponse = {
+  data: [
+    {
+      team: { code: 'URY', name: 'Uruguay' },
+      groupCode: '4',
+      matchesPlayed: 4,
+      wins: 3,
+      draws: 1,
+      losses: 0,
+      goalsFor: 15,
+      goalsAgainst: 5,
+      goalDifference: 10,
+      points: 7,
+      unifiedPoints: 10,
+      position: 1,
+      performance: 'champion',
+    },
+    {
+      team: { code: 'BRA', name: 'Brasil' },
+      groupCode: '1',
+      matchesPlayed: 6,
+      wins: 4,
+      draws: 1,
+      losses: 1,
+      goalsFor: 22,
+      goalsAgainst: 6,
+      goalDifference: 16,
+      points: 9,
+      unifiedPoints: 13,
+      position: 2,
+      performance: 'runner_up',
+    },
+    {
+      team: { code: 'SWE', name: 'Suecia' },
+      groupCode: '3',
+      matchesPlayed: 5,
+      wins: 2,
+      draws: 1,
+      losses: 2,
+      goalsFor: 11,
+      goalsAgainst: 15,
+      goalDifference: -4,
+      points: 5,
+      unifiedPoints: 7,
+      position: 3,
+      performance: 'third_place',
+    },
+  ],
+  pagination: {
+    page: 1,
+    size: 100,
+    totalElements: 3,
+    totalPages: 1,
+    hasNext: false,
+    hasPrevious: false,
+  },
+};
+
+export const CHAMPIONSHIP_STANDINGS_FIXTURE = CHAMPIONSHIP_STANDINGS_RESPONSE_FIXTURE.data;

@@ -153,6 +153,13 @@ la lista completa sin paginación visual. Los filtros por nombre, confederación
 localmente. El modal de plantel consulta `GET /api/championships/:year/squads/:teamCode` para
 listar los jugadores de la selección elegida.
 
+La solapa Posiciones de `/worldcup/:year` consume siempre
+`GET /api/championships/:year/standings`, reúne automáticamente todas las páginas disponibles con
+`size=100` y muestra todas las selecciones en una única tabla sin paginación visual. La columna PTS
+usa el atributo `points` provisto por el backend y el porcentaje de rendimiento se calcula con el
+sistema de puntos vigente para la edición: 2 puntos por victoria antes de 1994 y 3 puntos desde
+1994 inclusive.
+
 La solapa Estadios de `/worldcup/:year` consume siempre
 `GET /api/championships/:year/stadiums`, reúne automáticamente todas las páginas disponibles con
 `size=100` y muestra la lista completa sin paginación visual. El filtro por nombre se aplica

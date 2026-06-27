@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/mocks/server';
+import { CHAMPIONSHIP_STANDINGS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipStandings.fixture';
 import { CHAMPIONSHIP_TEAMS_RESPONSE_FIXTURE } from '@/test/fixtures/championshipTeams.fixture';
 import { resetUIStore, useUIStore } from '@/store/ui.store';
 import ChampionshipDetailPage from './ChampionshipDetailPage';
@@ -55,6 +56,13 @@ describe('ChampionshipDetailPage', () => {
     expect(screen.getByText(/La Copa Mundial de la FIFA de 1994 se celebró/)).toBeInTheDocument();
   });
 
+  it('does not render the unavailable stats tab', async () => {
+    renderAtPath('/worldcup/1994');
+
+    expect(await screen.findByText('1994')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Estadísticas' })).not.toBeInTheDocument();
+  });
+
   it('redirects to home when year param is not a valid number', () => {
     renderAtPath('/worldcup/invalid');
 
@@ -77,6 +85,23 @@ describe('ChampionshipDetailPage', () => {
 
     expect(await screen.findByText('Uruguay')).toBeInTheDocument();
     expect(requestedPath).toBe('/api/championships/1950/teams');
+  });
+
+  it('requests the standings endpoint for the route year when opening the standings tab', async () => {
+    const user = userEvent.setup();
+    let requestedPath = '';
+    server.use(
+      http.get('*/api/championships/:year/standings', ({ request }) => {
+        requestedPath = new URL(request.url).pathname;
+        return HttpResponse.json(CHAMPIONSHIP_STANDINGS_RESPONSE_FIXTURE);
+      }),
+    );
+
+    renderAtPath('/worldcup/1950');
+    await user.click(await screen.findByRole('button', { name: 'Posiciones' }));
+
+    expect(await screen.findByText('Uruguay')).toBeInTheDocument();
+    expect(requestedPath).toBe('/api/championships/1950/standings');
   });
 
   it('resets championship team filters when navigating to a different year', async () => {
