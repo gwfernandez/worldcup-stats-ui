@@ -1,31 +1,35 @@
 import { z } from 'zod';
-import { TeamPerformanceSchema } from '@/types/team.types';
-
-// ─── Resultado de partido (para forma) ───────────────────────────────────────
-
-export const MatchResultSchema = z.enum(['W', 'D', 'L']);
-export type MatchResult = z.infer<typeof MatchResultSchema>;
+import { PaginationInfoSchema } from '@/types/championship.types';
+import { ChampionshipTeamStageReachedSchema } from '@/types/team.types';
 
 // ─── Standing ─────────────────────────────────────────────────────────────────
 
 export const StandingSchema = z.object({
-  position: z.number(),
-  teamName: z.string(),
-  teamCode: z.string(),
-  isHost: z.boolean(),
-  performance: TeamPerformanceSchema,
-  played: z.number(),
-  won: z.number(),
-  drawn: z.number(),
-  lost: z.number(),
+  team: z.object({
+    code: z.string(),
+    name: z.string(),
+  }),
+  groupCode: z.string(),
+  matchesPlayed: z.number(),
+  wins: z.number(),
+  draws: z.number(),
+  losses: z.number(),
   goalsFor: z.number(),
   goalsAgainst: z.number(),
-  goalDiff: z.number(),
+  goalDifference: z.number(),
   points: z.number(),
-  form: z.array(MatchResultSchema),
+  unifiedPoints: z.number(),
+  position: z.number(),
+  performance: ChampionshipTeamStageReachedSchema,
 });
 
 export const StandingListSchema = z.array(StandingSchema);
 
+export const StandingListResponseSchema = z.object({
+  data: StandingListSchema,
+  pagination: PaginationInfoSchema,
+});
+
 export type Standing = z.infer<typeof StandingSchema>;
 export type StandingList = z.infer<typeof StandingListSchema>;
+export type StandingListResponse = z.infer<typeof StandingListResponseSchema>;

@@ -5,12 +5,10 @@ import {
   type EliminationPhaseList,
   type GroupList,
 } from '@/types/championship.types';
-import { StandingListSchema, type StandingList } from '@/types/standing.types';
 import {
   MOCK_ELIMINATION_PHASES,
   MOCK_GROUPS,
 } from '@/features/championships/mocks/championshipDetail.mock';
-import { MOCK_STANDINGS } from '@/features/championships/mocks/standings.mock';
 
 export const ChampionshipDetailSchema = z.object({
   year: z.number(),
@@ -27,7 +25,6 @@ export const ChampionshipDetailSchema = z.object({
   endDate: z.string(),
   groups: GroupListSchema,
   eliminationPhases: EliminationPhaseListSchema,
-  standings: StandingListSchema,
 });
 
 export interface ChampionshipDetail {
@@ -45,7 +42,6 @@ export interface ChampionshipDetail {
   endDate: string;
   groups: GroupList;
   eliminationPhases: EliminationPhaseList;
-  standings: StandingList;
 }
 
 /**
@@ -68,7 +64,6 @@ export const getChampionshipDetail = async (year: number): Promise<ChampionshipD
     endDate: '1970-06-21',
     groups: MOCK_GROUPS,
     eliminationPhases: MOCK_ELIMINATION_PHASES,
-    standings: MOCK_STANDINGS,
   };
 
   return ChampionshipDetailSchema.parse(detail);

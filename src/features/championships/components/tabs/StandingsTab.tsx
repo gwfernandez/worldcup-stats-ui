@@ -1,6 +1,7 @@
-import type { Standing, MatchResult } from '@/types/standing.types';
-import { PERFORMANCE_STYLES } from '@/types/team.types';
-import { Tooltip, FlagImage } from '@/components/shared';
+import type { ChampionshipTeamStageReached } from '@/types/team.types';
+import { Tooltip, FlagImage, TableSkeleton, StandingsLegend } from '@/components/shared';
+import { useChampionshipStandings } from '../../hooks/useChampionshipStandings';
+import { calcPerformance } from './standingsTab.utils';
 import { useTranslation } from 'react-i18next';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -11,32 +12,54 @@ const formatDiff = (diff: number): { label: string; className: string } => {
   return { label: '0', className: 'text-wc-text-muted' };
 };
 
-const calcPerformance = (points: number, played: number): number => {
-  if (played === 0) return 0;
-  return Math.round((points / (played * 3)) * 100);
-};
-
 // Color de la barra lateral según desempeño
-const PERFORMANCE_BAR_COLOR: Record<string, string> = {
+const PERFORMANCE_BAR_COLOR: Partial<Record<ChampionshipTeamStageReached, string>> = {
   champion: 'var(--wc-accent-gold)',
   runner_up: 'var(--wc-silver-text)',
-  third: 'var(--wc-bronze-text)',
-  fourth: 'var(--wc-fourth-text)',
-  quarters: 'var(--wc-info-text)',
+  third_place: 'var(--wc-bronze-text)',
+  fourth_place: 'var(--wc-fourth-text)',
+  quarterfinal: 'var(--wc-info-text)',
+  quarter_finals: 'var(--wc-info-text)',
+  semi_finals: 'var(--wc-info-text)',
+  final: 'var(--wc-info-text)',
   round_of_16: 'var(--wc-info-text)',
+  second_group_stage: 'var(--wc-surface-tertiary)',
   group_stage: 'var(--wc-surface-tertiary)',
 };
 
 // Color de la barra de rendimiento
-const PERF_BAR_COLOR: Record<string, string> = {
+const PERF_BAR_COLOR: Partial<Record<ChampionshipTeamStageReached, string>> = {
   champion: 'var(--wc-accent-gold)',
   runner_up: 'var(--wc-info-text)',
-  third: 'var(--wc-bronze-text)',
-  fourth: 'var(--wc-text-muted)',
-  quarters: 'var(--wc-info-text)',
+  third_place: 'var(--wc-bronze-text)',
+  fourth_place: 'var(--wc-text-muted)',
+  quarterfinal: 'var(--wc-info-text)',
+  quarter_finals: 'var(--wc-info-text)',
+  semi_finals: 'var(--wc-info-text)',
+  final: 'var(--wc-info-text)',
   round_of_16: 'var(--wc-info-text)',
+  second_group_stage: 'var(--wc-text-dim)',
   group_stage: 'var(--wc-text-dim)',
 };
+
+const PERFORMANCE_STYLES: Partial<Record<ChampionshipTeamStageReached, string>> = {
+  champion: 'bg-wc-success-surface text-wc-accent-gold border-wc-success-border',
+  runner_up: 'bg-wc-surface-secondary text-wc-silver-text border-wc-silver-border',
+  third_place: 'bg-wc-position-midfielder-surface text-wc-bronze-text border-wc-bronze-border',
+  fourth_place: 'bg-wc-position-midfielder-surface text-wc-fourth-text border-wc-fourth-border',
+  quarterfinal: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  quarter_finals: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  semi_finals: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  final: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  round_of_16: 'bg-wc-info-surface text-wc-info-text border-wc-info-border',
+  second_group_stage: 'bg-wc-surface-primary text-wc-text-muted border-wc-border-primary',
+  group_stage: 'bg-wc-surface-primary text-wc-text-muted border-wc-border-primary',
+};
+
+const DEFAULT_PERFORMANCE_STYLE =
+  'bg-wc-surface-primary text-wc-text-muted border-wc-border-primary';
+const DEFAULT_PERFORMANCE_BAR_COLOR = 'var(--wc-surface-tertiary)';
+const DEFAULT_PERF_BAR_COLOR = 'var(--wc-text-dim)';
 
 // ─── Subcomponente: tooltip en th ─────────────────────────────────────────────
 
@@ -60,35 +83,11 @@ function Th({
   );
 }
 
-// ─── Subcomponente: círculos de forma ─────────────────────────────────────────
-
-const FORM_STYLES: Record<MatchResult, { bg: string; labelKey: string }> = {
-  W: { bg: 'bg-wc-conf-conmebol-bar', labelKey: 'form.W' },
-  D: { bg: 'bg-wc-neutral-border', labelKey: 'form.D' },
-  L: { bg: 'bg-wc-danger-border', labelKey: 'form.L' },
-};
-
-function FormDots({ form }: { form: MatchResult[] }) {
-  const { t } = useTranslation('common');
-
-  return (
-    <div className="flex items-center justify-center gap-[3px]">
-      {form.map((result, i) => (
-        <div
-          key={i}
-          title={t(FORM_STYLES[result].labelKey)}
-          className={`w-2.5 h-2.5 rounded-full shrink-0 ${FORM_STYLES[result].bg}`}
-          aria-label={t(FORM_STYLES[result].labelKey)}
-        />
-      ))}
-    </div>
-  );
-}
-
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface StandingsTabProps {
-  standings: Standing[];
+  year: number;
+  hostCodes: string[];
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -96,29 +95,64 @@ export interface StandingsTabProps {
 /**
  * Solapa de posiciones del mundial.
  * Tabla completa sin paginado con todas las selecciones participantes.
- * Incluye borde lateral por desempeño, barra de rendimiento, forma y pills.
+ * Incluye borde lateral por desempeño, barra de rendimiento y pills.
  */
-export function StandingsTab({ standings }: StandingsTabProps) {
-  const { t } = useTranslation('common');
+export function StandingsTab({ year, hostCodes }: StandingsTabProps) {
+  const { t } = useTranslation(['common', 'championships']);
+  const { standings, isLoading, isError } = useChampionshipStandings(year);
   const sorted = [...standings].sort((a, b) => a.position - b.position);
+  const hostCodeSet = new Set(hostCodes.map((code) => code.toUpperCase()));
+
+  if (isLoading) {
+    return <TableSkeleton cols={11} rows={8} showPagination={false} />;
+  }
+
+  if (isError) {
+    return (
+      <p className="py-8 text-center text-sm text-wc-danger-text">
+        {t('championships:standings.loadError')}
+      </p>
+    );
+  }
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse" style={{ minWidth: '720px' }}>
+      <table className="w-full border-collapse" style={{ minWidth: '660px' }}>
         <thead>
           <tr className="border-b border-wc-border-primary">
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 w-8">#</th>
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pr-3">
               {t('labels.team')}
             </th>
-            <Th label="PTS" tooltip={t('standingMetrics.points')} />
-            <Th label="PJ" tooltip={t('standingMetrics.played')} />
-            <Th label="PG" tooltip={t('standingMetrics.won')} />
-            <Th label="PE" tooltip={t('standingMetrics.drawn')} />
-            <Th label="PP" tooltip={t('standingMetrics.lost')} />
-            <Th label="GF" tooltip={t('standingMetrics.goalsFor')} />
-            <Th label="GC" tooltip={t('standingMetrics.goalsAgainst')} />
-            <Th label="DIF" tooltip={t('standingMetrics.goalDiff')} />
+            <Th
+              label={t('standingMetrics.abbreviations.points')}
+              tooltip={t('standingMetrics.points')}
+            />
+            <Th
+              label={t('standingMetrics.abbreviations.played')}
+              tooltip={t('standingMetrics.played')}
+            />
+            <Th label={t('standingMetrics.abbreviations.won')} tooltip={t('standingMetrics.won')} />
+            <Th
+              label={t('standingMetrics.abbreviations.drawn')}
+              tooltip={t('standingMetrics.drawn')}
+            />
+            <Th
+              label={t('standingMetrics.abbreviations.lost')}
+              tooltip={t('standingMetrics.lost')}
+            />
+            <Th
+              label={t('standingMetrics.abbreviations.goalsFor')}
+              tooltip={t('standingMetrics.goalsFor')}
+            />
+            <Th
+              label={t('standingMetrics.abbreviations.goalsAgainst')}
+              tooltip={t('standingMetrics.goalsAgainst')}
+            />
+            <Th
+              label={t('standingMetrics.abbreviations.goalDiff')}
+              tooltip={t('standingMetrics.goalDiff')}
+            />
             <Th
               label={t('standingMetrics.performanceShort')}
               tooltip={t('standingMetrics.performance')}
@@ -127,21 +161,24 @@ export function StandingsTab({ standings }: StandingsTabProps) {
             <th className="text-left text-[10px] font-normal text-wc-text-muted pb-2 pl-2 min-w-[120px]">
               {t('labels.performance')}
             </th>
-            <th className="text-center text-[10px] font-normal text-wc-text-muted pb-2 min-w-[90px]">
-              {t('labels.form')}
-            </th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((row) => {
-            const diff = formatDiff(row.goalDiff);
-            const perfPct = calcPerformance(row.points, row.played);
-            const barColor = PERF_BAR_COLOR[row.performance];
-            const accentColor = PERFORMANCE_BAR_COLOR[row.performance];
+            const diff = formatDiff(row.goalDifference);
+            const perfPct = calcPerformance(row.points, row.matchesPlayed, year);
+            const barColor = PERF_BAR_COLOR[row.performance] ?? DEFAULT_PERF_BAR_COLOR;
+            const accentColor =
+              PERFORMANCE_BAR_COLOR[row.performance] ?? DEFAULT_PERFORMANCE_BAR_COLOR;
+            const isHost = hostCodeSet.has(row.team.code.toUpperCase());
+            const performanceStyle =
+              PERFORMANCE_STYLES[row.performance] ?? DEFAULT_PERFORMANCE_STYLE;
+            const performanceLabel =
+              row.performance === '' ? '—' : t(`common:performance.${row.performance}`);
 
             return (
               <tr
-                key={row.teamCode}
+                key={row.team.code}
                 className="border-t border-wc-surface-secondary hover:bg-wc-surface-primary transition-colors duration-150"
               >
                 {/* Posición con borde lateral */}
@@ -158,13 +195,13 @@ export function StandingsTab({ standings }: StandingsTabProps) {
                 <td className="py-2 pr-3">
                   <div className="flex items-center gap-2">
                     <FlagImage
-                      countryCode={row.teamCode}
-                      alt={row.teamName}
+                      countryCode={row.team.code}
+                      alt={row.team.name}
                       width={16}
                       height={11}
                       className="rounded-[1px] shrink-0"
                     />
-                    <span className="text-xs text-wc-text-primary">{row.teamName}</span>
+                    <span className="text-xs text-wc-text-primary">{row.team.name}</span>
                   </div>
                 </td>
 
@@ -174,10 +211,12 @@ export function StandingsTab({ standings }: StandingsTabProps) {
                 </td>
 
                 {/* PJ PG PE PP */}
-                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.played}</td>
-                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.won}</td>
-                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.drawn}</td>
-                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.lost}</td>
+                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">
+                  {row.matchesPlayed}
+                </td>
+                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.wins}</td>
+                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.draws}</td>
+                <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.losses}</td>
 
                 {/* GF GC */}
                 <td className="py-2 px-2 text-right text-xs text-wc-text-muted">{row.goalsFor}</td>
@@ -207,27 +246,23 @@ export function StandingsTab({ standings }: StandingsTabProps) {
                 <td className="py-2 pl-2 pr-3">
                   <div className="flex items-center gap-1 flex-wrap">
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${PERFORMANCE_STYLES[row.performance]}`}
+                      className={`text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap ${performanceStyle}`}
                     >
-                      {t(`performance.${row.performance}`)}
+                      {performanceLabel}
                     </span>
-                    {row.isHost && (
+                    {isHost && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full border bg-wc-lavender-surface text-wc-lavender-text border-wc-lavender-border whitespace-nowrap">
                         {t('performance.host')}
                       </span>
                     )}
                   </div>
                 </td>
-
-                {/* Forma */}
-                <td className="py-2 text-center">
-                  <FormDots form={row.form} />
-                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      <StandingsLegend mode="year" year={year} />
     </div>
   );
 }

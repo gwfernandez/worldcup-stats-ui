@@ -28,16 +28,14 @@
   "detail": {
     "loading": "Loading World Cup...",
     "error": "The World Cup details could not be loaded.",
-    "description": "The {{year}} FIFA World Cup was held from May 31 to June 21.",
-    "comingSoon": "Stats tab - coming soon"
+    "description": "The {{year}} FIFA World Cup was held from May 31 to June 21."
   },
   "tabs": {
     "groups": "Groups and fixtures",
     "teams": "Teams",
     "scorers": "Scorers",
     "stadiums": "Stadiums",
-    "standings": "Standings",
-    "stats": "Stats"
+    "standings": "Standings"
   },
   "groups": {
     "groupStage": "Group stage",
@@ -48,5 +46,8 @@
   },
   "stadiums": {
     "loadError": "The stadiums could not be loaded."
+  },
+  "standings": {
+    "loadError": "The standings could not be loaded."
   }
 }
